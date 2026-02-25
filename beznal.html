@@ -2,14 +2,12 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<title>Генератор счета</title>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<title>Счет</title>
 
 <style>
 
 body{
-font-family: Arial;
+font-family: Arial, sans-serif;
 background:#f2f4f8;
 padding:20px;
 }
@@ -17,19 +15,18 @@ padding:20px;
 .container{
 width:900px;
 margin:auto;
-}
-
-#print-area{
 background:white;
 padding:40px;
 box-shadow:0 4px 20px rgba(0,0,0,.1);
 }
 
+/* Заголовок */
 .header{
 text-align:center;
 margin-bottom:25px;
 }
 
+/* таблицы */
 table{
 width:100%;
 border-collapse:collapse;
@@ -47,6 +44,7 @@ background:#1976d2;
 color:white;
 }
 
+/* ширина колонок */
 td:nth-child(1){width:60px;}
 td:nth-child(3){width:70px;}
 td:nth-child(4){width:90px;}
@@ -56,31 +54,64 @@ width:100%;
 border:none;
 outline:none;
 font-size:14px;
+background:transparent;
 }
 
 .total{
 text-align:right;
 font-weight:bold;
+font-size:16px;
+}
+
+/* кнопки */
+.buttons{
+margin-top:20px;
 }
 
 button{
 width:100%;
 padding:12px;
-margin-top:10px;
+margin-bottom:10px;
 border:none;
+border-radius:6px;
 background:#2e7d32;
 color:white;
 font-size:16px;
 cursor:pointer;
 }
 
+button:hover{
+opacity:.9;
+}
+
+/* печать */
+@media print{
+
+body{
+background:white;
+padding:0;
+}
+
+.container{
+box-shadow:none;
+width:100%;
+}
+
+.buttons{
+display:none;
+}
+
+input{
+border:none;
+}
+
+}
+
 </style>
 </head>
 <body>
 
-<div class="container">
-
-<div id="print-area">
+<div class="container" id="print-area">
 
 <div class="header">
 <h2>СЧЕТ НА ОПЛАТУ № <span id="invoice-number"></span></h2>
@@ -89,7 +120,7 @@ cursor:pointer;
 
 <div>
 <b>Плательщик:</b>
-<input id="payer">
+<input id="payer" placeholder="Введите организацию">
 </div>
 
 <br>
@@ -118,18 +149,18 @@ cursor:pointer;
 
 <tfoot>
 <tr>
-<td colspan="3" class="total">Итого</td>
+<td colspan="3" class="total">Итого:</td>
 <td id="total">0</td>
 </tr>
 </tfoot>
 
 </table>
 
-</div>
-
+<div class="buttons">
 <button onclick="addRow()">Добавить строку</button>
 <button onclick="calc()">Рассчитать</button>
-<button onclick="generatePDF()">Скачать PDF</button>
+<button onclick="printPDF()">Скачать PDF</button>
+</div>
 
 </div>
 
@@ -139,7 +170,7 @@ cursor:pointer;
 document.getElementById("date").innerText =
 new Date().toLocaleDateString("ru-RU");
 
-/* номер */
+/* номер счета 0-20 */
 document.getElementById("invoice-number").innerText =
 Math.floor(Math.random()*21);
 
@@ -155,6 +186,7 @@ document.getElementById("tbody").insertAdjacentHTML("beforeend",`
 `);
 }
 
+/* стартовые строки */
 for(let i=0;i<8;i++) addRow();
 
 /* расчет */
@@ -171,42 +203,10 @@ document.getElementById("total").innerText =
 total.toLocaleString('ru-RU');
 }
 
-/* генерация */
-function generatePDF(){
-
+/* печать */
+function printPDF(){
 calc();
-
-/* новый номер */
-const invoiceNumber=Math.floor(Math.random()*21);
-document.getElementById("invoice-number").innerText=invoiceNumber;
-
-/* КЛОН */
-const clone = document.getElementById("print-area").cloneNode(true);
-
-/* перенос значений */
-const inputsOriginal = document.querySelectorAll("#print-area input");
-const inputsClone = clone.querySelectorAll("input");
-
-inputsOriginal.forEach((input,i)=>{
-const span=document.createElement("span");
-span.textContent=input.value;
-inputsClone[i].replaceWith(span);
-});
-
-/* вставляем временно */
-clone.style.position="fixed";
-clone.style.left="-10000px";
-document.body.appendChild(clone);
-
-html2pdf().set({
-margin:10,
-filename:'Счет_'+invoiceNumber+'.pdf',
-html2canvas:{scale:2},
-jsPDF:{unit:'mm',format:'a4'}
-}).from(clone).save().then(()=>{
-clone.remove();
-});
-
+window.print();
 }
 
 </script>
