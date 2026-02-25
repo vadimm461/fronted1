@@ -2,102 +2,99 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<title>Счет</title>
+<title>Генератор счета</title>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
 <style>
 
 body{
-    font-family: Arial, sans-serif;
-    background:#f0f2f5;
-    padding:20px;
+font-family: Arial;
+background:#f2f4f8;
+padding:20px;
 }
 
 .container{
-    width:900px;
-    margin:auto;
+width:900px;
+margin:auto;
 }
 
+/* Печатная область */
 #print-area{
-    background:white;
-    padding:30px;
+background:white;
+padding:40px;
+box-shadow:0 4px 20px rgba(0,0,0,.1);
 }
 
 /* Заголовок */
-h1{
-    text-align:center;
-    margin-bottom:20px;
+.header{
+text-align:center;
+margin-bottom:25px;
+}
+
+.header h1{
+margin:0;
+}
+
+.block{
+margin-bottom:20px;
 }
 
 /* Таблица */
 table{
-    width:100%;
-    border-collapse:collapse;
-    margin-bottom:20px;
+width:100%;
+border-collapse:collapse;
 }
 
 th,td{
-    border:1px solid #ccc;
-    padding:8px;
-    font-size:14px;
+border:1px solid #dcdcdc;
+padding:8px;
+font-size:14px;
 }
 
 th{
-    background:#1976d2;
-    color:white;
+background:#1976d2;
+color:white;
 }
 
 /* ширина колонок */
-#items th:nth-child(1),
-#items td:nth-child(1){
-    width:60px;
-    text-align:center;
-}
-
-#items th:nth-child(2),
-#items td:nth-child(2){
-    width:auto;
-}
-
-#items th:nth-child(3),
-#items td:nth-child(3){
-    width:60px;
-    text-align:center;
-}
-
-#items th:nth-child(4),
-#items td:nth-child(4){
-    width:80px;
-    text-align:right;
-}
+td:nth-child(1){width:60px;}
+td:nth-child(3){width:70px;}
+td:nth-child(4){width:90px;}
 
 input{
-    width:100%;
-    border:none;
-    outline:none;
-    font-size:14px;
+width:100%;
+border:none;
+outline:none;
+font-size:14px;
 }
 
+/* итог */
 .total{
-    text-align:right;
-    font-weight:bold;
+text-align:right;
+font-weight:bold;
+font-size:16px;
 }
 
 /* кнопки */
-.btn{
-    width:100%;
-    padding:12px;
-    margin-top:10px;
-    border:none;
-    background:#2e7d32;
-    color:white;
-    font-size:16px;
-    cursor:pointer;
+.buttons{
+margin-top:20px;
 }
 
-.btn:hover{
-    opacity:.9;
+button{
+width:100%;
+padding:12px;
+margin-bottom:10px;
+border:none;
+border-radius:6px;
+background:#2e7d32;
+color:white;
+font-size:16px;
+cursor:pointer;
+}
+
+button:hover{
+opacity:.9;
 }
 
 </style>
@@ -108,27 +105,35 @@ input{
 
 <div id="print-area">
 
-<h1>СЧЕТ № <span id="invoice-number"></span></h1>
+<div class="header">
+<h1>СЧЕТ НА ОПЛАТУ № <span id="invoice-number"></span></h1>
+<div>Дата: <span id="date"></span></div>
+</div>
 
-<p><b>Дата:</b> <span id="date"></span></p>
-
-<p>
+<div class="block">
 <b>Плательщик:</b>
-<input type="text" id="payer" placeholder="Введите плательщика">
-</p>
+<input id="payer" placeholder="Введите организацию">
+</div>
 
-<h3>Получатель</h3>
+<div class="block">
+
+<b>Получатель:</b>
 
 <table>
 <tr><td>ИП</td><td>Дворян Вадим Витальевич</td></tr>
 <tr><td>УСН</td><td>1440001838</td></tr>
-<tr><td>Расч. счет</td><td>2214050000024165</td></tr>
+<tr><td>Расчетный счет</td><td>2214050000024165</td></tr>
 <tr><td>Банк</td><td>ЗАО "Агропромбанк"</td></tr>
 </table>
 
-<h3>Товары</h3>
+</div>
+
+<div class="block">
+
+<b>Товары:</b>
 
 <table id="items">
+
 <thead>
 <tr>
 <th>Код</th>
@@ -151,67 +156,95 @@ input{
 
 </div>
 
-<button class="btn" onclick="calc()">Рассчитать</button>
-<button class="btn" onclick="generatePDF()">Скачать PDF</button>
+</div>
+
+<div class="buttons">
+<button onclick="addRow()">Добавить строку</button>
+<button onclick="calc()">Рассчитать</button>
+<button onclick="generatePDF()">Скачать PDF</button>
+</div>
 
 </div>
 
 <script>
 
 /* дата */
-document.getElementById("date").textContent =
+document.getElementById("date").innerText =
 new Date().toLocaleDateString("ru-RU");
 
-/* создаем 10 строк */
-for(let i=0;i<10;i++){
+/* номер счета */
+document.getElementById("invoice-number").innerText =
+Math.floor(Math.random()*21);
+
+/* строки */
+function addRow(){
 document.getElementById("tbody").innerHTML += `
 <tr>
 <td><input></td>
 <td><input></td>
 <td><input type="number" class="qty" value="0"></td>
 <td><input type="number" class="price" value="0"></td>
-</tr>
-`;
+</tr>`;
 }
+
+/* создаем 8 строк */
+for(let i=0;i<8;i++) addRow();
 
 /* расчет */
 function calc(){
+
 let total=0;
 
-document.querySelectorAll("#items tbody tr").forEach(row=>{
-let q=row.querySelector(".qty").value || 0;
-let p=row.querySelector(".price").value || 0;
-total+=q*p;
+document.querySelectorAll("#tbody tr").forEach(row=>{
+
+let q = row.querySelector(".qty").value || 0;
+let p = row.querySelector(".price").value || 0;
+
+total += q*p;
+
 });
 
-document.getElementById("total").innerText=
+document.getElementById("total").innerText =
 total.toLocaleString('ru-RU');
+
 }
 
-/* генерация pdf */
+/* подготовка input -> текст */
+function prepareForPdf(){
+
+document.querySelectorAll("#print-area input").forEach(input=>{
+
+const span=document.createElement("span");
+span.textContent=input.value;
+
+input.style.display="none";
+input.after(span);
+
+});
+
+}
+
+/* генерация */
 function generatePDF(){
 
 calc();
+prepareForPdf();
 
-/* случайный номер счета 0-20 */
-const invoiceNumber = Math.floor(Math.random()*21);
-document.getElementById("invoice-number").textContent = invoiceNumber;
+/* новый номер счета */
+const invoiceNumber=Math.floor(Math.random()*21);
+document.getElementById("invoice-number").innerText=invoiceNumber;
 
-const element = document.getElementById("print-area");
+const element=document.getElementById("print-area");
 
-const opt = {
+html2pdf().set({
 margin:10,
 filename:'Счет_'+invoiceNumber+'.pdf',
-image:{ type:'jpeg', quality:1 },
-html2canvas:{ scale:2 },
-jsPDF:{
-unit:'mm',
-format:'a4',
-orientation:'portrait'
-}
-};
+html2canvas:{scale:2},
+jsPDF:{unit:'mm',format:'a4'}
+}).from(element).save();
 
-html2pdf().set(opt).from(element).save();
+setTimeout(()=>location.reload(),500);
+
 }
 
 </script>
