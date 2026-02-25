@@ -167,9 +167,17 @@
 
 <!-- Нижние кнопки -->
 <div class="bottom-buttons">
-    <button class="btn btn-non-cash">ОФОРМИТЬ БЕЗНАЛ</button>
-    <button class="btn btn-close-shift">ЗАКРЫТИЕ СМЕНЫ</button>
+    <button id="btnBeznal" class="btn btn-non-cash">ОФОРМИТЬ БЕЗНАЛ</button>
+    <button id="btnSmena" class="btn btn-close-shift">ЗАКРЫТИЕ СМЕНЫ</button>
 </div>
+<script>
+    document.getElementById("btnBeznal").addEventListener("click", () => {
+        window.location.href = "beznal.html";
+    });
+    document.getElementById("btnSmena").addEventListener("click", () => {
+        window.location.href = "smena.html";
+    });
+</script>
 
 <script>
 document.querySelectorAll('.calculator').forEach(calc => {
@@ -194,3 +202,4 @@ document.querySelectorAll('.calculator').forEach(calc => {
 
 </body>
 </html>
+
