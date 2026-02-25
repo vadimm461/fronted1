@@ -9,7 +9,7 @@
 <style>
 
 body{
-font-family: Arial, sans-serif;
+font-family: Arial;
 background:#f2f4f8;
 padding:20px;
 }
@@ -25,22 +25,11 @@ padding:40px;
 box-shadow:0 4px 20px rgba(0,0,0,.1);
 }
 
-/* заголовок */
 .header{
 text-align:center;
 margin-bottom:25px;
 }
 
-.header h1{
-margin:0;
-font-size:26px;
-}
-
-.block{
-margin-bottom:20px;
-}
-
-/* таблицы */
 table{
 width:100%;
 border-collapse:collapse;
@@ -48,7 +37,7 @@ margin-top:10px;
 }
 
 th,td{
-border:1px solid #dcdcdc;
+border:1px solid #ccc;
 padding:8px;
 font-size:14px;
 }
@@ -58,7 +47,6 @@ background:#1976d2;
 color:white;
 }
 
-/* ширина колонок */
 td:nth-child(1){width:60px;}
 td:nth-child(3){width:70px;}
 td:nth-child(4){width:90px;}
@@ -68,35 +56,22 @@ width:100%;
 border:none;
 outline:none;
 font-size:14px;
-background:transparent;
 }
 
-/* итог */
 .total{
 text-align:right;
 font-weight:bold;
-font-size:16px;
-}
-
-/* кнопки */
-.buttons{
-margin-top:20px;
 }
 
 button{
 width:100%;
 padding:12px;
-margin-bottom:10px;
+margin-top:10px;
 border:none;
-border-radius:6px;
 background:#2e7d32;
 color:white;
 font-size:16px;
 cursor:pointer;
-}
-
-button:hover{
-opacity:.9;
 }
 
 </style>
@@ -108,18 +83,16 @@ opacity:.9;
 <div id="print-area">
 
 <div class="header">
-<h1>СЧЕТ НА ОПЛАТУ № <span id="invoice-number"></span></h1>
+<h2>СЧЕТ НА ОПЛАТУ № <span id="invoice-number"></span></h2>
 <div>Дата: <span id="date"></span></div>
 </div>
 
-<div class="block">
+<div>
 <b>Плательщик:</b>
-<input id="payer" placeholder="Введите организацию">
+<input id="payer">
 </div>
 
-<div class="block">
-
-<b>Получатель:</b>
+<br>
 
 <table>
 <tr><td>ИП</td><td>Дворян Вадим Витальевич</td></tr>
@@ -128,11 +101,7 @@ opacity:.9;
 <tr><td>Банк</td><td>ЗАО "Агропромбанк"</td></tr>
 </table>
 
-</div>
-
-<div class="block">
-
-<b>Товары:</b>
+<br>
 
 <table id="items">
 
@@ -149,7 +118,7 @@ opacity:.9;
 
 <tfoot>
 <tr>
-<td colspan="3" class="total">Итого:</td>
+<td colspan="3" class="total">Итого</td>
 <td id="total">0</td>
 </tr>
 </tfoot>
@@ -158,13 +127,9 @@ opacity:.9;
 
 </div>
 
-</div>
-
-<div class="buttons">
 <button onclick="addRow()">Добавить строку</button>
 <button onclick="calc()">Рассчитать</button>
 <button onclick="generatePDF()">Скачать PDF</button>
-</div>
 
 </div>
 
@@ -174,11 +139,11 @@ opacity:.9;
 document.getElementById("date").innerText =
 new Date().toLocaleDateString("ru-RU");
 
-/* номер счета */
+/* номер */
 document.getElementById("invoice-number").innerText =
 Math.floor(Math.random()*21);
 
-/* добавить строку */
+/* строки */
 function addRow(){
 document.getElementById("tbody").insertAdjacentHTML("beforeend",`
 <tr>
@@ -190,43 +155,23 @@ document.getElementById("tbody").insertAdjacentHTML("beforeend",`
 `);
 }
 
-/* стартовые строки */
 for(let i=0;i<8;i++) addRow();
 
 /* расчет */
 function calc(){
-
 let total=0;
 
 document.querySelectorAll("#tbody tr").forEach(row=>{
-
 let q = Number(row.querySelector(".qty").value);
 let p = Number(row.querySelector(".price").value);
-
 total += q*p;
-
 });
 
 document.getElementById("total").innerText =
 total.toLocaleString('ru-RU');
-
 }
 
-/* создаем копию DOM */
-function buildPdfBlock(){
-
-const clone = document.getElementById("print-area").cloneNode(true);
-
-clone.querySelectorAll("input").forEach(input=>{
-const span=document.createElement("span");
-span.textContent=input.value;
-input.replaceWith(span);
-});
-
-return clone;
-}
-
-/* генерация pdf */
+/* генерация */
 function generatePDF(){
 
 calc();
@@ -235,14 +180,32 @@ calc();
 const invoiceNumber=Math.floor(Math.random()*21);
 document.getElementById("invoice-number").innerText=invoiceNumber;
 
-const pdfBlock = buildPdfBlock();
+/* КЛОН */
+const clone = document.getElementById("print-area").cloneNode(true);
+
+/* перенос значений */
+const inputsOriginal = document.querySelectorAll("#print-area input");
+const inputsClone = clone.querySelectorAll("input");
+
+inputsOriginal.forEach((input,i)=>{
+const span=document.createElement("span");
+span.textContent=input.value;
+inputsClone[i].replaceWith(span);
+});
+
+/* вставляем временно */
+clone.style.position="fixed";
+clone.style.left="-10000px";
+document.body.appendChild(clone);
 
 html2pdf().set({
 margin:10,
 filename:'Счет_'+invoiceNumber+'.pdf',
 html2canvas:{scale:2},
 jsPDF:{unit:'mm',format:'a4'}
-}).from(pdfBlock).save();
+}).from(clone).save().then(()=>{
+clone.remove();
+});
 
 }
 
