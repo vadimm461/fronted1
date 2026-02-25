@@ -24,12 +24,13 @@ body{
     padding:30px;
 }
 
-/* Печатная форма */
+/* Заголовок */
 h1{
     text-align:center;
-    margin-bottom:25px;
+    margin-bottom:20px;
 }
 
+/* Таблица */
 table{
     width:100%;
     border-collapse:collapse;
@@ -47,6 +48,30 @@ th{
     color:white;
 }
 
+/* ширина колонок */
+#items th:nth-child(1),
+#items td:nth-child(1){
+    width:60px;
+    text-align:center;
+}
+
+#items th:nth-child(2),
+#items td:nth-child(2){
+    width:auto;
+}
+
+#items th:nth-child(3),
+#items td:nth-child(3){
+    width:60px;
+    text-align:center;
+}
+
+#items th:nth-child(4),
+#items td:nth-child(4){
+    width:80px;
+    text-align:right;
+}
+
 input{
     width:100%;
     border:none;
@@ -59,6 +84,7 @@ input{
     font-weight:bold;
 }
 
+/* кнопки */
 .btn{
     width:100%;
     padding:12px;
@@ -82,13 +108,13 @@ input{
 
 <div id="print-area">
 
-<h1>СЧЕТ НА ОПЛАТУ</h1>
+<h1>СЧЕТ № <span id="invoice-number"></span></h1>
 
 <p><b>Дата:</b> <span id="date"></span></p>
 
 <p>
 <b>Плательщик:</b>
-<input type="text" id="payer">
+<input type="text" id="payer" placeholder="Введите плательщика">
 </p>
 
 <h3>Получатель</h3>
@@ -112,22 +138,7 @@ input{
 </tr>
 </thead>
 
-<tbody>
-
-<script>
-for(let i=0;i<10;i++){
-document.write(`
-<tr>
-<td><input></td>
-<td><input></td>
-<td><input type="number" class="qty" value="0"></td>
-<td><input type="number" class="price" value="0"></td>
-</tr>
-`)
-}
-</script>
-
-</tbody>
+<tbody id="tbody"></tbody>
 
 <tfoot>
 <tr>
@@ -147,9 +158,23 @@ document.write(`
 
 <script>
 
+/* дата */
 document.getElementById("date").textContent =
 new Date().toLocaleDateString("ru-RU");
 
+/* создаем 10 строк */
+for(let i=0;i<10;i++){
+document.getElementById("tbody").innerHTML += `
+<tr>
+<td><input></td>
+<td><input></td>
+<td><input type="number" class="qty" value="0"></td>
+<td><input type="number" class="price" value="0"></td>
+</tr>
+`;
+}
+
+/* расчет */
 function calc(){
 let total=0;
 
@@ -168,18 +193,22 @@ function generatePDF(){
 
 calc();
 
+/* случайный номер счета 0-20 */
+const invoiceNumber = Math.floor(Math.random()*21);
+document.getElementById("invoice-number").textContent = invoiceNumber;
+
 const element = document.getElementById("print-area");
 
 const opt = {
-    margin:10,
-    filename:'Счет.pdf',
-    image:{ type:'jpeg', quality:1 },
-    html2canvas:{ scale:2 },
-    jsPDF:{
-        unit:'mm',
-        format:'a4',
-        orientation:'portrait'
-    }
+margin:10,
+filename:'Счет_'+invoiceNumber+'.pdf',
+image:{ type:'jpeg', quality:1 },
+html2canvas:{ scale:2 },
+jsPDF:{
+unit:'mm',
+format:'a4',
+orientation:'portrait'
+}
 };
 
 html2pdf().set(opt).from(element).save();
