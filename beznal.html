@@ -9,7 +9,7 @@
 <style>
 
 body{
-font-family: Arial;
+font-family: Arial, sans-serif;
 background:#f2f4f8;
 padding:20px;
 }
@@ -19,14 +19,13 @@ width:900px;
 margin:auto;
 }
 
-/* Печатная область */
 #print-area{
 background:white;
 padding:40px;
 box-shadow:0 4px 20px rgba(0,0,0,.1);
 }
 
-/* Заголовок */
+/* заголовок */
 .header{
 text-align:center;
 margin-bottom:25px;
@@ -34,16 +33,18 @@ margin-bottom:25px;
 
 .header h1{
 margin:0;
+font-size:26px;
 }
 
 .block{
 margin-bottom:20px;
 }
 
-/* Таблица */
+/* таблицы */
 table{
 width:100%;
 border-collapse:collapse;
+margin-top:10px;
 }
 
 th,td{
@@ -67,6 +68,7 @@ width:100%;
 border:none;
 outline:none;
 font-size:14px;
+background:transparent;
 }
 
 /* итог */
@@ -176,18 +178,19 @@ new Date().toLocaleDateString("ru-RU");
 document.getElementById("invoice-number").innerText =
 Math.floor(Math.random()*21);
 
-/* строки */
+/* добавить строку */
 function addRow(){
-document.getElementById("tbody").innerHTML += `
+document.getElementById("tbody").insertAdjacentHTML("beforeend",`
 <tr>
 <td><input></td>
 <td><input></td>
 <td><input type="number" class="qty" value="0"></td>
 <td><input type="number" class="price" value="0"></td>
-</tr>`;
+</tr>
+`);
 }
 
-/* создаем 8 строк */
+/* стартовые строки */
 for(let i=0;i<8;i++) addRow();
 
 /* расчет */
@@ -197,8 +200,8 @@ let total=0;
 
 document.querySelectorAll("#tbody tr").forEach(row=>{
 
-let q = row.querySelector(".qty").value || 0;
-let p = row.querySelector(".price").value || 0;
+let q = Number(row.querySelector(".qty").value);
+let p = Number(row.querySelector(".price").value);
 
 total += q*p;
 
@@ -209,41 +212,37 @@ total.toLocaleString('ru-RU');
 
 }
 
-/* подготовка input -> текст */
-function prepareForPdf(){
+/* создаем копию DOM */
+function buildPdfBlock(){
 
-document.querySelectorAll("#print-area input").forEach(input=>{
+const clone = document.getElementById("print-area").cloneNode(true);
 
+clone.querySelectorAll("input").forEach(input=>{
 const span=document.createElement("span");
 span.textContent=input.value;
-
-input.style.display="none";
-input.after(span);
-
+input.replaceWith(span);
 });
 
+return clone;
 }
 
-/* генерация */
+/* генерация pdf */
 function generatePDF(){
 
 calc();
-prepareForPdf();
 
-/* новый номер счета */
+/* новый номер */
 const invoiceNumber=Math.floor(Math.random()*21);
 document.getElementById("invoice-number").innerText=invoiceNumber;
 
-const element=document.getElementById("print-area");
+const pdfBlock = buildPdfBlock();
 
 html2pdf().set({
 margin:10,
 filename:'Счет_'+invoiceNumber+'.pdf',
 html2canvas:{scale:2},
 jsPDF:{unit:'mm',format:'a4'}
-}).from(element).save();
-
-setTimeout(()=>location.reload(),500);
+}).from(pdfBlock).save();
 
 }
 
