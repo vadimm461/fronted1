@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<title>Счет для безналичной оплаты</title>
+<title>РЎС‡РµС‚ РґР»СЏ Р±РµР·РЅР°Р»РёС‡РЅРѕР№ РѕРїР»Р°С‚С‹</title>
 <style>
     body {
         font-family: Arial, sans-serif;
@@ -106,11 +106,11 @@
         box-sizing: border-box;
     }
 
-    /* Установка ширины колонок */
-    td:nth-child(1) input { width: 80px; text-align:center; }   /* Код товара */
-    td:nth-child(2) input { width: 100%; }                      /* Наименование */
-    td:nth-child(3) input { width: 60px; text-align:center; }   /* Кол-во */
-    td:nth-child(4) input { width: 80px; text-align:right; }    /* Цена */
+    /* РЈСЃС‚Р°РЅРѕРІРєР° С€РёСЂРёРЅС‹ РєРѕР»РѕРЅРѕРє */
+    td:nth-child(1) input { width: 80px; text-align:center; }   /* РљРѕРґ С‚РѕРІР°СЂР° */
+    td:nth-child(2) input { width: 100%; }                      /* РќР°РёРјРµРЅРѕРІР°РЅРёРµ */
+    td:nth-child(3) input { width: 60px; text-align:center; }   /* РљРѕР»-РІРѕ */
+    td:nth-child(4) input { width: 80px; text-align:right; }    /* Р¦РµРЅР° */
 
     tfoot td {
         font-weight: bold;
@@ -139,78 +139,78 @@
 <body>
 
 <div class="container">
-    <h1>СГЕНЕРИРОВАТЬ СЧЕТ ДЛЯ БЕЗНАЛИЧНОЙ ОПЛАТЫ</h1>
+    <h1>РЎР“Р•РќР•Р РР РћР’РђРўР¬ РЎР§Р•Рў Р”Р›РЇ Р‘Р•Р—РќРђР›РР§РќРћР™ РћРџР›РђРўР«</h1>
 
-    <!-- Информация о плательщике -->
+    <!-- РРЅС„РѕСЂРјР°С†РёСЏ Рѕ РїР»Р°С‚РµР»СЊС‰РёРєРµ -->
     <div class="payer-info">
-        <label>Организация плательщик:</label>
-        <input type="text" id="payer" placeholder="Введите название организации">
+        <label>РћСЂРіР°РЅРёР·Р°С†РёСЏ РїР»Р°С‚РµР»СЊС‰РёРє:</label>
+        <input type="text" id="payer" placeholder="Р’РІРµРґРёС‚Рµ РЅР°Р·РІР°РЅРёРµ РѕСЂРіР°РЅРёР·Р°С†РёРё">
     </div>
 
-    <!-- Информация о получателе (статическая) -->
+    <!-- РРЅС„РѕСЂРјР°С†РёСЏ Рѕ РїРѕР»СѓС‡Р°С‚РµР»Рµ (СЃС‚Р°С‚РёС‡РµСЃРєР°СЏ) -->
     <div class="recipient-info">
         <table>
             <tr>
-                <td>ИП</td>
-                <td>Дворян Вадим Витальевич</td>
+                <td>РРџ</td>
+                <td>Р”РІРѕСЂСЏРЅ Р’Р°РґРёРј Р’РёС‚Р°Р»СЊРµРІРёС‡</td>
             </tr>
             <tr>
-                <td>Серия</td>
-                <td>УСН № 1440001838</td>
+                <td>РЎРµСЂРёСЏ</td>
+                <td>РЈРЎРќ в„– 1440001838</td>
             </tr>
             <tr>
-                <td>Расч. сч.</td>
+                <td>Р Р°СЃС‡. СЃС‡.</td>
                 <td>2214050000024165</td>
             </tr>
             <tr>
-                <td>Банк</td>
-                <td>ЗАО "Агропромбанк" ф-л г. Рыбница</td>
+                <td>Р‘Р°РЅРє</td>
+                <td>Р—РђРћ "РђРіСЂРѕРїСЂРѕРјР±Р°РЅРє" С„-Р» Рі. Р С‹Р±РЅРёС†Р°</td>
             </tr>
         </table>
     </div>
 
-    <!-- Таблица товаров -->
+    <!-- РўР°Р±Р»РёС†Р° С‚РѕРІР°СЂРѕРІ -->
     <table id="items-table">
         <thead>
             <tr>
-                <th>Код</th>
-                <th>Наименование</th>
-                <th>Кол-во</th>
-                <th>Цена, руб</th>
+                <th>РљРѕРґ</th>
+                <th>РќР°РёРјРµРЅРѕРІР°РЅРёРµ</th>
+                <th>РљРѕР»-РІРѕ</th>
+                <th>Р¦РµРЅР°, СЂСѓР±</th>
             </tr>
         </thead>
         <tbody>
-            <!-- 10 строк -->
+            <!-- 10 СЃС‚СЂРѕРє -->
             <tr>
-                <td><input type="text" placeholder="Код"></td>
-                <td><input type="text" placeholder="Наименование"></td>
+                <td><input type="text" placeholder="РљРѕРґ"></td>
+                <td><input type="text" placeholder="РќР°РёРјРµРЅРѕРІР°РЅРёРµ"></td>
                 <td><input type="number" class="qty" min="0" value="0"></td>
                 <td><input type="number" class="price" min="0" value="0"></td>
             </tr>
             <tr>
-                <td><input type="text" placeholder="Код"></td>
-                <td><input type="text" placeholder="Наименование"></td>
+                <td><input type="text" placeholder="РљРѕРґ"></td>
+                <td><input type="text" placeholder="РќР°РёРјРµРЅРѕРІР°РЅРёРµ"></td>
                 <td><input type="number" class="qty" min="0" value="0"></td>
                 <td><input type="number" class="price" min="0" value="0"></td>
             </tr>
-            <!-- Добавь другие строки по аналогии -->
+            <!-- Р”РѕР±Р°РІСЊ РґСЂСѓРіРёРµ СЃС‚СЂРѕРєРё РїРѕ Р°РЅР°Р»РѕРіРёРё -->
         </tbody>
         <tfoot>
             <tr>
-                <td colspan="3" class="total">Итого, руб:</td>
+                <td colspan="3" class="total">РС‚РѕРіРѕ, СЂСѓР±:</td>
                 <td id="total-sum">0</td>
             </tr>
         </tfoot>
     </table>
 
-    <button class="btn-generate" id="calculate-btn">Рассчитать сумму</button>
-    <button class="btn-generate" id="generate-pdf-btn">Скачать PDF</button>
+    <button class="btn-generate" id="calculate-btn">Р Р°СЃСЃС‡РёС‚Р°С‚СЊ СЃСѓРјРјСѓ</button>
+    <button class="btn-generate" id="generate-pdf-btn">РЎРєР°С‡Р°С‚СЊ PDF</button>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
 <script>
-// Функция для расчета общей суммы
+// Р¤СѓРЅРєС†РёСЏ РґР»СЏ СЂР°СЃС‡РµС‚Р° РѕР±С‰РµР№ СЃСѓРјРјС‹
 function calculateTotal() {
     let total = 0;
     const rows = document.querySelectorAll('#items-table tbody tr');
@@ -222,44 +222,44 @@ function calculateTotal() {
     document.getElementById('total-sum').textContent = total.toLocaleString('ru-RU', {minimumFractionDigits:2, maximumFractionDigits:2});
 }
 
-// Калькулятор суммы
+// РљР°Р»СЊРєСѓР»СЏС‚РѕСЂ СЃСѓРјРјС‹
 document.getElementById('calculate-btn').addEventListener('click', calculateTotal);
 document.querySelectorAll('.qty, .price').forEach(input => {
     input.addEventListener('input', calculateTotal);
 });
 
-// Генерация PDF
+// Р“РµРЅРµСЂР°С†РёСЏ PDF
 document.getElementById('generate-pdf-btn').addEventListener('click', () => {
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF();
     let yPos = 15;
 
-    // Устанавливаем шрифт для кириллицы
+    // РЈСЃС‚Р°РЅР°РІР»РёРІР°РµРј С€СЂРёС„С‚ РґР»СЏ РєРёСЂРёР»Р»РёС†С‹
     doc.setFont("helvetica");
 
     doc.setFontSize(16);
-    doc.text("СЧЁТ-ФАКТУРА № 39 от 25.02.26", 105, yPos, {align: "center"});
+    doc.text("РЎР§РЃРў-Р¤РђРљРўРЈР Рђ в„– 39 РѕС‚ 25.02.26", 105, yPos, {align: "center"});
     yPos += 10;
 
-    // Дата счета
+    // Р”Р°С‚Р° СЃС‡РµС‚Р°
     const today = new Date();
     const dateStr = today.toLocaleDateString('ru-RU');
     doc.setFontSize(12);
-    doc.text("Дата: " + dateStr, 10, yPos);
+    doc.text("Р”Р°С‚Р°: " + dateStr, 10, yPos);
     yPos += 8;
 
-    // Плательщик
+    // РџР»Р°С‚РµР»СЊС‰РёРє
     const payer = document.getElementById('payer').value || "";
-    doc.text("Плательщик:", 10, yPos);
+    doc.text("РџР»Р°С‚РµР»СЊС‰РёРє:", 10, yPos);
     doc.text(payer, 50, yPos);
     yPos += 8;
 
-    // Получатель
+    // РџРѕР»СѓС‡Р°С‚РµР»СЊ
     const recipientData = [
-        ["ИП", "Дворян Вадим Витальевич"],
-        ["Серия", "УСН № 1440001838"],
-        ["Расч. сч.", "2214050000024165"],
-        ["Банк", 'ЗАО "Агропромбанк" ф-л г. Рыбница']
+        ["РРџ", "Р”РІРѕСЂСЏРЅ Р’Р°РґРёРј Р’РёС‚Р°Р»СЊРµРІРёС‡"],
+        ["РЎРµСЂРёСЏ", "РЈРЎРќ в„– 1440001838"],
+        ["Р Р°СЃС‡. СЃС‡.", "2214050000024165"],
+        ["Р‘Р°РЅРє", 'Р—РђРћ "РђРіСЂРѕРїСЂРѕРјР±Р°РЅРє" С„-Р» Рі. Р С‹Р±РЅРёС†Р°']
     ];
     recipientData.forEach(item => {
         doc.text(item[0] + ":", 10, yPos);
@@ -268,7 +268,7 @@ document.getElementById('generate-pdf-btn').addEventListener('click', () => {
     });
     yPos += 4;
 
-    // Таблица товаров
+    // РўР°Р±Р»РёС†Р° С‚РѕРІР°СЂРѕРІ
     const rows = [];
     document.querySelectorAll('#items-table tbody tr').forEach(tr => {
         const code = tr.children[0].querySelector('input').value || "";
@@ -282,7 +282,7 @@ document.getElementById('generate-pdf-btn').addEventListener('click', () => {
 
     doc.autoTable({
         startY: yPos,
-        head: [['Код', 'Наименование', 'Кол-во', 'Цена, руб']],
+        head: [['РљРѕРґ', 'РќР°РёРјРµРЅРѕРІР°РЅРёРµ', 'РљРѕР»-РІРѕ', 'Р¦РµРЅР°, СЂСѓР±']],
         body: rows,
         styles: { fontSize: 10 },
         headStyles: { fillColor: [25, 118, 210], textColor: 255, halign: 'center' },
@@ -297,9 +297,9 @@ document.getElementById('generate-pdf-btn').addEventListener('click', () => {
     const total = document.getElementById('total-sum').textContent;
     const finalY = doc.lastAutoTable.finalY || yPos + 10;
     doc.setFontSize(12);
-    doc.text("Итого, руб: " + total, 150, finalY + 10, {align: "right"});
+    doc.text("РС‚РѕРіРѕ, СЂСѓР±: " + total, 150, finalY + 10, {align: "right"});
 
-    doc.save("Счет.pdf");
+    doc.save("РЎС‡РµС‚.pdf");
 });
 </script>
 
