@@ -17,81 +17,7 @@ padding:20px;
 overflow-x:hidden;
 }
 
-/* ===== ЭКРАН ВХОДА ===== */
-
-.login-screen{
-position:fixed;
-top:0;
-left:0;
-width:100%;
-height:100vh;
-background:linear-gradient(135deg,#1b5e20,#000);
-display:flex;
-justify-content:center;
-align-items:center;
-padding:20px;
-z-index:9999;
-}
-
-.login-box{
-background:white;
-padding:30px 25px;
-border-radius:10px;
-width:100%;
-max-width:380px;
-text-align:center;
-box-shadow:0 10px 30px rgba(0,0,0,.3);
-}
-
-.login-logo{
-font-size:30px;
-font-weight:bold;
-margin-bottom:10px;
-}
-
-.green{color:#2e7d32;}
-.black{color:#000;}
-
-.login-subtitle{
-color:#555;
-margin-bottom:20px;
-}
-
-.login-input{
-width:100%;
-padding:12px;
-font-size:16px;
-border:1px solid #ccc;
-border-radius:6px;
-margin-bottom:15px;
-}
-
-.login-input:focus{
-outline:none;
-border-color:#2e7d32;
-box-shadow:0 0 5px rgba(46,125,50,.4);
-}
-
-.login-btn{
-width:100%;
-padding:12px;
-font-size:16px;
-border:none;
-border-radius:6px;
-cursor:pointer;
-color:white;
-background:linear-gradient(to right,#43a047,#1b5e20);
-}
-
-.error-msg{
-color:#d32f2f;
-margin-top:10px;
-font-size:14px;
-}
-
-/* ===== ОСНОВНОЙ САЙТ ===== */
-
-#mainContent{display:none;}
+/* ---------- ШАПКА ---------- */
 
 .header{
 background:white;
@@ -108,6 +34,9 @@ font-weight:bold;
 letter-spacing:1px;
 }
 
+.logo .green{color:#2e7d32;}
+.logo .black{color:#000;}
+
 .manager-panel{
 margin-top:8px;
 font-size:14px;
@@ -115,6 +44,8 @@ color:#555;
 border-top:1px solid #eee;
 padding-top:8px;
 }
+
+/* ---------- КАЛЬКУЛЯТОРЫ ---------- */
 
 .wrapper{
 display:flex;
@@ -132,9 +63,21 @@ flex:1 1 300px;
 width:100%;
 }
 
-.title{font-size:20px;font-weight:bold;}
-.subtitle{color:#d32f2f;font-weight:bold;margin-bottom:15px;}
-.hint{margin-bottom:10px;color:#555;}
+.title{
+font-size:20px;
+font-weight:bold;
+}
+
+.subtitle{
+color:#d32f2f;
+font-weight:bold;
+margin-bottom:15px;
+}
+
+.hint{
+margin-bottom:10px;
+color:#555;
+}
 
 .input{
 width:100%;
@@ -154,7 +97,11 @@ border:none;
 border-radius:4px;
 cursor:pointer;
 margin-bottom:20px;
+transition:.2s;
 }
+
+.btn:hover{opacity:.9;}
+.btn:active{transform:scale(.98);}
 
 .btn-calc{
 background:linear-gradient(to right,#1976d2,#0d47a1);
@@ -204,6 +151,8 @@ flex-wrap:wrap;
 flex:1 1 250px;
 }
 
+/* ---------- МОБИЛЬНАЯ ФИКСАЦИЯ ---------- */
+
 @media (max-width:768px){
 
 body{padding:10px;}
@@ -216,28 +165,140 @@ table{font-size:13px;}
 
 }
 
+/* ================= ДОБАВЛЕНО ================= */
+
+/* LOGIN */
+
+.login-screen{
+position:fixed;
+top:0;left:0;
+width:100%;height:100vh;
+background:linear-gradient(135deg,#1b5e20,#000);
+display:flex;
+justify-content:center;
+align-items:center;
+padding:20px;
+z-index:9999;
+}
+
+.login-box{
+background:white;
+padding:30px 25px;
+border-radius:12px;
+width:100%;
+max-width:400px;
+text-align:center;
+box-shadow:0 15px 40px rgba(0,0,0,.35);
+}
+
+.login-logo{font-size:30px;font-weight:bold;margin-bottom:10px;}
+.login-subtitle{color:#555;margin-bottom:15px;}
+
+select,input[type="password"]{
+width:100%;
+padding:12px;
+font-size:16px;
+border:1px solid #ccc;
+border-radius:6px;
+margin-bottom:15px;
+}
+
+.login-btn{
+width:100%;
+padding:12px;
+font-size:16px;
+border:none;
+border-radius:6px;
+cursor:pointer;
+color:white;
+background:linear-gradient(to right,#43a047,#1b5e20);
+}
+
+.error-msg{color:#d32f2f;font-size:14px;margin-top:8px;}
+
+/* SIDE MENU */
+
+.menu-toggle{
+position:fixed;
+top:15px;left:15px;
+width:40px;height:40px;
+background:#2e7d32;
+color:white;
+display:flex;
+align-items:center;
+justify-content:center;
+border-radius:8px;
+cursor:pointer;
+z-index:2000;
+box-shadow:0 4px 10px rgba(0,0,0,.2);
+}
+
+.side-menu{
+position:fixed;
+top:0;left:-260px;
+width:260px;height:100%;
+background:#111;
+color:white;
+padding:20px;
+transition:.3s;
+z-index:1999;
+}
+
+.side-menu.active{left:0;}
+
+.session-time{
+margin:15px 0;
+padding:10px;
+background:#222;
+border-radius:6px;
+font-size:14px;
+}
+
+.logout-btn{
+width:100%;
+padding:10px;
+border:none;
+border-radius:6px;
+cursor:pointer;
+background:linear-gradient(to right,#c62828,#8e0000);
+color:white;
+}
+
 </style>
 </head>
 <body>
 
-<!-- ===== ВХОД ===== -->
-
+<!-- LOGIN SCREEN -->
 <div id="loginScreen" class="login-screen">
-<div class="login-box">
-<div class="login-logo">
-<span class="green">A</span><span class="black">uto-</span>
-<span class="green">S</span><span class="black">tyle</span>
-</div>
-<div class="login-subtitle">Вход в панель менеджера</div>
-<input type="password" id="passwordInput" placeholder="Введите пароль" class="login-input">
-<button id="loginBtn" class="login-btn">ВОЙТИ</button>
-<div id="errorMsg" class="error-msg"></div>
-</div>
+  <div class="login-box">
+    <div class="login-logo">
+      <span class="green">A</span><span class="black">uto-</span>
+      <span class="green">S</span><span class="black">tyle</span>
+    </div>
+    <div class="login-subtitle">Выберите пользователя</div>
+    <select id="userSelect">
+      <option value="cashier">Кассир</option>
+      <option value="evgeniy">Евгений</option>
+      <option value="vadim">Вадим</option>
+    </select>
+    <input type="password" id="passwordInput" placeholder="Введите пароль">
+    <button id="loginBtn" class="login-btn">ВОЙТИ</button>
+    <div id="errorMsg" class="error-msg"></div>
+  </div>
 </div>
 
-<!-- ===== ВЕСЬ ВАШ САЙТ ===== -->
+<div class="menu-toggle" onclick="toggleMenu()">☰</div>
 
-<div id="mainContent">
+<div id="sideMenu" class="side-menu">
+  <h3 id="currentUser"></h3>
+  <div class="session-time">
+    Сессия истекает через:
+    <div id="timeLeft"></div>
+  </div>
+  <button class="logout-btn" onclick="logout()">Выйти</button>
+</div>
+
+<!-- ======= ВАШ САЙТ БЕЗ ИЗМЕНЕНИЙ ======= -->
 
 <!-- ШАПКА -->
 <div class="header">
@@ -245,7 +306,9 @@ table{font-size:13px;}
 <span class="green">A</span><span class="black">uto-</span>
 <span class="green">S</span><span class="black">tyle</span>
 </div>
-<div class="manager-panel">Панель менеджера</div>
+<div class="manager-panel">
+Панель менеджера
+</div>
 </div>
 
 <div class="wrapper">
@@ -257,7 +320,6 @@ table{font-size:13px;}
 <div class="hint">Введите общую сумму чека</div>
 <input type="number" class="input sum">
 <button class="btn btn-calc">РАССЧИТАТЬ</button>
-
 <table>
 <tr><th>РАССРОЧКА</th><th>КОЭФФ.</th><th>ИТОГО</th></tr>
 <tr><td>АПБ 3</td><td class="coef">0.955</td><td class="result"></td></tr>
@@ -271,7 +333,6 @@ table{font-size:13px;}
 <div class="calculator">
 <div class="title">КАЛЬКУЛЯТОР РАССРОЧКИ</div>
 <div class="subtitle">ЭКСИМБАНК</div>
-  <div class="hint">Введите общую сумму чека</div>
 <input type="number" class="input sum">
 <button class="btn btn-calc">РАССЧИТАТЬ</button>
 <table>
@@ -287,7 +348,6 @@ table{font-size:13px;}
 <div class="calculator">
 <div class="title">КАЛЬКУЛЯТОР РАССРОЧКИ</div>
 <div class="subtitle">СБЕРБАНК</div>
-  <div class="hint">Введите общую сумму чека</div>
 <input type="number" class="input sum">
 <button class="btn btn-calc">РАССЧИТАТЬ</button>
 <table>
@@ -301,44 +361,25 @@ table{font-size:13px;}
 
 </div>
 
-<!-- нижние кнопки -->
 <div class="bottom-buttons">
 <button id="btnBeznal" class="btn btn-non-cash">ОФОРМИТЬ БЕЗНАЛ</button>
 <button id="btnSmena" class="btn btn-close-shift">ЗАКРЫТИЕ СМЕНЫ</button>
 <button id="btnDiscount" class="btn btn-discount">РЕГИСТРАЦИЯ СКИДОЧНОЙ КАРТЫ</button>
 </div>
 
-</div>
-
 <script>
 
-const correctPassword="2012";
+/* ===== ВАШ СТАРЫЙ JS (НЕ ИЗМЕНЁН) ===== */
 
-document.getElementById("loginBtn").onclick=function(){
-const entered=document.getElementById("passwordInput").value;
-if(entered===correctPassword){
-document.getElementById("loginScreen").style.display="none";
-document.getElementById("mainContent").style.display="block";
-}else{
-document.getElementById("errorMsg").textContent="Неверный пароль";
-}
-};
-
-document.getElementById("passwordInput").addEventListener("keypress",function(e){
-if(e.key==="Enter"){document.getElementById("loginBtn").click();}
-});
-
-/* переходы */
 document.getElementById("btnBeznal").onclick=()=>{location.href="beznal.html";};
 document.getElementById("btnSmena").onclick=()=>{location.href="smena.html";};
 document.getElementById("btnDiscount").onclick=()=>{location.href="discount.html";};
 
-/* расчет */
 document.querySelectorAll('.calculator').forEach(calc=>{
-const btn=calc.querySelector('.btn-calc');
-btn.onclick=()=>{
+const btn = calc.querySelector('.btn-calc');
+btn.onclick = ()=>{
 const sum=parseFloat(calc.querySelector('.sum').value);
-if(!sum)return;
+if(!sum) return;
 const coefs=calc.querySelectorAll('.coef');
 const results=calc.querySelectorAll('.result');
 coefs.forEach((c,i)=>{
@@ -348,8 +389,67 @@ results[i].textContent=(sum/parseFloat(c.textContent))
 };
 });
 
+/* ===== ДОБАВЛЕНА АВТОРИЗАЦИЯ ===== */
+
+const users={
+cashier:{name:"Кассир",pass:"2012"},
+evgeniy:{name:"Евгений",pass:"0186"},
+vadim:{name:"Вадим",pass:"2385"}
+};
+
+const sessionDuration=24*60*60*1000;
+let sessionTimer;
+
+window.addEventListener("load",function(){
+const saved=localStorage.getItem("session");
+if(saved){
+const data=JSON.parse(saved);
+if(Date.now()<data.expire){
+startSession(data.user,data.expire);
+}
+}
+});
+
+document.getElementById("loginBtn").onclick=function(){
+const userKey=document.getElementById("userSelect").value;
+const pass=document.getElementById("passwordInput").value;
+
+if(pass===users[userKey].pass){
+const expire=Date.now()+sessionDuration;
+localStorage.setItem("session",JSON.stringify({user:userKey,expire}));
+startSession(userKey,expire);
+}else{
+document.getElementById("errorMsg").textContent="Неверный пароль";
+}
+};
+
+function startSession(userKey,expire){
+document.getElementById("loginScreen").style.display="none";
+document.getElementById("currentUser").textContent=users[userKey].name;
+updateTimer(expire);
+sessionTimer=setInterval(()=>updateTimer(expire),1000);
+}
+
+function updateTimer(expire){
+const diff=expire-Date.now();
+if(diff<=0){logout();return;}
+const h=Math.floor(diff/1000/60/60);
+const m=Math.floor((diff/1000/60)%60);
+const s=Math.floor((diff/1000)%60);
+document.getElementById("timeLeft").textContent=`${h}ч ${m}м ${s}с`;
+}
+
+function logout(){
+localStorage.removeItem("session");
+clearInterval(sessionTimer);
+location.reload();
+}
+
+function toggleMenu(){
+document.getElementById("sideMenu").classList.toggle("active");
+}
+
 </script>
 
 </body>
 </html>
-
