@@ -16,7 +16,6 @@ overflow-x:hidden;
 }
 
 /* ===== HEADER ===== */
-
 .header{
 background:white;
 padding:15px;
@@ -43,7 +42,6 @@ padding-top:8px;
 }
 
 /* ===== CALCULATORS ===== */
-
 .wrapper{
 display:flex;
 gap:20px;
@@ -109,7 +107,6 @@ td{border-bottom:1px solid #eee;padding:10px 0;}
 .result{font-weight:bold;}
 
 /* ===== LOGIN ===== */
-
 .login-screen{
 position:fixed;
 top:0;left:0;
@@ -164,7 +161,6 @@ to{opacity:1;transform:translateY(0);}
 }
 
 /* ===== PREMIUM SIDE MENU ===== */
-
 .menu-toggle{
 position:fixed;
 top:20px;
@@ -275,6 +271,12 @@ body{padding:10px;}
 <div class="session-time">
 Сессия истекает через:
 <div id="timeLeft"></div>
+</div>
+
+<!-- Display "Осталось время до конца рабочего дня" только для кассира -->
+<div id="workingDayTimer" style="display:none;">
+Осталось времени до конца рабочего дня:
+<div id="timeToEndOfDay"></div>
 </div>
 
 <button class="menu-btn" onclick="location.href='beznal.html'">ОФОРМИТЬ БЕЗНАЛ</button>
@@ -404,6 +406,12 @@ document.getElementById("loginScreen").style.display="none";
 document.getElementById("currentUser").textContent="👤 "+users[userKey].name;
 updateTimer(expire);
 sessionTimer=setInterval(()=>updateTimer(expire),1000);
+
+if(userKey === 'cashier'){
+  document.getElementById('workingDayTimer').style.display = 'block'; // Показать таймер
+  setInterval(updateWorkingDayTimer, 60000); // Обновлять каждый минут
+  updateWorkingDayTimer(); // Обновить сразу
+}
 }
 
 function updateTimer(expire){
@@ -413,6 +421,21 @@ const h=Math.floor(diff/1000/60/60);
 const m=Math.floor((diff/1000/60)%60);
 const s=Math.floor((diff/1000)%60);
 document.getElementById("timeLeft").textContent=`${h}ч ${m}м ${s}с`;
+}
+
+function updateWorkingDayTimer(){
+const endOfDay = new Date();
+endOfDay.setHours(19, 0, 0, 0); // 19:00 текущего дня
+
+const diff = endOfDay - Date.now();
+if(diff <= 0) {
+  document.getElementById("timeToEndOfDay").textContent = "Рабочий день завершен!";
+} else {
+  const hours = Math.floor(diff / (1000 * 60 * 60));
+  const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+  document.getElementById("timeToEndOfDay").textContent = `${hours}ч ${minutes}м`;
+}
+
 }
 
 function logout(){
