@@ -4,261 +4,253 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Auto-Style</title>
+
 <style>
-body{font-family: Arial, sans-serif;margin:0;padding:20px;background:#f5f6f8;overflow-x:hidden;}
+body{font-family:Arial,sans-serif;margin:0;padding:20px;background:#f5f6f8;overflow-x:hidden;}
+
 /* ---------- LOGIN ---------- */
-.login-screen{
-    position:fixed;top:0;left:0;width:100%;height:100vh;
-    background:linear-gradient(135deg,#1b5e20,#000);
-    display:flex;justify-content:center;align-items:center;z-index:9999;
-}
-.login-box{
-    background:#fff;padding:30px 25px;border-radius:14px;width:100%;max-width:400px;text-align:center;
-    box-shadow:0 20px 50px rgba(0,0,0,.4);animation:fadeIn .4s ease;
-}
+.login-screen{position:fixed;top:0;left:0;width:100%;height:100vh;background:linear-gradient(135deg,#1b5e20,#000);display:flex;justify-content:center;align-items:center;z-index:9999;}
+.login-box{background:#fff;padding:30px 25px;border-radius:14px;width:100%;max-width:400px;text-align:center;box-shadow:0 20px 50px rgba(0,0,0,.4);animation:fadeIn .6s ease;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:none;}}
 .login-logo{font-size:30px;font-weight:bold;margin-bottom:10px;}
-.login-logo .green{color:#2e7d32;}
-.login-logo .black{color:#000;}
+.green{color:#2e7d32;}
+.black{color:#000;}
 .login-subtitle{color:#555;margin-bottom:15px;}
 select,input[type="password"]{width:100%;padding:12px;font-size:16px;margin-bottom:15px;border:1px solid #ccc;border-radius:6px;}
 .login-btn{width:100%;padding:12px;font-size:16px;border:none;border-radius:6px;cursor:pointer;color:white;background:linear-gradient(to right,#43a047,#1b5e20);}
+.login-btn:hover{opacity:.9;}
 .error-msg{color:#d32f2f;font-size:14px;margin-top:8px;}
-@keyframes fadeIn{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
 
 /* ---------- HEADER ---------- */
 .header{background:white;padding:15px;border-radius:6px;box-shadow:0 2px 6px rgba(0,0,0,.1);margin-bottom:20px;text-align:center;}
 .logo{font-size:28px;font-weight:bold;}
-.logo .green{color:#2e7d32;}
-.logo .black{color:#000;}
 
 /* ---------- MENU ---------- */
-.menu-toggle{position:fixed;top:20px;left:20px;width:45px;height:45px;background:linear-gradient(135deg,#2e7d32,#1b5e20);color:white;display:flex;align-items:center;justify-content:center;border-radius:12px;cursor:pointer;z-index:3000;box-shadow:0 6px 20px rgba(0,0,0,.3);transition:.3s;}
+.menu-toggle{position:fixed;top:20px;left:20px;width:50px;height:50px;background:linear-gradient(135deg,#2e7d32,#1b5e20);color:white;display:flex;align-items:center;justify-content:center;border-radius:15px;cursor:pointer;z-index:3000;box-shadow:0 6px 20px rgba(0,0,0,.3);transition:.3s;}
 .menu-toggle:hover{transform:scale(1.1);}
-.side-menu{position:fixed;top:0;left:-320px;width:300px;height:100%;background:rgba(20,20,20,.95);backdrop-filter:blur(12px);color:white;padding:80px 20px 20px 20px;transition:.4s cubic-bezier(.77,0,.18,1);z-index:2500;box-shadow:10px 0 40px rgba(0,0,0,.5);}
+.side-menu{position:fixed;top:0;left:-320px;width:300px;height:100%;background:rgba(20,20,20,.95);color:white;padding:80px 20px 20px 20px;transition:.4s;z-index:2500;}
 .side-menu.active{left:0;}
 .user-name{font-size:20px;font-weight:bold;margin-bottom:15px;color:#43a047;}
-.menu-btn{width:100%;padding:12px;margin-bottom:12px;border:none;border-radius:8px;cursor:pointer;color:white;font-size:14px;transition:.3s;background:linear-gradient(to right,#333,#222);}
-.menu-btn:hover{transform:translateX(6px);background:linear-gradient(to right,#43a047,#1b5e20);}
-.logout-btn{background:linear-gradient(to right,#c62828,#8e0000);}
+.session-timer{margin-bottom:20px;font-size:14px;color:#ccc;}
+.menu-btn{width:100%;padding:12px;margin-bottom:12px;border:none;border-radius:8px;cursor:pointer;color:white;background:#333;transition:.3s;}
+.menu-btn:hover{background:#2e7d32;}
+.logout-btn{background:#c62828;}
 
 /* ---------- CALCULATORS ---------- */
-.wrapper{display:flex;gap:20px;flex-wrap:wrap;width:100%;}
-.calculator{background:#fff;border-radius:6px;padding:20px;box-shadow:0 2px 6px rgba(0,0,0,0.1);flex:1 1 300px;width:100%;}
-.title{font-size:20px;font-weight:bold;}
+.wrapper{display:flex;gap:20px;flex-wrap:wrap;}
+.calculator{background:#fff;border-radius:6px;padding:20px;box-shadow:0 2px 6px rgba(0,0,0,0.1);flex:1 1 300px;transition:.3s;}
+.calculator:hover{transform:scale(1.02);}
+.title{font-size:18px;font-weight:bold;}
 .subtitle{color:#d32f2f;font-weight:bold;margin-bottom:15px;}
 .hint{margin-bottom:10px;color:#555;}
 .input{width:100%;padding:10px;font-size:16px;margin-bottom:15px;border:1px solid #ccc;border-radius:4px;}
 .btn{width:100%;color:white;padding:12px;font-size:16px;border:none;border-radius:4px;cursor:pointer;margin-bottom:20px;transition:.2s;}
-.btn:hover{opacity:.9;}
-.btn:active{transform:scale(.98);}
 .btn-calc{background:linear-gradient(to right,#1976d2,#0d47a1);}
 table{width:100%;border-collapse:collapse;font-size:14px;}
-th{text-align:left;padding-bottom:8px;border-bottom:1px solid #ddd;}
-td{padding:10px 0;border-bottom:1px solid #eee;}
+th,td{padding:8px;border-bottom:1px solid #eee;}
 .coef{color:#555;}
 .result{font-weight:bold;}
 
 /* ---------- CHAT ---------- */
-#chatToggle{position:fixed;bottom:20px;right:20px;background:#2e7d32;color:white;padding:12px 15px;border-radius:30px;cursor:pointer;z-index:3000;}
-#chatWindow{position:fixed;bottom:80px;right:20px;width:300px;height:400px;background:#1c1c1c;border-radius:12px;display:none;flex-direction:column;overflow:hidden;z-index:3000;}
-#chatHeader{background:#2e7d32;color:white;padding:10px;font-weight:bold;}
-#chatMessages{flex:1;padding:10px;color:white; overflow-y:auto;font-size:14px;}
-#chatInputArea{display:flex;padding:10px;background:#111;}
-#chatInput{flex:1;padding:8px;border:none;border-radius:6px;}
-#chatSend{margin-left:5px;padding:8px 10px;background:#2e7d32;color:white;border:none;border-radius:6px;}
+#chatToggle{position:fixed;bottom:20px;right:20px;background:#2e7d32;color:white;padding:12px 16px;border-radius:30px;cursor:pointer;z-index:3000;transition:.3s;}
+#chatToggle:hover{transform:scale(1.1);}
+.badge{position:absolute;top:-5px;right:-5px;background:red;color:white;border-radius:50%;font-size:12px;padding:3px 6px;}
+#chatWindow{position:fixed;bottom:80px;right:20px;width:320px;height:420px;background:#1c1c1c;border-radius:12px;display:none;flex-direction:column;overflow:hidden;z-index:3000;}
+#chatHeader{background:#2e7d32;color:white;padding:10px;font-weight:bold;cursor:pointer;}
+#chatMessages{flex:1;padding:10px;color:white;overflow-y:auto;font-size:14px;}
+.message{margin-bottom:8px;padding:6px 8px;border-radius:6px;background:#333;}
+#chatInputArea{display:flex;padding:8px;background:#111;}
+#chatInput{flex:1;padding:6px;border:none;border-radius:6px;}
+#chatSend{margin-left:5px;padding:6px 10px;background:#2e7d32;color:white;border:none;border-radius:6px;}
+
+@media(max-width:768px){.wrapper{flex-direction:column;}}
 </style>
 </head>
 <body>
 
-<!-- LOGIN SCREEN -->
+<!-- LOGIN -->
 <div id="loginScreen" class="login-screen">
-  <div class="login-box">
-    <div class="login-logo"><span class="green">A</span><span class="black">uto-</span><span class="green">S</span><span class="black">tyle</span></div>
-    <div class="login-subtitle">Выберите пользователя</div>
-    <select id="userSelect">
-      <option value="cashier">Кассир</option>
-      <option value="evgeniy">Евгений</option>
-      <option value="vadim">Вадим</option>
-    </select>
-    <input type="password" id="passwordInput" placeholder="Введите пароль">
-    <button id="loginBtn" class="login-btn">ВОЙТИ</button>
-    <div id="errorMsg" class="error-msg"></div>
-  </div>
+<div class="login-box">
+<div class="login-logo"><span class="green">A</span><span class="black">uto-</span><span class="green">S</span><span class="black">tyle</span></div>
+<select id="userSelect">
+<option value="cashier">Кассир</option>
+<option value="evgeniy">Евгений</option>
+<option value="vadim">Вадим</option>
+</select>
+<input type="password" id="passwordInput" placeholder="Введите пароль">
+<button id="loginBtn" class="login-btn">ВОЙТИ</button>
+<div id="errorMsg" class="error-msg"></div>
+</div>
 </div>
 
-<!-- MENU -->
 <div class="menu-toggle" onclick="toggleMenu()">☰</div>
 <div id="sideMenu" class="side-menu">
-  <div class="user-name" id="currentUser"></div>
-  <button class="menu-btn" onclick="location.href='beznal.html'">ОФОРМИТЬ БЕЗНАЛ</button>
-  <button class="menu-btn" onclick="location.href='smena.html'">ЗАКРЫТИЕ СМЕНЫ</button>
-  <button class="menu-btn" onclick="location.href='discount.html'">СКИДОЧНАЯ КАРТА</button>
-  <button class="menu-btn" onclick="location.href='pass.html'">ПАРОЛИ</button>
-  <button class="menu-btn logout-btn" onclick="logout()">ВЫЙТИ</button>
+<div class="user-name" id="currentUser"></div>
+<div class="session-timer" id="sessionTimer"></div>
+<button class="menu-btn" onclick="location.href='beznal.html'">ОФОРМИТЬ БЕЗНАЛ</button>
+<button class="menu-btn" onclick="location.href='smena.html'">ЗАКРЫТИЕ СМЕНЫ</button>
+<button class="menu-btn" onclick="location.href='discount.html'">СКИДОЧНАЯ КАРТА</button>
+<button class="menu-btn" onclick="location.href='pass.html'">ПАРОЛИ</button>
+<button class="menu-btn logout-btn" onclick="logout()">ВЫЙТИ</button>
 </div>
 
-<!-- HEADER -->
 <div class="header">
-  <div class="logo"><span class="green">A</span><span class="black">uto-</span><span class="green">S</span><span class="black">tyle</span></div>
+<div class="logo"><span class="green">A</span><span class="black">uto-</span><span class="green">S</span><span class="black">tyle</span></div>
 </div>
 
-<!-- CALCULATORS -->
 <div class="wrapper">
-  <!-- Калькулятор АГРОПРОМБАНК -->
-  <div class="calculator">
-    <div class="title">КАЛЬКУЛЯТОР РАССРОЧКИ</div>
-    <div class="subtitle">АГРОПРОМБАНК</div>
-    <div class="hint">Введите сумму чека</div>
-    <input type="number" class="input sum">
-    <button class="btn btn-calc">РАССЧИТАТЬ</button>
-    <table>
-      <tr><th>РАССРОЧКА</th><th>КОЭФФ.</th><th>ИТОГО</th></tr>
-      <tr><td>3 мес.</td><td class="coef">0.955</td><td class="result"></td></tr>
-      <tr><td>6 мес.</td><td class="coef">0.93</td><td class="result"></td></tr>
-      <tr><td>9 мес.</td><td class="coef">0.90</td><td class="result"></td></tr>
-      <tr><td>12 мес.</td><td class="coef">0.875</td><td class="result"></td></tr>
-    </table>
-  </div>
-  <!-- Калькулятор ЭКСИМБАНК -->
-  <div class="calculator">
-    <div class="title">КАЛЬКУЛЯТОР РАССРОЧКИ</div>
-    <div class="subtitle">ЭКСИМБАНК</div>
-    <div class="hint">Введите сумму чека</div>
-    <input type="number" class="input sum">
-    <button class="btn btn-calc">РАССЧИТАТЬ</button>
-    <table>
-      <tr><th>РАССРОЧКА</th><th>КОЭФФ.</th><th>ИТОГО</th></tr>
-      <tr><td>3 мес.</td><td class="coef">0.955</td><td class="result"></td></tr>
-      <tr><td>6 мес.</td><td class="coef">0.93</td><td class="result"></td></tr>
-      <tr><td>9 мес.</td><td class="coef">0.90</td><td class="result"></td></tr>
-      <tr><td>12 мес.</td><td class="coef">0.886</td><td class="result"></td></tr>
-    </table>
-  </div>
-  <!-- Калькулятор СБЕРБАНК -->
-  <div class="calculator">
-    <div class="title">КАЛЬКУЛЯТОР РАССРОЧКИ</div>
-    <div class="subtitle">СБЕРБАНК</div>
-    <div class="hint">Введите сумму чека</div>
-    <input type="number" class="input sum">
-    <button class="btn btn-calc">РАССЧИТАТЬ</button>
-    <table>
-      <tr><th>РАССРОЧКА</th><th>КОЭФФ.</th><th>ИТОГО</th></tr>
-      <tr><td>3 мес.</td><td class="coef">0.96</td><td class="result"></td></tr>
-      <tr><td>6 мес.</td><td class="coef">0.93</td><td class="result"></td></tr>
-      <tr><td>9 мес.</td><td class="coef">0.90</td><td class="result"></td></tr>
-      <tr><td>12 мес.</td><td class="coef">0.88</td><td class="result"></td></tr>
-    </table>
-  </div>
+
+<!-- АГРОПРОМБАНК -->
+<div class="calculator">
+<div class="title">КАЛЬКУЛЯТОР РАССРОЧКИ</div>
+<div class="subtitle">АГРОПРОМБАНК</div>
+<input type="number" class="input sum">
+<button class="btn btn-calc">РАССЧИТАТЬ</button>
+<table>
+<tr><th>МЕС</th><th>КОЭФ</th><th>ИТОГО</th></tr>
+<tr><td>3</td><td class="coef">0.955</td><td class="result"></td></tr>
+<tr><td>6</td><td class="coef">0.93</td><td class="result"></td></tr>
+<tr><td>9</td><td class="coef">0.90</td><td class="result"></td></tr>
+<tr><td>12</td><td class="coef">0.875</td><td class="result"></td></tr>
+</table>
 </div>
 
-<!-- CHAT -->
-<div id="chatToggle" onclick="toggleChat()">Чат</div>
+<!-- ЭКСИМБАНК -->
+<div class="calculator">
+<div class="title">КАЛЬКУЛЯТОР РАССРОЧКИ</div>
+<div class="subtitle">ЭКСИМБАНК</div>
+<input type="number" class="input sum">
+<button class="btn btn-calc">РАССЧИТАТЬ</button>
+<table>
+<tr><th>МЕС</th><th>КОЭФ</th><th>ИТОГО</th></tr>
+<tr><td>3</td><td class="coef">0.955</td><td class="result"></td></tr>
+<tr><td>6</td><td class="coef">0.93</td><td class="result"></td></tr>
+<tr><td>9</td><td class="coef">0.90</td><td class="result"></td></tr>
+<tr><td>12</td><td class="coef">0.886</td><td class="result"></td></tr>
+</table>
+</div>
+
+<!-- СБЕРБАНК -->
+<div class="calculator">
+<div class="title">КАЛЬКУЛЯТОР РАССРОЧКИ</div>
+<div class="subtitle">СБЕРБАНК</div>
+<input type="number" class="input sum">
+<button class="btn btn-calc">РАССЧИТАТЬ</button>
+<table>
+<tr><th>МЕС</th><th>КОЭФ</th><th>ИТОГО</th></tr>
+<tr><td>3</td><td class="coef">0.96</td><td class="result"></td></tr>
+<tr><td>6</td><td class="coef">0.93</td><td class="result"></td></tr>
+<tr><td>9</td><td class="coef">0.90</td><td class="result"></td></tr>
+<tr><td>12</td><td class="coef">0.88</td><td class="result"></td></tr>
+</table>
+</div>
+
+</div>
+
+<div id="chatToggle">Чат <span id="chatBadge" class="badge">0</span></div>
 <div id="chatWindow">
-  <div id="chatHeader">Чат</div>
-  <div id="chatMessages"></div>
-  <div id="chatInputArea">
-    <input type="text" id="chatInput" placeholder="Введите сообщение">
-    <button id="chatSend">Отправить</button>
-  </div>
+<div id="chatHeader">Чат</div>
+<div id="chatMessages"></div>
+<div id="chatInputArea">
+<select id="chatRecipient"></select>
+<input type="text" id="chatInput">
+<button id="chatSend">▶</button>
+</div>
 </div>
 
 <script>
-// Пользователи
-const users = {
-  cashier:{name:"Кассир", pass:"2012"},
-  evgeniy:{name:"Евгений", pass:"0186"},
-  vadim:{name:"Вадим", pass:"2385"}
-};
-let currentUser="";
-const chatKey="chatHistory";
+const users={cashier:{name:"Кассир",pass:"2012"},evgeniy:{name:"Евгений",pass:"0186"},vadim:{name:"Вадим",pass:"2385"}};
+let currentUser="",sessionExpire=0;
+const chatKey="chatHistory",readKey="chatRead";
 
-// Вход
-document.getElementById("loginBtn").onclick = function(){
-  const user=document.getElementById("userSelect").value;
-  const pass=document.getElementById("passwordInput").value;
-  if(pass===users[user].pass){
-    const expire = Date.now()+24*60*60*1000; // 24 часа
-    localStorage.setItem("session",JSON.stringify({user:user,expire}));
-    startSession(user);
-  } else {
-    document.getElementById("errorMsg").textContent="Неверный пароль";
-  }
+/* LOGIN */
+document.getElementById("loginBtn").onclick=function(){
+let u=userSelect.value,p=passwordInput.value;
+if(p===users[u].pass){
+sessionExpire=Date.now()+86400000;
+localStorage.setItem("session",JSON.stringify({u,sessionExpire}));
+startSession(u);
+}else errorMsg.textContent="Неверный пароль";
 };
 
-window.onload = function(){
-  const saved = localStorage.getItem("session");
-  if(saved){
-    const data = JSON.parse(saved);
-    if(Date.now()<data.expire) startSession(data.user);
-    else localStorage.removeItem("session");
-  }
-};
-
-// Начало сессии
-function startSession(user){
-  currentUser = user;
-  document.getElementById("loginScreen").style.display="none";
-  document.getElementById("currentUser").textContent = "👤 " + users[user].name;
-  loadChat();
-  if(user!=="vadim") document.getElementById("chatInputArea").style.display="none";
+window.onload=function(){
+let s=localStorage.getItem("session");
+if(s){
+let data=JSON.parse(s);
+if(Date.now()<data.sessionExpire){sessionExpire=data.sessionExpire;startSession(data.u);}
 }
+};
 
-// Выход
-function logout(){
-  localStorage.removeItem("session");
-  location.reload();
+/* SESSION */
+function startSession(u){
+currentUser=u;
+loginScreen.style.display="none";
+currentUserDiv=currentUser;
+document.getElementById("currentUser").textContent="👤 "+users[u].name;
+populateRecipients();
+updateTimer();
+setInterval(updateTimer,1000);
+loadChat();
 }
+function updateTimer(){
+let diff=sessionExpire-Date.now();
+if(diff<=0)return logout();
+let h=Math.floor(diff/3600000),
+m=Math.floor(diff/60000)%60,
+s=Math.floor(diff/1000)%60;
+sessionTimer.textContent=`Сессия: ${h.toString().padStart(2,'0')}:${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
+}
+function logout(){localStorage.removeItem("session");location.reload();}
+function toggleMenu(){sideMenu.classList.toggle("active");}
 
-// Меню
-function toggleMenu(){document.getElementById("sideMenu").classList.toggle("active");}
-
-// Калькуляторы
-document.querySelectorAll('.calculator').forEach(calc=>{
-  const btn = calc.querySelector('.btn-calc');
-  btn.addEventListener('click',()=>{
-    const sum = parseFloat(calc.querySelector('.sum').value);
-    if(isNaN(sum)||sum<0) return;
-    const coefs = calc.querySelectorAll('td.coef');
-    const results = calc.querySelectorAll('td.result');
-    coefs.forEach((c,i)=>{
-      results[i].textContent = (sum/parseFloat(c.textContent)).toLocaleString('ru-RU',{minimumFractionDigits:2,maximumFractionDigits:2});
-    });
-  });
-  calc.querySelector('.sum').addEventListener('keydown', e=>{
-    if(e.key==='Enter') btn.click();
-  });
+/* CALC */
+document.querySelectorAll('.calculator').forEach(c=>{
+c.querySelector('.btn-calc').onclick=function(){
+let sum=parseFloat(c.querySelector('.sum').value);
+if(!sum)return;
+c.querySelectorAll('.coef').forEach((coef,i)=>{
+c.querySelectorAll('.result')[i].textContent=(sum/parseFloat(coef.textContent)).toFixed(2);
+});
+};
 });
 
-// Чат
-function toggleChat(){
-  const w = document.getElementById("chatWindow");
-  w.style.display = w.style.display==="flex" ? "none" : "flex";
+/* CHAT */
+chatToggle.onclick=()=>chatWindow.style.display=chatWindow.style.display==="flex"?"none":"flex";
+chatSend.onclick=sendMessage;
+function sendMessage(){
+let text=chatInput.value.trim(),to=chatRecipient.value;
+if(!text)return;
+let data=JSON.parse(localStorage.getItem(chatKey)||"[]");
+data=data.filter(m=>Date.now()-m.time<86400000);
+data.push({from:currentUser,to,text,time:Date.now()});
+localStorage.setItem(chatKey,JSON.stringify(data));
+chatInput.value="";
+loadChat();
 }
-document.getElementById("chatSend").onclick=function(){
-  const msg = document.getElementById("chatInput").value.trim();
-  if(!msg) return;
-  // Сохраняем сообщения с указанием пользователя
-  let data = JSON.parse(localStorage.getItem(chatKey)||"[]");
-  data.push({user:currentUser,text:msg});
-  localStorage.setItem(chatKey,JSON.stringify(data));
-  document.getElementById("chatInput").value="";
-  loadChat();
-};
-
 function loadChat(){
-  const box = document.getElementById("chatMessages");
-  box.innerHTML = "";
-  const data = JSON.parse(localStorage.getItem(chatKey)||"[]");
-  data.forEach(m=>{
-    // Отображаем сообщение только если оно адресовано текущему пользователю
-    if(m.user === currentUser || currentUser==="vadim"){
-      const d=document.createElement("div");
-      d.textContent = users[m.user].name+": "+m.text;
-      box.appendChild(d);
-    }
-  });
-  box.scrollTop = box.scrollHeight;
+let data=JSON.parse(localStorage.getItem(chatKey)||"[]");
+data=data.filter(m=>Date.now()-m.time<86400000);
+localStorage.setItem(chatKey,JSON.stringify(data));
+chatMessages.innerHTML="";
+let unread=0;
+data.forEach(m=>{
+if(m.to===currentUser||m.from===currentUser){
+let div=document.createElement("div");
+div.className="message";
+div.textContent=users[m.from].name+": "+m.text;
+chatMessages.appendChild(div);
+if(m.to===currentUser && m.from!==currentUser)unread++;
 }
+});
+chatBadge.textContent=unread;
+chatMessages.scrollTop=chatMessages.scrollHeight;
+}
+function populateRecipients(){
+chatRecipient.innerHTML="";
+for(let u in users)if(u!==currentUser)
+chatRecipient.innerHTML+=`<option value="${u}">${users[u].name}</option>`;
+}
+window.addEventListener("storage",loadChat);
 </script>
 
 </body>
