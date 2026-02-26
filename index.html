@@ -2,204 +2,330 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Калькулятор рассрочки</title>
+
 <style>
-    body {
-        font-family: Arial, sans-serif;
-        background: #f5f6f8;
-        margin: 0;
-        padding: 20px;
-    }
-    .wrapper {
-        display: flex;
-        gap: 20px;
-        justify-content: space-between;
-        flex-wrap: wrap; /* адаптация на узких экранах */
-    }
-    .calculator {
-        background: #ffffff;
-        border-radius: 6px;
-        padding: 20px;
-        box-shadow: 0 2px 6px rgba(0,0,0,0.1);
 
-        flex: 1;
-        min-width: 310px;
-    }
-    .title {
-        font-size: 20px;
-        font-weight: bold;
-    }
-    .subtitle {
-        color: #d32f2f;
-        font-weight: bold;
-        margin-bottom: 15px;
-    }
-    .hint {
-        margin-bottom: 10px;
-        color: #555;
-    }
-    .input {
-        width: 100%;
-        padding: 10px;
-        font-size: 16px;
-        margin-bottom: 15px;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-    }
-    .btn {
-        width: 100%;
-        color: white;
-        padding: 12px;
-        font-size: 16px;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
-        margin-bottom: 20px;
-        transition: all 0.2s ease;
-    }
-    .btn:hover {
-        opacity: 0.9;
-    }
-    .btn:active {
-        transform: scale(0.98);
-    }
-    /* Градиенты для кнопок расчета */
-    .btn-calc {
-        background: linear-gradient(to right, #1976d2, #0d47a1);
-    }
-    /* Новые кнопки под калькуляторами */
-    .btn-non-cash {
-        background: linear-gradient(to right, #43a047, #2e7d32);
-    }
-    .btn-close-shift {
-        background: linear-gradient(to right, #f57c00, #e65100);
-    }
+body{
+font-family: Arial, sans-serif;
+background:#f5f6f8;
+margin:0;
+padding:20px;
+}
 
-    table {
-        width: 100%;
-        border-collapse: collapse;
-        font-size: 14px;
-    }
-    th {
-        text-align: left;
-        padding-bottom: 8px;
-        border-bottom: 1px solid #ddd;
-    }
-    td {
-        padding: 10px 0;
-        border-bottom: 1px solid #eee;
-    }
-    .coef {
-        color: #555;
-    }
-    .result {
-        font-weight: bold;
-    }
+/* ---------- ШАПКА ---------- */
 
-    /* Контейнер для двух новых кнопок */
-    .bottom-buttons {
-        width: 100%;
-        margin-top: 20px;
-        display: flex;
-        gap: 20px;
-        flex-wrap: wrap;
-        justify-content: center;
-    }
-    .bottom-buttons .btn {
-        flex: 1;
-        min-width: 200px;
-    }
+.header{
+background:white;
+padding:15px;
+border-radius:6px;
+box-shadow:0 2px 6px rgba(0,0,0,.1);
+margin-bottom:20px;
+text-align:center;
+}
+
+.logo{
+font-size:28px;
+font-weight:bold;
+letter-spacing:1px;
+}
+
+.logo .green{
+color:#2e7d32;
+}
+
+.logo .black{
+color:#000;
+}
+
+.manager-panel{
+margin-top:8px;
+font-size:14px;
+color:#555;
+border-top:1px solid #eee;
+padding-top:8px;
+}
+
+/* ---------- КАЛЬКУЛЯТОРЫ ---------- */
+
+.wrapper{
+display:flex;
+gap:20px;
+justify-content:space-between;
+flex-wrap:wrap;
+}
+
+.calculator{
+background:#ffffff;
+border-radius:6px;
+padding:20px;
+box-shadow:0 2px 6px rgba(0,0,0,0.1);
+flex:1;
+min-width:310px;
+}
+
+.title{
+font-size:20px;
+font-weight:bold;
+}
+
+.subtitle{
+color:#d32f2f;
+font-weight:bold;
+margin-bottom:15px;
+}
+
+.hint{
+margin-bottom:10px;
+color:#555;
+}
+
+.input{
+width:100%;
+padding:10px;
+font-size:16px;
+margin-bottom:15px;
+border:1px solid #ccc;
+border-radius:4px;
+}
+
+.btn{
+width:100%;
+color:white;
+padding:12px;
+font-size:16px;
+border:none;
+border-radius:4px;
+cursor:pointer;
+margin-bottom:20px;
+transition:.2s;
+}
+
+.btn:hover{
+opacity:.9;
+}
+
+.btn:active{
+transform:scale(.98);
+}
+
+/* кнопки */
+.btn-calc{
+background:linear-gradient(to right,#1976d2,#0d47a1);
+}
+
+.btn-non-cash{
+background:linear-gradient(to right,#43a047,#2e7d32);
+}
+
+.btn-close-shift{
+background:linear-gradient(to right,#f57c00,#e65100);
+}
+
+.btn-discount{
+background:linear-gradient(to right,#8e24aa,#6a1b9a);
+}
+
+/* таблица */
+table{
+width:100%;
+border-collapse:collapse;
+font-size:14px;
+}
+
+th{
+text-align:left;
+padding-bottom:8px;
+border-bottom:1px solid #ddd;
+}
+
+td{
+padding:10px 0;
+border-bottom:1px solid #eee;
+}
+
+.coef{
+color:#555;
+}
+
+.result{
+font-weight:bold;
+}
+
+/* нижние кнопки */
+.bottom-buttons{
+width:100%;
+margin-top:20px;
+display:flex;
+gap:20px;
+flex-wrap:wrap;
+justify-content:center;
+}
+
+.bottom-buttons .btn{
+flex:1;
+min-width:220px;
+}
+
+/* ---------- МОБИЛЬНАЯ АДАПТАЦИЯ ---------- */
+
+@media (max-width:768px){
+
+body{
+padding:10px;
+}
+
+.logo{
+font-size:24px;
+}
+
+.calculator{
+min-width:100%;
+padding:15px;
+}
+
+.title{
+font-size:18px;
+}
+
+.input{
+font-size:15px;
+}
+
+.btn{
+font-size:15px;
+padding:10px;
+}
+
+table{
+font-size:13px;
+}
+
+}
+
 </style>
 </head>
 <body>
 
+<!-- ШАПКА -->
+<div class="header">
+
+<div class="logo">
+<span class="green">A</span><span class="black">uto-</span><span class="green">S</span><span class="black">tyle</span>
+</div>
+
+<div class="manager-panel">
+Панель менеджера
+</div>
+
+</div>
+
 <div class="wrapper">
 
-    <!-- Калькулятор 1 – АГРОПРОМБАНК -->
-    <div class="calculator">
-        <div class="title">КАЛЬКУЛЯТОР РАССРОЧКИ</div>
-        <div class="subtitle">АГРОПРОМБАНК</div>
-        <div class="hint">Введите общую сумму чека и нажмите рассчитать</div>
-        <input type="number" class="input sum">
-        <button class="btn btn-calc">РАССЧИТАТЬ</button>
-        <table>
-            <tr><th>РАССРОЧКА</th><th>КОЭФФ.</th><th>ИТОГО, руб</th></tr>
-            <tr><td>АПБ 3 мес.</td><td class="coef">0.955</td><td class="result"></td></tr>
-            <tr><td>АПБ 6 мес.</td><td class="coef">0.93</td><td class="result"></td></tr>
-            <tr><td>АПБ 9 мес.</td><td class="coef">0.90</td><td class="result"></td></tr>
-            <tr><td>АПБ 12 мес.</td><td class="coef">0.875</td><td class="result"></td></tr>
-        </table>
-    </div>
+<!-- Калькулятор 1 -->
+<div class="calculator">
+<div class="title">КАЛЬКУЛЯТОР РАССРОЧКИ</div>
+<div class="subtitle">АГРОПРОМБАНК</div>
+<div class="hint">Введите общую сумму чека и нажмите рассчитать</div>
+<input type="number" class="input sum">
+<button class="btn btn-calc">РАССЧИТАТЬ</button>
 
-    <!-- Калькулятор 2 – ЭКСИМБАНК -->
-    <div class="calculator">
-        <div class="title">КАЛЬКУЛЯТОР РАССРОЧКИ</div>
-        <div class="subtitle">ЭКСИМБАНК</div>
-        <div class="hint">Введите общую сумму чека и нажмите рассчитать</div>
-        <input type="number" class="input sum">
-        <button class="btn btn-calc">РАССЧИТАТЬ</button>
-        <table>
-            <tr><th>РАССРОЧКА</th><th>КОЭФФ.</th><th>ИТОГО, руб</th></tr>
-            <tr><td>ЭксимБанк 3 мес.</td><td class="coef">0.955</td><td class="result"></td></tr>
-            <tr><td>ЭксимБанк 6 мес.</td><td class="coef">0.93</td><td class="result"></td></tr>
-            <tr><td>ЭксимБанк 9 мес.</td><td class="coef">0.90</td><td class="result"></td></tr>
-            <tr><td>ЭксимБанк 12 мес.</td><td class="coef">0.886</td><td class="result"></td></tr>
-        </table>
-    </div>
+<table>
+<tr><th>РАССРОЧКА</th><th>КОЭФФ.</th><th>ИТОГО, руб</th></tr>
+<tr><td>АПБ 3 мес.</td><td class="coef">0.955</td><td class="result"></td></tr>
+<tr><td>АПБ 6 мес.</td><td class="coef">0.93</td><td class="result"></td></tr>
+<tr><td>АПБ 9 мес.</td><td class="coef">0.90</td><td class="result"></td></tr>
+<tr><td>АПБ 12 мес.</td><td class="coef">0.875</td><td class="result"></td></tr>
+</table>
+</div>
 
-    <!-- Калькулятор 3 – СБЕРБАНК -->
-    <div class="calculator">
-        <div class="title">КАЛЬКУЛЯТОР РАССРОЧКИ</div>
-        <div class="subtitle">СБЕРБАНК</div>
-        <div class="hint">Введите общую сумму чека и нажмите рассчитать</div>
-        <input type="number" class="input sum">
-        <button class="btn btn-calc">РАССЧИТАТЬ</button>
-        <table>
-            <tr><th>РАССРОЧКА</th><th>КОЭФФ.</th><th>ИТОГО, руб</th></tr>
-            <tr><td>СберБанк 3 мес.</td><td class="coef">0.96</td><td class="result"></td></tr>
-            <tr><td>СберБанк 6 мес.</td><td class="coef">0.93</td><td class="result"></td></tr>
-            <tr><td>СберБанк 9 мес.</td><td class="coef">0.90</td><td class="result"></td></tr>
-            <tr><td>СберБанк 12 мес.</td><td class="coef">0.88</td><td class="result"></td></tr>
-        </table>
-    </div>
+<!-- Калькулятор 2 -->
+<div class="calculator">
+<div class="title">КАЛЬКУЛЯТОР РАССРОЧКИ</div>
+<div class="subtitle">ЭКСИМБАНК</div>
+<div class="hint">Введите общую сумму чека и нажмите рассчитать</div>
+<input type="number" class="input sum">
+<button class="btn btn-calc">РАССЧИТАТЬ</button>
+
+<table>
+<tr><th>РАССРОЧКА</th><th>КОЭФФ.</th><th>ИТОГО, руб</th></tr>
+<tr><td>ЭксимБанк 3 мес.</td><td class="coef">0.955</td><td class="result"></td></tr>
+<tr><td>ЭксимБанк 6 мес.</td><td class="coef">0.93</td><td class="result"></td></tr>
+<tr><td>ЭксимБанк 9 мес.</td><td class="coef">0.90</td><td class="result"></td></tr>
+<tr><td>ЭксимБанк 12 мес.</td><td class="coef">0.886</td><td class="result"></td></tr>
+</table>
+</div>
+
+<!-- Калькулятор 3 -->
+<div class="calculator">
+<div class="title">КАЛЬКУЛЯТОР РАССРОЧКИ</div>
+<div class="subtitle">:contentReference[oaicite:0]{index=0}</div>
+<div class="hint">Введите общую сумму чека и нажмите рассчитать</div>
+<input type="number" class="input sum">
+<button class="btn btn-calc">РАССЧИТАТЬ</button>
+
+<table>
+<tr><th>РАССРОЧКА</th><th>КОЭФФ.</th><th>ИТОГО, руб</th></tr>
+<tr><td>СберБанк 3 мес.</td><td class="coef">0.96</td><td class="result"></td></tr>
+<tr><td>СберБанк 6 мес.</td><td class="coef">0.93</td><td class="result"></td></tr>
+<tr><td>СберБанк 9 мес.</td><td class="coef">0.90</td><td class="result"></td></tr>
+<tr><td>СберБанк 12 мес.</td><td class="coef">0.88</td><td class="result"></td></tr>
+</table>
+</div>
 
 </div>
 
 <!-- Нижние кнопки -->
 <div class="bottom-buttons">
-    <button id="btnBeznal" class="btn btn-non-cash">ОФОРМИТЬ БЕЗНАЛ</button>
-    <button id="btnSmena" class="btn btn-close-shift">ЗАКРЫТИЕ СМЕНЫ</button>
+
+<button id="btnBeznal" class="btn btn-non-cash">ОФОРМИТЬ БЕЗНАЛ</button>
+<button id="btnSmena" class="btn btn-close-shift">ЗАКРЫТИЕ СМЕНЫ</button>
+<button id="btnDiscount" class="btn btn-discount">РЕГИСТРАЦИЯ СКИДОЧНОЙ КАРТЫ</button>
+
 </div>
-<script>
-    document.getElementById("btnBeznal").addEventListener("click", () => {
-        window.location.href = "beznal.html";
-    });
-    document.getElementById("btnSmena").addEventListener("click", () => {
-        window.location.href = "smena.html";
-    });
-</script>
 
 <script>
-document.querySelectorAll('.calculator').forEach(calc => {
-    const btn = calc.querySelector('.btn-calc');
-    btn.addEventListener('click', () => {
-        const sum = parseFloat(calc.querySelector('.sum').value);
-        if (isNaN(sum) || sum < 0) return;
-        const coefs = calc.querySelectorAll('td.coef');
-        const results = calc.querySelectorAll('td.result');
-        coefs.forEach((c, i) => {
-            results[i].textContent = (sum / parseFloat(c.textContent))
-                .toLocaleString('ru-RU', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-        });
-    });
 
-    // расчет при Enter
-    calc.querySelector('.sum').addEventListener('keydown', e => {
-        if (e.key === 'Enter') btn.click();
-    });
+document.getElementById("btnBeznal").onclick = ()=>{
+window.location.href="beznal.html";
+};
+
+document.getElementById("btnSmena").onclick = ()=>{
+window.location.href="smena.html";
+};
+
+document.getElementById("btnDiscount").onclick = ()=>{
+window.location.href="discount.html";
+};
+
+/* расчет */
+document.querySelectorAll('.calculator').forEach(calc=>{
+
+const btn = calc.querySelector('.btn-calc');
+
+btn.onclick = ()=>{
+
+const sum = parseFloat(calc.querySelector('.sum').value);
+if(isNaN(sum) || sum<=0) return;
+
+const coefs = calc.querySelectorAll('.coef');
+const results = calc.querySelectorAll('.result');
+
+coefs.forEach((c,i)=>{
+results[i].textContent = (sum / parseFloat(c.textContent))
+.toLocaleString('ru-RU',{minimumFractionDigits:2,maximumFractionDigits:2});
 });
+
+};
+
+calc.querySelector('.sum').addEventListener('keydown',e=>{
+if(e.key==="Enter") btn.click();
+});
+
+});
+
 </script>
 
 </body>
 </html>
-
