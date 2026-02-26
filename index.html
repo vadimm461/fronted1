@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Калькулятор рассрочки</title>
 <style>
-/* ===== Обновленный стиль ===== */
 *{box-sizing:border-box;}
 body{font-family:Arial,sans-serif;background:#f5f6f8;margin:0;padding:20px;overflow-x:hidden;}
 
@@ -39,7 +38,7 @@ td{border-bottom:1px solid #eee;padding:10px 0;}
 .login-box{background:white;padding:30px 25px;border-radius:14px;width:100%;max-width:400px;text-align:center;box-shadow:0 20px 50px rgba(0,0,0,.4);animation:fadeIn .4s ease;}
 .login-logo{font-size:30px;font-weight:bold;margin-bottom:10px;}
 .login-subtitle{color:#555;margin-bottom:15px;}
-select,input[type="password"]{width:100%;padding:12px;font-size:16px;border:1px solid #ccc;border-radius:6px;margin-bottom:15px;}
+select,input[type="password"],#adminMessage{width:100%;padding:12px;font-size:16px;border:1px solid #ccc;border-radius:6px;margin-bottom:15px;}
 .login-btn{width:100%;padding:12px;font-size:16px;border:none;border-radius:6px;cursor:pointer;color:white;background:linear-gradient(to right,#43a047,#1b5e20);}
 .error-msg{color:#d32f2f;font-size:14px;margin-top:8px;}
 @keyframes fadeIn{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
@@ -57,23 +56,8 @@ select,input[type="password"]{width:100%;padding:12px;font-size:16px;border:1px 
 .menu-btn{width:100%;padding:12px;margin-bottom:12px;border:none;border-radius:8px;cursor:pointer;color:white;font-size:14px;transition:.3s;background:linear-gradient(to right,#333,#222);}
 .menu-btn:hover{transform:translateX(6px);background:linear-gradient(to right,#43a047,#1b5e20);}
 .logout-btn{background:linear-gradient(to right,#c62828,#8e0000);}
-
-/* Уведомление */
 .notification{position:relative;}
-.notification .badge{
-position:absolute;
-top:0;right:0;
-width:20px;height:20px;
-background:red;
-color:white;
-border-radius:50%;
-font-size:12px;
-display:none;
-text-align:center;
-line-height:20px;
-}
-
-/* ===== MOBILE ===== */
+.notification .badge{position:absolute;top:-5px;right:-5px;width:20px;height:20px;background:red;color:white;border-radius:50%;font-size:12px;text-align:center;line-height:20px;display:none;}
 @media(max-width:768px){body{padding:10px;}}
 </style>
 </head>
@@ -108,17 +92,17 @@ line-height:20px;
 Осталось времени до конца рабочего дня:<div id="timeToEndOfDay"></div>
 </div>
 
-<!-- Уведомления для кассира и Евгения -->
+<!-- Уведомления -->
 <div id="notificationArea">
-<button class="menu-btn notification" onclick="showNotification('cashier')">Уведомления</button>
-<div id="cashierNotification" class="badge">1</div>
-
-<button class="menu-btn notification" onclick="showNotification('evgeniy')">Уведомления</button>
-<div id="evgeniyNotification" class="badge">1</div>
+<button class="menu-btn notification" id="notifBtn" onclick="readNotification()">Уведомления
+<span class="badge" id="notifBadge">1</span>
+</button>
+<div id="notifText" style="margin-bottom:15px;display:none;background:#333;padding:10px;border-radius:6px;color:white;"></div>
 </div>
 
-<!-- Уведомление для администратора -->
+<!-- Админ: выбор кому отправить уведомление и текст -->
 <div id="adminNotification" style="display:none;">
+<input type="text" id="adminMessage" placeholder="Введите текст уведомления">
 <select id="receiverSelect">
 <option value="cashier">Кассиру</option>
 <option value="evgeniy">Евгению</option>
@@ -133,24 +117,22 @@ line-height:20px;
 <button class="menu-btn logout-btn" onclick="logout()">ВЫЙТИ</button>
 </div>
 
-<!-- ===== ВАШ КОНТЕНТ (КАЛЬКУЛЯТОРЫ И КНОПКИ) ===== -->
+<!-- ===== КАЛЬКУЛЯТОРЫ И КНОПКИ ===== -->
 <div class="header"><div class="logo"><span class="green">A</span><span class="black">uto-</span><span class="green">S</span><span class="black">tyle</span></div><div class="manager-panel">Панель менеджера</div></div>
 <div class="wrapper">
-<!-- Калькулятор 1 -->
+<!-- калькуляторы оставлены без изменений -->
 <div class="calculator"><div class="title">КАЛЬКУЛЯТОР РАССРОЧКИ</div><div class="subtitle">АГРОПРОМБАНК</div><div class="hint">Введите общую сумму чека</div><input type="number" class="input sum"><button class="btn btn-calc">РАССЧИТАТЬ</button>
 <table><tr><th>РАССРОЧКА</th><th>КОЭФФ.</th><th>ИТОГО</th></tr>
 <tr><td>АПБ 3</td><td class="coef">0.955</td><td class="result"></td></tr>
 <tr><td>АПБ 6</td><td class="coef">0.93</td><td class="result"></td></tr>
 <tr><td>АПБ 9</td><td class="coef">0.90</td><td class="result"></td></tr>
 <tr><td>АПБ 12</td><td class="coef">0.875</td><td class="result"></td></tr></table></div>
-<!-- Калькулятор 2 -->
 <div class="calculator"><div class="title">КАЛЬКУЛЯТОР РАССРОЧКИ</div><div class="subtitle">ЭКСИМБАНК</div><input type="number" class="input sum"><button class="btn btn-calc">РАССЧИТАТЬ</button>
 <table><tr><th>РАССРОЧКА</th><th>КОЭФФ.</th><th>ИТОГО</th></tr>
 <tr><td>3 мес</td><td class="coef">0.955</td><td class="result"></td></tr>
 <tr><td>6 мес</td><td class="coef">0.93</td><td class="result"></td></tr>
 <tr><td>9 мес</td><td class="coef">0.90</td><td class="result"></td></tr>
 <tr><td>12 мес</td><td class="coef">0.886</td><td class="result"></td></tr></table></div>
-<!-- Калькулятор 3 -->
 <div class="calculator"><div class="title">КАЛЬКУЛЯТОР РАССРОЧКИ</div><div class="subtitle">СБЕРБАНК</div><input type="number" class="input sum"><button class="btn btn-calc">РАССЧИТАТЬ</button>
 <table><tr><th>РАССРОЧКА</th><th>КОЭФФ.</th><th>ИТОГО</th></tr>
 <tr><td>3 мес</td><td class="coef">0.96</td><td class="result"></td></tr>
@@ -160,42 +142,32 @@ line-height:20px;
 </div>
 
 <script>
-/* Обработка уведомлений */
-let notifications = { cashier: false, evgeniy: false };
+/* ===== Калькулятор ===== */
+document.querySelectorAll('.calculator').forEach(calc=>{
+const btn=calc.querySelector('.btn-calc');
+btn.onclick=()=>{
+const sum=parseFloat(calc.querySelector('.sum').value);
+if(!sum)return;
+const coefs=calc.querySelectorAll('.coef');
+const results=calc.querySelectorAll('.result');
+coefs.forEach((c,i)=>{
+results[i].textContent=(sum/parseFloat(c.textContent)).toLocaleString('ru-RU',{minimumFractionDigits:2,maximumFractionDigits:2});
+});
+};
+});
 
-function showNotification(user) {
-  if (user === "cashier" && notifications.cashier) {
-    alert("Уведомление для кассира");
-    notifications.cashier = false;
-    document.getElementById("cashierNotification").style.display = "none";
-  }
-  if (user === "evgeniy" && notifications.evgeniy) {
-    alert("Уведомление для Евгения");
-    notifications.evgeniy = false;
-    document.getElementById("evgeniyNotification").style.display = "none";
-  }
-}
-
-/* Администратор отправляет уведомление */
-function sendNotification() {
-  const receiver = document.getElementById("receiverSelect").value;
-  if (receiver === "cashier") {
-    notifications.cashier = true;
-    document.getElementById("cashierNotification").style.display = "inline-block";
-  } else if (receiver === "evgeniy") {
-    notifications.evgeniy = true;
-    document.getElementById("evgeniyNotification").style.display = "inline-block";
-  }
-}
-
-/* Вход в систему */
+/* ===== AUTH & SESSION ===== */
 const users={cashier:{name:"Кассир",pass:"2012"},evgeniy:{name:"Евгений",pass:"0186"},vadim:{name:"Вадим",pass:"2385"}};
 const sessionDuration=24*60*60*1000;
 let sessionTimer;
+let currentUser="";
+let currentNotification="";
+
 window.addEventListener("load",()=>{
 const saved=localStorage.getItem("session");
 if(saved){const data=JSON.parse(saved);if(Date.now()<data.expire){startSession(data.user,data.expire);}}
 });
+
 document.getElementById("loginBtn").onclick=function(){
 const userKey=document.getElementById("userSelect").value;
 const pass=document.getElementById("passwordInput").value;
@@ -207,17 +179,51 @@ startSession(userKey,expire);
 };
 
 function startSession(userKey,expire){
+currentUser=userKey;
 document.getElementById("loginScreen").style.display="none";
 document.getElementById("currentUser").textContent="👤 "+users[userKey].name;
 updateTimer(expire);
 sessionTimer=setInterval(()=>updateTimer(expire),1000);
+
 if(userKey==='vadim'){
-  document.getElementById('adminNotification').style.display='block'; // Администратор может отправлять уведомления
+  document.getElementById('adminNotification').style.display='block';
+}
+if(userKey==='cashier' || userKey==='evgeniy'){
+  document.getElementById('notifBadge').style.display='none';
 }
 }
 
 function updateTimer(expire){const diff=expire-Date.now();if(diff<=0){logout();return;}const h=Math.floor(diff/1000/60/60);const m=Math.floor((diff/1000/60)%60);const s=Math.floor((diff/1000)%60);document.getElementById("timeLeft").textContent=`${h}ч ${m}м ${s}с`;}
 
+/* ===== Уведомления ===== */
+function sendNotification(){
+const msg=document.getElementById('adminMessage').value.trim();
+if(!msg)return alert("Введите текст уведомления");
+const receiver=document.getElementById('receiverSelect').value;
+localStorage.setItem(receiver+"_notif",msg);
+if(currentUser===receiver){
+document.getElementById('notifText').textContent=msg;
+document.getElementById('notifText').style.display='block';
+document.getElementById('notifBadge').style.display='inline-block';
+} 
+alert("Уведомление отправлено!");
+document.getElementById('adminMessage').value="";
+}
+
+function readNotification(){
+const notifKey=currentUser+"_notif";
+const msg=localStorage.getItem(notifKey);
+if(msg){
+document.getElementById('notifText').textContent=msg;
+document.getElementById('notifText').style.display='block';
+document.getElementById('notifBadge').style.display='none';
+localStorage.removeItem(notifKey);
+}else{
+alert("Нет новых уведомлений");
+}
+}
+
+/* ===== LOGOUT ===== */
 function logout(){localStorage.removeItem("session");clearInterval(sessionTimer);location.reload();}
 function toggleMenu(){document.getElementById("sideMenu").classList.toggle("active");}
 </script>
