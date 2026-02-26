@@ -2,6 +2,7 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Счет</title>
 
 <style>
@@ -10,14 +11,37 @@ body{
 font-family: Arial, sans-serif;
 background:#f2f4f8;
 padding:20px;
+margin:0;
+}
+
+/* кнопка назад */
+.back-button{
+position:fixed;
+top:15px;
+left:15px;
+z-index:9999;
+background:#000;
+color:#fff;
+border:none;
+padding:10px 16px;
+border-radius:8px;
+cursor:pointer;
+font-size:14px;
+opacity:.9;
+}
+
+.back-button:hover{
+opacity:1;
 }
 
 .container{
-width:900px;
+max-width:900px;
+width:100%;
 margin:auto;
 background:white;
 padding:40px;
 box-shadow:0 4px 20px rgba(0,0,0,.1);
+box-sizing:border-box;
 }
 
 /* Заголовок */
@@ -46,8 +70,8 @@ color:white;
 
 /* ширина колонок */
 td:nth-child(1){width:60px;}
-td:nth-child(3){width:70px;}
-td:nth-child(4){width:90px;}
+td:nth-child(3){width:90px;}
+td:nth-child(4){width:120px;}
 
 input{
 width:100%;
@@ -84,6 +108,36 @@ button:hover{
 opacity:.9;
 }
 
+/* -------------------- */
+/* МОБИЛЬНАЯ АДАПТАЦИЯ */
+/* -------------------- */
+
+@media (max-width:768px){
+
+body{
+padding:10px;
+}
+
+.container{
+padding:15px;
+}
+
+th,td{
+font-size:12px;
+padding:6px;
+}
+
+h2{
+font-size:18px;
+}
+
+button{
+font-size:14px;
+padding:10px;
+}
+
+}
+
 /* печать */
 @media print{
 
@@ -95,9 +149,14 @@ padding:0;
 .container{
 box-shadow:none;
 width:100%;
+padding:0;
 }
 
 .buttons{
+display:none;
+}
+
+.back-button{
 display:none;
 }
 
@@ -110,6 +169,8 @@ border:none;
 </style>
 </head>
 <body>
+
+<button class="back-button" onclick="history.back()">← Назад</button>
 
 <div class="container" id="print-area">
 
