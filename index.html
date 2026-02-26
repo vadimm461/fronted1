@@ -2,194 +2,263 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<title>Калькулятор рассрочки</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Auto-Style</title>
 <style>
-    body {
-        font-family: Arial, sans-serif;
-        background: #f5f6f8;
-        margin: 0;
-        padding: 20px;
-    }
-    .wrapper {
-        display: flex;
-        gap: 20px;
-        justify-content: space-between;
-        flex-wrap: wrap; /* адаптация на узких экранах */
-    }
-    .calculator {
-        background: #ffffff;
-        border-radius: 6px;
-        padding: 20px;
-        box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+body{font-family: Arial, sans-serif;margin:0;padding:20px;background:#f5f6f8;overflow-x:hidden;}
+/* ---------- LOGIN ---------- */
+.login-screen{
+    position:fixed;top:0;left:0;width:100%;height:100vh;
+    background:linear-gradient(135deg,#1b5e20,#000);
+    display:flex;justify-content:center;align-items:center;z-index:9999;
+}
+.login-box{
+    background:#fff;padding:30px 25px;border-radius:14px;width:100%;max-width:400px;text-align:center;
+    box-shadow:0 20px 50px rgba(0,0,0,.4);animation:fadeIn .4s ease;
+}
+.login-logo{font-size:30px;font-weight:bold;margin-bottom:10px;}
+.login-logo .green{color:#2e7d32;}
+.login-logo .black{color:#000;}
+.login-subtitle{color:#555;margin-bottom:15px;}
+select,input[type="password"]{width:100%;padding:12px;font-size:16px;margin-bottom:15px;border:1px solid #ccc;border-radius:6px;}
+.login-btn{width:100%;padding:12px;font-size:16px;border:none;border-radius:6px;cursor:pointer;color:white;background:linear-gradient(to right,#43a047,#1b5e20);}
+.error-msg{color:#d32f2f;font-size:14px;margin-top:8px;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
 
-        flex: 1;
-        min-width: 310px;
-    }
-    .title {
-        font-size: 20px;
-        font-weight: bold;
-    }
-    .subtitle {
-        color: #d32f2f;
-        font-weight: bold;
-        margin-bottom: 15px;
-    }
-    .hint {
-        margin-bottom: 10px;
-        color: #555;
-    }
-    .input {
-        width: 100%;
-        padding: 10px;
-        font-size: 16px;
-        margin-bottom: 15px;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-    }
-    .btn {
-        width: 100%;
-        color: white;
-        padding: 12px;
-        font-size: 16px;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
-        margin-bottom: 20px;
-        transition: all 0.2s ease;
-    }
-    .btn:hover {
-        opacity: 0.9;
-    }
-    .btn:active {
-        transform: scale(0.98);
-    }
-    /* Градиенты для кнопок расчета */
-    .btn-calc {
-        background: linear-gradient(to right, #1976d2, #0d47a1);
-    }
-    /* Новые кнопки под калькуляторами */
-    .btn-non-cash {
-        background: linear-gradient(to right, #43a047, #2e7d32);
-    }
-    .btn-close-shift {
-        background: linear-gradient(to right, #f57c00, #e65100);
-    }
+/* ---------- HEADER ---------- */
+.header{background:white;padding:15px;border-radius:6px;box-shadow:0 2px 6px rgba(0,0,0,.1);margin-bottom:20px;text-align:center;}
+.logo{font-size:28px;font-weight:bold;}
+.logo .green{color:#2e7d32;}
+.logo .black{color:#000;}
 
-    table {
-        width: 100%;
-        border-collapse: collapse;
-        font-size: 14px;
-    }
-    th {
-        text-align: left;
-        padding-bottom: 8px;
-        border-bottom: 1px solid #ddd;
-    }
-    td {
-        padding: 10px 0;
-        border-bottom: 1px solid #eee;
-    }
-    .coef {
-        color: #555;
-    }
-    .result {
-        font-weight: bold;
-    }
+/* ---------- MENU ---------- */
+.menu-toggle{position:fixed;top:20px;left:20px;width:45px;height:45px;background:linear-gradient(135deg,#2e7d32,#1b5e20);color:white;display:flex;align-items:center;justify-content:center;border-radius:12px;cursor:pointer;z-index:3000;box-shadow:0 6px 20px rgba(0,0,0,.3);transition:.3s;}
+.menu-toggle:hover{transform:scale(1.1);}
+.side-menu{position:fixed;top:0;left:-320px;width:300px;height:100%;background:rgba(20,20,20,.95);backdrop-filter:blur(12px);color:white;padding:80px 20px 20px 20px;transition:.4s cubic-bezier(.77,0,.18,1);z-index:2500;box-shadow:10px 0 40px rgba(0,0,0,.5);}
+.side-menu.active{left:0;}
+.user-name{font-size:20px;font-weight:bold;margin-bottom:15px;color:#43a047;}
+.menu-btn{width:100%;padding:12px;margin-bottom:12px;border:none;border-radius:8px;cursor:pointer;color:white;font-size:14px;transition:.3s;background:linear-gradient(to right,#333,#222);}
+.menu-btn:hover{transform:translateX(6px);background:linear-gradient(to right,#43a047,#1b5e20);}
+.logout-btn{background:linear-gradient(to right,#c62828,#8e0000);}
 
-    /* Контейнер для двух новых кнопок */
-    .bottom-buttons {
-        width: 100%;
-        margin-top: 20px;
-        display: flex;
-        gap: 20px;
-        flex-wrap: wrap;
-        justify-content: center;
-    }
-    .bottom-buttons .btn {
-        flex: 1;
-        min-width: 200px;
-    }
+/* ---------- CALCULATORS ---------- */
+.wrapper{display:flex;gap:20px;flex-wrap:wrap;width:100%;}
+.calculator{background:#fff;border-radius:6px;padding:20px;box-shadow:0 2px 6px rgba(0,0,0,0.1);flex:1 1 300px;width:100%;}
+.title{font-size:20px;font-weight:bold;}
+.subtitle{color:#d32f2f;font-weight:bold;margin-bottom:15px;}
+.hint{margin-bottom:10px;color:#555;}
+.input{width:100%;padding:10px;font-size:16px;margin-bottom:15px;border:1px solid #ccc;border-radius:4px;}
+.btn{width:100%;color:white;padding:12px;font-size:16px;border:none;border-radius:4px;cursor:pointer;margin-bottom:20px;transition:.2s;}
+.btn:hover{opacity:.9;}
+.btn:active{transform:scale(.98);}
+.btn-calc{background:linear-gradient(to right,#1976d2,#0d47a1);}
+table{width:100%;border-collapse:collapse;font-size:14px;}
+th{text-align:left;padding-bottom:8px;border-bottom:1px solid #ddd;}
+td{padding:10px 0;border-bottom:1px solid #eee;}
+.coef{color:#555;}
+.result{font-weight:bold;}
+
+/* ---------- CHAT ---------- */
+#chatToggle{position:fixed;bottom:20px;right:20px;background:#2e7d32;color:white;padding:12px 15px;border-radius:30px;cursor:pointer;z-index:3000;}
+#chatWindow{position:fixed;bottom:80px;right:20px;width:300px;height:400px;background:#1c1c1c;border-radius:12px;display:none;flex-direction:column;overflow:hidden;z-index:3000;}
+#chatHeader{background:#2e7d32;color:white;padding:10px;font-weight:bold;}
+#chatMessages{flex:1;padding:10px;color:white; overflow-y:auto;font-size:14px;}
+#chatInputArea{display:flex;padding:10px;background:#111;}
+#chatInput{flex:1;padding:8px;border:none;border-radius:6px;}
+#chatSend{margin-left:5px;padding:8px 10px;background:#2e7d32;color:white;border:none;border-radius:6px;}
 </style>
 </head>
 <body>
 
-<div class="wrapper">
-
-    <!-- Калькулятор 1 – АГРОПРОМБАНК -->
-    <div class="calculator">
-        <div class="title">КАЛЬКУЛЯТОР РАССРОЧКИ</div>
-        <div class="subtitle">АГРОПРОМБАНК</div>
-        <div class="hint">Введите общую сумму чека и нажмите рассчитать</div>
-        <input type="number" class="input sum">
-        <button class="btn btn-calc">РАССЧИТАТЬ</button>
-        <table>
-            <tr><th>РАССРОЧКА</th><th>КОЭФФ.</th><th>ИТОГО, руб</th></tr>
-            <tr><td>АПБ 3 мес.</td><td class="coef">0.955</td><td class="result"></td></tr>
-            <tr><td>АПБ 6 мес.</td><td class="coef">0.93</td><td class="result"></td></tr>
-            <tr><td>АПБ 9 мес.</td><td class="coef">0.90</td><td class="result"></td></tr>
-            <tr><td>АПБ 12 мес.</td><td class="coef">0.875</td><td class="result"></td></tr>
-        </table>
-    </div>
-
-    <!-- Калькулятор 2 – ЭКСИМБАНК -->
-    <div class="calculator">
-        <div class="title">КАЛЬКУЛЯТОР РАССРОЧКИ</div>
-        <div class="subtitle">ЭКСИМБАНК</div>
-        <div class="hint">Введите общую сумму чека и нажмите рассчитать</div>
-        <input type="number" class="input sum">
-        <button class="btn btn-calc">РАССЧИТАТЬ</button>
-        <table>
-            <tr><th>РАССРОЧКА</th><th>КОЭФФ.</th><th>ИТОГО, руб</th></tr>
-            <tr><td>ЭксимБанк 3 мес.</td><td class="coef">0.955</td><td class="result"></td></tr>
-            <tr><td>ЭксимБанк 6 мес.</td><td class="coef">0.93</td><td class="result"></td></tr>
-            <tr><td>ЭксимБанк 9 мес.</td><td class="coef">0.90</td><td class="result"></td></tr>
-            <tr><td>ЭксимБанк 12 мес.</td><td class="coef">0.886</td><td class="result"></td></tr>
-        </table>
-    </div>
-
-    <!-- Калькулятор 3 – СБЕРБАНК -->
-    <div class="calculator">
-        <div class="title">КАЛЬКУЛЯТОР РАССРОЧКИ</div>
-        <div class="subtitle">СБЕРБАНК</div>
-        <div class="hint">Введите общую сумму чека и нажмите рассчитать</div>
-        <input type="number" class="input sum">
-        <button class="btn btn-calc">РАССЧИТАТЬ</button>
-        <table>
-            <tr><th>РАССРОЧКА</th><th>КОЭФФ.</th><th>ИТОГО, руб</th></tr>
-            <tr><td>СберБанк 3 мес.</td><td class="coef">0.96</td><td class="result"></td></tr>
-            <tr><td>СберБанк 6 мес.</td><td class="coef">0.93</td><td class="result"></td></tr>
-            <tr><td>СберБанк 9 мес.</td><td class="coef">0.90</td><td class="result"></td></tr>
-            <tr><td>СберБанк 12 мес.</td><td class="coef">0.88</td><td class="result"></td></tr>
-        </table>
-    </div>
-
+<!-- LOGIN SCREEN -->
+<div id="loginScreen" class="login-screen">
+  <div class="login-box">
+    <div class="login-logo"><span class="green">A</span><span class="black">uto-</span><span class="green">S</span><span class="black">tyle</span></div>
+    <div class="login-subtitle">Выберите пользователя</div>
+    <select id="userSelect">
+      <option value="cashier">Кассир</option>
+      <option value="evgeniy">Евгений</option>
+      <option value="vadim">Вадим</option>
+    </select>
+    <input type="password" id="passwordInput" placeholder="Введите пароль">
+    <button id="loginBtn" class="login-btn">ВОЙТИ</button>
+    <div id="errorMsg" class="error-msg"></div>
+  </div>
 </div>
 
-<!-- Нижние кнопки -->
-<div class="bottom-buttons">
-    <button class="btn btn-non-cash">ОФОРМИТЬ БЕЗНАЛ</button>
-    <button class="btn btn-close-shift">ЗАКРЫТИЕ СМЕНЫ</button>
+<!-- MENU -->
+<div class="menu-toggle" onclick="toggleMenu()">☰</div>
+<div id="sideMenu" class="side-menu">
+  <div class="user-name" id="currentUser"></div>
+  <button class="menu-btn" onclick="location.href='beznal.html'">ОФОРМИТЬ БЕЗНАЛ</button>
+  <button class="menu-btn" onclick="location.href='smena.html'">ЗАКРЫТИЕ СМЕНЫ</button>
+  <button class="menu-btn" onclick="location.href='discount.html'">СКИДОЧНАЯ КАРТА</button>
+  <button class="menu-btn" onclick="location.href='pass.html'">ПАРОЛИ</button>
+  <button class="menu-btn logout-btn" onclick="logout()">ВЫЙТИ</button>
+</div>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="logo"><span class="green">A</span><span class="black">uto-</span><span class="green">S</span><span class="black">tyle</span></div>
+</div>
+
+<!-- CALCULATORS -->
+<div class="wrapper">
+  <!-- Калькулятор АГРОПРОМБАНК -->
+  <div class="calculator">
+    <div class="title">КАЛЬКУЛЯТОР РАССРОЧКИ</div>
+    <div class="subtitle">АГРОПРОМБАНК</div>
+    <div class="hint">Введите сумму чека</div>
+    <input type="number" class="input sum">
+    <button class="btn btn-calc">РАССЧИТАТЬ</button>
+    <table>
+      <tr><th>РАССРОЧКА</th><th>КОЭФФ.</th><th>ИТОГО</th></tr>
+      <tr><td>3 мес.</td><td class="coef">0.955</td><td class="result"></td></tr>
+      <tr><td>6 мес.</td><td class="coef">0.93</td><td class="result"></td></tr>
+      <tr><td>9 мес.</td><td class="coef">0.90</td><td class="result"></td></tr>
+      <tr><td>12 мес.</td><td class="coef">0.875</td><td class="result"></td></tr>
+    </table>
+  </div>
+  <!-- Калькулятор ЭКСИМБАНК -->
+  <div class="calculator">
+    <div class="title">КАЛЬКУЛЯТОР РАССРОЧКИ</div>
+    <div class="subtitle">ЭКСИМБАНК</div>
+    <div class="hint">Введите сумму чека</div>
+    <input type="number" class="input sum">
+    <button class="btn btn-calc">РАССЧИТАТЬ</button>
+    <table>
+      <tr><th>РАССРОЧКА</th><th>КОЭФФ.</th><th>ИТОГО</th></tr>
+      <tr><td>3 мес.</td><td class="coef">0.955</td><td class="result"></td></tr>
+      <tr><td>6 мес.</td><td class="coef">0.93</td><td class="result"></td></tr>
+      <tr><td>9 мес.</td><td class="coef">0.90</td><td class="result"></td></tr>
+      <tr><td>12 мес.</td><td class="coef">0.886</td><td class="result"></td></tr>
+    </table>
+  </div>
+  <!-- Калькулятор СБЕРБАНК -->
+  <div class="calculator">
+    <div class="title">КАЛЬКУЛЯТОР РАССРОЧКИ</div>
+    <div class="subtitle">СБЕРБАНК</div>
+    <div class="hint">Введите сумму чека</div>
+    <input type="number" class="input sum">
+    <button class="btn btn-calc">РАССЧИТАТЬ</button>
+    <table>
+      <tr><th>РАССРОЧКА</th><th>КОЭФФ.</th><th>ИТОГО</th></tr>
+      <tr><td>3 мес.</td><td class="coef">0.96</td><td class="result"></td></tr>
+      <tr><td>6 мес.</td><td class="coef">0.93</td><td class="result"></td></tr>
+      <tr><td>9 мес.</td><td class="coef">0.90</td><td class="result"></td></tr>
+      <tr><td>12 мес.</td><td class="coef">0.88</td><td class="result"></td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- CHAT -->
+<div id="chatToggle" onclick="toggleChat()">Чат</div>
+<div id="chatWindow">
+  <div id="chatHeader">Чат</div>
+  <div id="chatMessages"></div>
+  <div id="chatInputArea">
+    <input type="text" id="chatInput" placeholder="Введите сообщение">
+    <button id="chatSend">Отправить</button>
+  </div>
 </div>
 
 <script>
-document.querySelectorAll('.calculator').forEach(calc => {
-    const btn = calc.querySelector('.btn-calc');
-    btn.addEventListener('click', () => {
-        const sum = parseFloat(calc.querySelector('.sum').value);
-        if (isNaN(sum) || sum < 0) return;
-        const coefs = calc.querySelectorAll('td.coef');
-        const results = calc.querySelectorAll('td.result');
-        coefs.forEach((c, i) => {
-            results[i].textContent = (sum / parseFloat(c.textContent))
-                .toLocaleString('ru-RU', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-        });
-    });
+// Пользователи
+const users = {
+  cashier:{name:"Кассир", pass:"2012"},
+  evgeniy:{name:"Евгений", pass:"0186"},
+  vadim:{name:"Вадим", pass:"2385"}
+};
+let currentUser="";
+const chatKey="chatHistory";
 
-    // расчет при Enter
-    calc.querySelector('.sum').addEventListener('keydown', e => {
-        if (e.key === 'Enter') btn.click();
+// Вход
+document.getElementById("loginBtn").onclick = function(){
+  const user=document.getElementById("userSelect").value;
+  const pass=document.getElementById("passwordInput").value;
+  if(pass===users[user].pass){
+    const expire = Date.now()+24*60*60*1000; // 24 часа
+    localStorage.setItem("session",JSON.stringify({user:user,expire}));
+    startSession(user);
+  } else {
+    document.getElementById("errorMsg").textContent="Неверный пароль";
+  }
+};
+
+window.onload = function(){
+  const saved = localStorage.getItem("session");
+  if(saved){
+    const data = JSON.parse(saved);
+    if(Date.now()<data.expire) startSession(data.user);
+    else localStorage.removeItem("session");
+  }
+};
+
+// Начало сессии
+function startSession(user){
+  currentUser = user;
+  document.getElementById("loginScreen").style.display="none";
+  document.getElementById("currentUser").textContent = "👤 " + users[user].name;
+  loadChat();
+  if(user!=="vadim") document.getElementById("chatInputArea").style.display="none";
+}
+
+// Выход
+function logout(){
+  localStorage.removeItem("session");
+  location.reload();
+}
+
+// Меню
+function toggleMenu(){document.getElementById("sideMenu").classList.toggle("active");}
+
+// Калькуляторы
+document.querySelectorAll('.calculator').forEach(calc=>{
+  const btn = calc.querySelector('.btn-calc');
+  btn.addEventListener('click',()=>{
+    const sum = parseFloat(calc.querySelector('.sum').value);
+    if(isNaN(sum)||sum<0) return;
+    const coefs = calc.querySelectorAll('td.coef');
+    const results = calc.querySelectorAll('td.result');
+    coefs.forEach((c,i)=>{
+      results[i].textContent = (sum/parseFloat(c.textContent)).toLocaleString('ru-RU',{minimumFractionDigits:2,maximumFractionDigits:2});
     });
+  });
+  calc.querySelector('.sum').addEventListener('keydown', e=>{
+    if(e.key==='Enter') btn.click();
+  });
 });
+
+// Чат
+function toggleChat(){
+  const w = document.getElementById("chatWindow");
+  w.style.display = w.style.display==="flex" ? "none" : "flex";
+}
+document.getElementById("chatSend").onclick=function(){
+  const msg = document.getElementById("chatInput").value.trim();
+  if(!msg) return;
+  // Сохраняем сообщения с указанием пользователя
+  let data = JSON.parse(localStorage.getItem(chatKey)||"[]");
+  data.push({user:currentUser,text:msg});
+  localStorage.setItem(chatKey,JSON.stringify(data));
+  document.getElementById("chatInput").value="";
+  loadChat();
+};
+
+function loadChat(){
+  const box = document.getElementById("chatMessages");
+  box.innerHTML = "";
+  const data = JSON.parse(localStorage.getItem(chatKey)||"[]");
+  data.forEach(m=>{
+    // Отображаем сообщение только если оно адресовано текущему пользователю
+    if(m.user === currentUser || currentUser==="vadim"){
+      const d=document.createElement("div");
+      d.textContent = users[m.user].name+": "+m.text;
+      box.appendChild(d);
+    }
+  });
+  box.scrollTop = box.scrollHeight;
+}
 </script>
 
 </body>
