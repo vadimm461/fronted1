@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Калькулятор рассрочки</title>
 <style>
+/* ===== Обновленный стиль ===== */
 *{box-sizing:border-box;}
 body{font-family:Arial,sans-serif;background:#f5f6f8;margin:0;padding:20px;overflow-x:hidden;}
 
@@ -56,6 +57,23 @@ select,input[type="password"]{width:100%;padding:12px;font-size:16px;border:1px 
 .menu-btn{width:100%;padding:12px;margin-bottom:12px;border:none;border-radius:8px;cursor:pointer;color:white;font-size:14px;transition:.3s;background:linear-gradient(to right,#333,#222);}
 .menu-btn:hover{transform:translateX(6px);background:linear-gradient(to right,#43a047,#1b5e20);}
 .logout-btn{background:linear-gradient(to right,#c62828,#8e0000);}
+
+/* Уведомление */
+.notification{position:relative;}
+.notification .badge{
+position:absolute;
+top:0;right:0;
+width:20px;height:20px;
+background:red;
+color:white;
+border-radius:50%;
+font-size:12px;
+display:none;
+text-align:center;
+line-height:20px;
+}
+
+/* ===== MOBILE ===== */
 @media(max-width:768px){body{padding:10px;}}
 </style>
 </head>
@@ -69,7 +87,7 @@ select,input[type="password"]{width:100%;padding:12px;font-size:16px;border:1px 
 <select id="userSelect">
 <option value="cashier">Кассир</option>
 <option value="evgeniy">Евгений</option>
-<option value="vadim">Вадим</option>
+<option value="vadim">Вадим (Администратор)</option>
 </select>
 <input type="password" id="passwordInput" placeholder="Введите пароль">
 <button id="loginBtn" class="login-btn">ВОЙТИ</button>
@@ -88,6 +106,24 @@ select,input[type="password"]{width:100%;padding:12px;font-size:16px;border:1px 
 
 <div id="workingDayTimer" style="display:none;">
 Осталось времени до конца рабочего дня:<div id="timeToEndOfDay"></div>
+</div>
+
+<!-- Уведомления для кассира и Евгения -->
+<div id="notificationArea">
+<button class="menu-btn notification" onclick="showNotification('cashier')">Уведомления</button>
+<div id="cashierNotification" class="badge">1</div>
+
+<button class="menu-btn notification" onclick="showNotification('evgeniy')">Уведомления</button>
+<div id="evgeniyNotification" class="badge">1</div>
+</div>
+
+<!-- Уведомление для администратора -->
+<div id="adminNotification" style="display:none;">
+<select id="receiverSelect">
+<option value="cashier">Кассиру</option>
+<option value="evgeniy">Евгению</option>
+</select>
+<button class="menu-btn" onclick="sendNotification()">Отправить уведомление</button>
 </div>
 
 <button class="menu-btn" onclick="location.href='beznal.html'">ОФОРМИТЬ БЕЗНАЛ</button>
@@ -124,21 +160,35 @@ select,input[type="password"]{width:100%;padding:12px;font-size:16px;border:1px 
 </div>
 
 <script>
-/* Калькулятор */
-document.querySelectorAll('.calculator').forEach(calc=>{
-const btn=calc.querySelector('.btn-calc');
-btn.onclick=()=>{
-const sum=parseFloat(calc.querySelector('.sum').value);
-if(!sum)return;
-const coefs=calc.querySelectorAll('.coef');
-const results=calc.querySelectorAll('.result');
-coefs.forEach((c,i)=>{
-results[i].textContent=(sum/parseFloat(c.textContent)).toLocaleString('ru-RU',{minimumFractionDigits:2,maximumFractionDigits:2});
-});
-};
-});
+/* Обработка уведомлений */
+let notifications = { cashier: false, evgeniy: false };
 
-/* AUTH & SESSION */
+function showNotification(user) {
+  if (user === "cashier" && notifications.cashier) {
+    alert("Уведомление для кассира");
+    notifications.cashier = false;
+    document.getElementById("cashierNotification").style.display = "none";
+  }
+  if (user === "evgeniy" && notifications.evgeniy) {
+    alert("Уведомление для Евгения");
+    notifications.evgeniy = false;
+    document.getElementById("evgeniyNotification").style.display = "none";
+  }
+}
+
+/* Администратор отправляет уведомление */
+function sendNotification() {
+  const receiver = document.getElementById("receiverSelect").value;
+  if (receiver === "cashier") {
+    notifications.cashier = true;
+    document.getElementById("cashierNotification").style.display = "inline-block";
+  } else if (receiver === "evgeniy") {
+    notifications.evgeniy = true;
+    document.getElementById("evgeniyNotification").style.display = "inline-block";
+  }
+}
+
+/* Вход в систему */
 const users={cashier:{name:"Кассир",pass:"2012"},evgeniy:{name:"Евгений",pass:"0186"},vadim:{name:"Вадим",pass:"2385"}};
 const sessionDuration=24*60*60*1000;
 let sessionTimer;
@@ -155,24 +205,19 @@ localStorage.setItem("session",JSON.stringify({user:userKey,expire}));
 startSession(userKey,expire);
 }else{document.getElementById("errorMsg").textContent="Неверный пароль";}
 };
+
 function startSession(userKey,expire){
 document.getElementById("loginScreen").style.display="none";
 document.getElementById("currentUser").textContent="👤 "+users[userKey].name;
 updateTimer(expire);
 sessionTimer=setInterval(()=>updateTimer(expire),1000);
-if(userKey==='cashier'){
-document.getElementById('workingDayTimer').style.display='block';
-updateWorkingDayTimer();
-setInterval(updateWorkingDayTimer,1000);
+if(userKey==='vadim'){
+  document.getElementById('adminNotification').style.display='block'; // Администратор может отправлять уведомления
 }
 }
+
 function updateTimer(expire){const diff=expire-Date.now();if(diff<=0){logout();return;}const h=Math.floor(diff/1000/60/60);const m=Math.floor((diff/1000/60)%60);const s=Math.floor((diff/1000)%60);document.getElementById("timeLeft").textContent=`${h}ч ${m}м ${s}с`;}
-function updateWorkingDayTimer(){
-const now=new Date();const end=new Date();end.setHours(19,0,0,0);
-let diff=end-now;let text="";
-if(diff<=0){text="Рабочий день завершен!";}else{const h=Math.floor(diff/1000/60/60);const m=Math.floor((diff/1000/60)%60);text=`${h}ч ${m}м`;}
-document.getElementById("timeToEndOfDay").textContent=text;
-}
+
 function logout(){localStorage.removeItem("session");clearInterval(sessionTimer);location.reload();}
 function toggleMenu(){document.getElementById("sideMenu").classList.toggle("active");}
 </script>
