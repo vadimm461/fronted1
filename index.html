@@ -4,242 +4,59 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Калькулятор рассрочки</title>
-
 <style>
 *{box-sizing:border-box;}
-body{
-font-family:Arial,sans-serif;
-background:#f5f6f8;
-margin:0;
-padding:20px;
-overflow-x:hidden;
-}
+body{font-family:Arial,sans-serif;background:#f5f6f8;margin:0;padding:20px;overflow-x:hidden;}
 
 /* ===== HEADER ===== */
-.header{
-background:white;
-padding:15px;
-border-radius:8px;
-box-shadow:0 4px 12px rgba(0,0,0,.08);
-margin-bottom:20px;
-text-align:center;
-}
-
-.logo{
-font-size:28px;
-font-weight:bold;
-letter-spacing:1px;
-}
+.header{background:white;padding:15px;border-radius:8px;box-shadow:0 4px 12px rgba(0,0,0,.08);margin-bottom:20px;text-align:center;}
+.logo{font-size:28px;font-weight:bold;letter-spacing:1px;}
 .logo .green{color:#2e7d32;}
 .logo .black{color:#000;}
-
-.manager-panel{
-margin-top:8px;
-font-size:14px;
-color:#555;
-border-top:1px solid #eee;
-padding-top:8px;
-}
+.manager-panel{margin-top:8px;font-size:14px;color:#555;border-top:1px solid #eee;padding-top:8px;}
 
 /* ===== CALCULATORS ===== */
-.wrapper{
-display:flex;
-gap:20px;
-flex-wrap:wrap;
-width:100%;
-}
-
-.calculator{
-background:#fff;
-border-radius:8px;
-padding:20px;
-box-shadow:0 4px 12px rgba(0,0,0,.08);
-flex:1 1 300px;
-width:100%;
-transition:.3s;
-}
-
-.calculator:hover{
-transform:translateY(-4px);
-box-shadow:0 10px 25px rgba(0,0,0,.12);
-}
-
+.wrapper{display:flex;gap:20px;flex-wrap:wrap;width:100%;}
+.calculator{background:#fff;border-radius:8px;padding:20px;box-shadow:0 4px 12px rgba(0,0,0,.08);flex:1 1 300px;width:100%;transition:.3s;}
+.calculator:hover{transform:translateY(-4px);box-shadow:0 10px 25px rgba(0,0,0,.12);}
 .title{font-size:20px;font-weight:bold;}
 .subtitle{color:#d32f2f;font-weight:bold;margin-bottom:15px;}
 .hint{margin-bottom:10px;color:#555;}
-
-.input{
-width:100%;
-padding:10px;
-font-size:16px;
-margin-bottom:15px;
-border:1px solid #ccc;
-border-radius:6px;
-}
-
-.btn{
-width:100%;
-color:white;
-padding:12px;
-font-size:16px;
-border:none;
-border-radius:6px;
-cursor:pointer;
-margin-bottom:20px;
-transition:.2s;
-}
-
+.input{width:100%;padding:10px;font-size:16px;margin-bottom:15px;border:1px solid #ccc;border-radius:6px;}
+.btn{width:100%;color:white;padding:12px;font-size:16px;border:none;border-radius:6px;cursor:pointer;margin-bottom:20px;transition:.2s;}
 .btn:hover{opacity:.9;}
 .btn:active{transform:scale(.98);}
-
-.btn-calc{
-background:linear-gradient(to right,#1976d2,#0d47a1);
-}
-
-table{
-width:100%;
-border-collapse:collapse;
-font-size:14px;
-}
+.btn-calc{background:linear-gradient(to right,#1976d2,#0d47a1);}
+table{width:100%;border-collapse:collapse;font-size:14px;}
 th{border-bottom:1px solid #ddd;padding-bottom:8px;text-align:left;}
 td{border-bottom:1px solid #eee;padding:10px 0;}
 .coef{color:#555;}
 .result{font-weight:bold;}
 
 /* ===== LOGIN ===== */
-.login-screen{
-position:fixed;
-top:0;left:0;
-width:100%;height:100vh;
-background:linear-gradient(135deg,#1b5e20,#000);
-display:flex;
-justify-content:center;
-align-items:center;
-padding:20px;
-z-index:9999;
-}
-
-.login-box{
-background:white;
-padding:30px 25px;
-border-radius:14px;
-width:100%;
-max-width:400px;
-text-align:center;
-box-shadow:0 20px 50px rgba(0,0,0,.4);
-animation:fadeIn .4s ease;
-}
-
+.login-screen{position:fixed;top:0;left:0;width:100%;height:100vh;background:linear-gradient(135deg,#1b5e20,#000);display:flex;justify-content:center;align-items:center;padding:20px;z-index:9999;}
+.login-box{background:white;padding:30px 25px;border-radius:14px;width:100%;max-width:400px;text-align:center;box-shadow:0 20px 50px rgba(0,0,0,.4);animation:fadeIn .4s ease;}
 .login-logo{font-size:30px;font-weight:bold;margin-bottom:10px;}
 .login-subtitle{color:#555;margin-bottom:15px;}
-
-select,input[type="password"]{
-width:100%;
-padding:12px;
-font-size:16px;
-border:1px solid #ccc;
-border-radius:6px;
-margin-bottom:15px;
-}
-
-.login-btn{
-width:100%;
-padding:12px;
-font-size:16px;
-border:none;
-border-radius:6px;
-cursor:pointer;
-color:white;
-background:linear-gradient(to right,#43a047,#1b5e20);
-}
-
+select,input[type="password"]{width:100%;padding:12px;font-size:16px;border:1px solid #ccc;border-radius:6px;margin-bottom:15px;}
+.login-btn{width:100%;padding:12px;font-size:16px;border:none;border-radius:6px;cursor:pointer;color:white;background:linear-gradient(to right,#43a047,#1b5e20);}
 .error-msg{color:#d32f2f;font-size:14px;margin-top:8px;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
 
-@keyframes fadeIn{
-from{opacity:0;transform:translateY(10px);}
-to{opacity:1;transform:translateY(0);}
-}
-
-/* ===== PREMIUM SIDE MENU ===== */
-.menu-toggle{
-position:fixed;
-top:20px;
-left:20px;
-width:45px;
-height:45px;
-background:linear-gradient(135deg,#2e7d32,#1b5e20);
-color:white;
-display:flex;
-align-items:center;
-justify-content:center;
-border-radius:12px;
-cursor:pointer;
-z-index:3000;
-box-shadow:0 6px 20px rgba(0,0,0,.3);
-transition:.3s;
-}
-
+/* ===== SIDE MENU ===== */
+.menu-toggle{position:fixed;top:20px;left:20px;width:45px;height:45px;background:linear-gradient(135deg,#2e7d32,#1b5e20);color:white;display:flex;align-items:center;justify-content:center;border-radius:12px;cursor:pointer;z-index:3000;box-shadow:0 6px 20px rgba(0,0,0,.3);transition:.3s;}
 .menu-toggle:hover{transform:scale(1.1);}
-
-.side-menu{
-position:fixed;
-top:0;
-left:-320px;
-width:300px;
-height:100%;
-background:rgba(20,20,20,.95);
-backdrop-filter:blur(12px);
-color:white;
-padding:80px 20px 20px 20px;
-transition:.4s cubic-bezier(.77,0,.18,1);
-z-index:2500;
-box-shadow:10px 0 40px rgba(0,0,0,.5);
-}
-
+.side-menu{position:fixed;top:0;left:-320px;width:300px;height:100%;background:rgba(20,20,20,.95);backdrop-filter:blur(12px);color:white;padding:80px 20px 20px 20px;transition:.4s cubic-bezier(.77,0,.18,1);z-index:2500;box-shadow:10px 0 40px rgba(0,0,0,.5);}
 .side-menu.active{left:0;}
-
-.user-name{
-font-size:20px;
-font-weight:bold;
-margin-bottom:15px;
-color:#43a047;
-}
-
-.session-time{
-margin-bottom:25px;
-padding:12px;
-background:rgba(255,255,255,.05);
-border-radius:10px;
-font-size:14px;
-}
-
-.menu-btn{
-width:100%;
-padding:12px;
-margin-bottom:12px;
-border:none;
-border-radius:8px;
-cursor:pointer;
-color:white;
-font-size:14px;
-transition:.3s;
-background:linear-gradient(to right,#333,#222);
-}
-
-.menu-btn:hover{
-transform:translateX(6px);
-background:linear-gradient(to right,#43a047,#1b5e20);
-}
-
-.logout-btn{
-background:linear-gradient(to right,#c62828,#8e0000);
-}
-
-/* mobile */
-@media(max-width:768px){
-body{padding:10px;}
-}
-
+.user-name{font-size:20px;font-weight:bold;margin-bottom:15px;color:#43a047;}
+.session-time{margin-bottom:15px;padding:6px 12px;background:rgba(255,255,255,0.08);border-radius:8px;font-size:12px;color:#ccc;text-align:center;opacity:0.7;transition:opacity .3s;}
+.session-time:hover{opacity:1;}
+#workingDayTimer{margin-bottom:25px;padding:15px;background:linear-gradient(135deg,#2e7d32,#1b5e20);border-radius:12px;font-size:18px;font-weight:bold;text-align:center;color:white;box-shadow:0 0 15px rgba(46,125,50,0.7);animation:pulse 2s infinite;}
+@keyframes pulse{0%{box-shadow:0 0 15px rgba(46,125,50,0.5);}50%{box-shadow:0 0 25px rgba(46,125,50,0.9);}100%{box-shadow:0 0 15px rgba(46,125,50,0.5);}}
+.menu-btn{width:100%;padding:12px;margin-bottom:12px;border:none;border-radius:8px;cursor:pointer;color:white;font-size:14px;transition:.3s;background:linear-gradient(to right,#333,#222);}
+.menu-btn:hover{transform:translateX(6px);background:linear-gradient(to right,#43a047,#1b5e20);}
+.logout-btn{background:linear-gradient(to right,#c62828,#8e0000);}
+@media(max-width:768px){body{padding:10px;}}
 </style>
 </head>
 <body>
@@ -247,10 +64,7 @@ body{padding:10px;}
 <!-- LOGIN -->
 <div id="loginScreen" class="login-screen">
 <div class="login-box">
-<div class="login-logo">
-<span class="green">A</span><span class="black">uto-</span>
-<span class="green">S</span><span class="black">tyle</span>
-</div>
+<div class="login-logo"><span class="green">A</span><span class="black">uto-</span><span class="green">S</span><span class="black">tyle</span></div>
 <div class="login-subtitle">Выберите пользователя</div>
 <select id="userSelect">
 <option value="cashier">Кассир</option>
@@ -269,90 +83,48 @@ body{padding:10px;}
 <div class="user-name" id="currentUser"></div>
 
 <div class="session-time">
-Сессия истекает через:
-<div id="timeLeft"></div>
+Сессия истекает через:<div id="timeLeft"></div>
 </div>
 
-<!-- Display "Осталось время до конца рабочего дня" только для кассира -->
 <div id="workingDayTimer" style="display:none;">
-Осталось времени до конца рабочего дня:
-<div id="timeToEndOfDay"></div>
+Осталось времени до конца рабочего дня:<div id="timeToEndOfDay"></div>
 </div>
 
 <button class="menu-btn" onclick="location.href='beznal.html'">ОФОРМИТЬ БЕЗНАЛ</button>
 <button class="menu-btn" onclick="location.href='smena.html'">ЗАКРЫТИЕ СМЕНЫ</button>
 <button class="menu-btn" onclick="location.href='discount.html'">СКИДОЧНАЯ КАРТА</button>
 <button class="menu-btn" onclick="location.href='pass.html'">ПАРОЛИ</button>
-
 <button class="menu-btn logout-btn" onclick="logout()">ВЫЙТИ</button>
 </div>
 
-<!-- ===== ВАШ КОНТЕНТ БЕЗ ИЗМЕНЕНИЙ ===== -->
-
-<div class="header">
-<div class="logo">
-<span class="green">A</span><span class="black">uto-</span>
-<span class="green">S</span><span class="black">tyle</span>
-</div>
-<div class="manager-panel">Панель менеджера</div>
-</div>
-
+<!-- ===== ВАШ КОНТЕНТ (КАЛЬКУЛЯТОРЫ И КНОПКИ) ===== -->
+<div class="header"><div class="logo"><span class="green">A</span><span class="black">uto-</span><span class="green">S</span><span class="black">tyle</span></div><div class="manager-panel">Панель менеджера</div></div>
 <div class="wrapper">
-
-<!-- Калькуляторы полностью сохранены -->
-
 <!-- Калькулятор 1 -->
-<div class="calculator">
-<div class="title">КАЛЬКУЛЯТОР РАССРОЧКИ</div>
-<div class="subtitle">АГРОПРОМБАНК</div>
-<div class="hint">Введите общую сумму чека</div>
-<input type="number" class="input sum">
-<button class="btn btn-calc">РАССЧИТАТЬ</button>
-<table>
-<tr><th>РАССРОЧКА</th><th>КОЭФФ.</th><th>ИТОГО</th></tr>
+<div class="calculator"><div class="title">КАЛЬКУЛЯТОР РАССРОЧКИ</div><div class="subtitle">АГРОПРОМБАНК</div><div class="hint">Введите общую сумму чека</div><input type="number" class="input sum"><button class="btn btn-calc">РАССЧИТАТЬ</button>
+<table><tr><th>РАССРОЧКА</th><th>КОЭФФ.</th><th>ИТОГО</th></tr>
 <tr><td>АПБ 3</td><td class="coef">0.955</td><td class="result"></td></tr>
 <tr><td>АПБ 6</td><td class="coef">0.93</td><td class="result"></td></tr>
 <tr><td>АПБ 9</td><td class="coef">0.90</td><td class="result"></td></tr>
-<tr><td>АПБ 12</td><td class="coef">0.875</td><td class="result"></td></tr>
-</table>
-</div>
-
+<tr><td>АПБ 12</td><td class="coef">0.875</td><td class="result"></td></tr></table></div>
 <!-- Калькулятор 2 -->
-<div class="calculator">
-<div class="title">КАЛЬКУЛЯТОР РАССРОЧКИ</div>
-<div class="subtitle">ЭКСИМБАНК</div>
-<input type="number" class="input sum">
-<button class="btn btn-calc">РАССЧИТАТЬ</button>
-<table>
-<tr><th>РАССРОЧКА</th><th>КОЭФФ.</th><th>ИТОГО</th></tr>
+<div class="calculator"><div class="title">КАЛЬКУЛЯТОР РАССРОЧКИ</div><div class="subtitle">ЭКСИМБАНК</div><input type="number" class="input sum"><button class="btn btn-calc">РАССЧИТАТЬ</button>
+<table><tr><th>РАССРОЧКА</th><th>КОЭФФ.</th><th>ИТОГО</th></tr>
 <tr><td>3 мес</td><td class="coef">0.955</td><td class="result"></td></tr>
 <tr><td>6 мес</td><td class="coef">0.93</td><td class="result"></td></tr>
 <tr><td>9 мес</td><td class="coef">0.90</td><td class="result"></td></tr>
-<tr><td>12 мес</td><td class="coef">0.886</td><td class="result"></td></tr>
-</table>
-</div>
-
+<tr><td>12 мес</td><td class="coef">0.886</td><td class="result"></td></tr></table></div>
 <!-- Калькулятор 3 -->
-<div class="calculator">
-<div class="title">КАЛЬКУЛЯТОР РАССРОЧКИ</div>
-<div class="subtitle">СБЕРБАНК</div>
-<input type="number" class="input sum">
-<button class="btn btn-calc">РАССЧИТАТЬ</button>
-<table>
-<tr><th>РАССРОЧКА</th><th>КОЭФФ.</th><th>ИТОГО</th></tr>
+<div class="calculator"><div class="title">КАЛЬКУЛЯТОР РАССРОЧКИ</div><div class="subtitle">СБЕРБАНК</div><input type="number" class="input sum"><button class="btn btn-calc">РАССЧИТАТЬ</button>
+<table><tr><th>РАССРОЧКА</th><th>КОЭФФ.</th><th>ИТОГО</th></tr>
 <tr><td>3 мес</td><td class="coef">0.96</td><td class="result"></td></tr>
 <tr><td>6 мес</td><td class="coef">0.93</td><td class="result"></td></tr>
 <tr><td>9 мес</td><td class="coef">0.90</td><td class="result"></td></tr>
-<tr><td>12 мес</td><td class="coef">0.88</td><td class="result"></td></tr>
-</table>
-</div>
-
+<tr><td>12 мес</td><td class="coef">0.88</td><td class="result"></td></tr></table></div>
 </div>
 
 <script>
-
-/* ORIGINAL JS */
-
+/* Калькулятор */
 document.querySelectorAll('.calculator').forEach(calc=>{
 const btn=calc.querySelector('.btn-calc');
 btn.onclick=()=>{
@@ -361,93 +133,48 @@ if(!sum)return;
 const coefs=calc.querySelectorAll('.coef');
 const results=calc.querySelectorAll('.result');
 coefs.forEach((c,i)=>{
-results[i].textContent=(sum/parseFloat(c.textContent))
-.toLocaleString('ru-RU',{minimumFractionDigits:2,maximumFractionDigits:2});
+results[i].textContent=(sum/parseFloat(c.textContent)).toLocaleString('ru-RU',{minimumFractionDigits:2,maximumFractionDigits:2});
 });
 };
 });
 
-/* AUTH */
-
-const users={
-cashier:{name:"Кассир",pass:"2012"},
-evgeniy:{name:"Евгений",pass:"0186"},
-vadim:{name:"Вадим",pass:"2385"}
-};
-
+/* AUTH & SESSION */
+const users={cashier:{name:"Кассир",pass:"2012"},evgeniy:{name:"Евгений",pass:"0186"},vadim:{name:"Вадим",pass:"2385"}};
 const sessionDuration=24*60*60*1000;
 let sessionTimer;
-
 window.addEventListener("load",()=>{
 const saved=localStorage.getItem("session");
-if(saved){
-const data=JSON.parse(saved);
-if(Date.now()<data.expire){
-startSession(data.user,data.expire);
-}
-}
+if(saved){const data=JSON.parse(saved);if(Date.now()<data.expire){startSession(data.user,data.expire);}}
 });
-
 document.getElementById("loginBtn").onclick=function(){
 const userKey=document.getElementById("userSelect").value;
 const pass=document.getElementById("passwordInput").value;
-
 if(pass===users[userKey].pass){
 const expire=Date.now()+sessionDuration;
 localStorage.setItem("session",JSON.stringify({user:userKey,expire}));
 startSession(userKey,expire);
-}else{
-document.getElementById("errorMsg").textContent="Неверный пароль";
-}
+}else{document.getElementById("errorMsg").textContent="Неверный пароль";}
 };
-
 function startSession(userKey,expire){
 document.getElementById("loginScreen").style.display="none";
 document.getElementById("currentUser").textContent="👤 "+users[userKey].name;
 updateTimer(expire);
 sessionTimer=setInterval(()=>updateTimer(expire),1000);
-
-if(userKey === 'cashier'){
-  document.getElementById('workingDayTimer').style.display = 'block'; // Показать таймер
-  setInterval(updateWorkingDayTimer, 60000); // Обновлять каждый минут
-  updateWorkingDayTimer(); // Обновить сразу
+if(userKey==='cashier'){
+document.getElementById('workingDayTimer').style.display='block';
+updateWorkingDayTimer();
+setInterval(updateWorkingDayTimer,1000);
 }
 }
-
-function updateTimer(expire){
-const diff=expire-Date.now();
-if(diff<=0){logout();return;}
-const h=Math.floor(diff/1000/60/60);
-const m=Math.floor((diff/1000/60)%60);
-const s=Math.floor((diff/1000)%60);
-document.getElementById("timeLeft").textContent=`${h}ч ${m}м ${s}с`;
-}
-
+function updateTimer(expire){const diff=expire-Date.now();if(diff<=0){logout();return;}const h=Math.floor(diff/1000/60/60);const m=Math.floor((diff/1000/60)%60);const s=Math.floor((diff/1000)%60);document.getElementById("timeLeft").textContent=`${h}ч ${m}м ${s}с`;}
 function updateWorkingDayTimer(){
-const endOfDay = new Date();
-endOfDay.setHours(19, 0, 0, 0); // 19:00 текущего дня
-
-const diff = endOfDay - Date.now();
-if(diff <= 0) {
-  document.getElementById("timeToEndOfDay").textContent = "Рабочий день завершен!";
-} else {
-  const hours = Math.floor(diff / (1000 * 60 * 60));
-  const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-  document.getElementById("timeToEndOfDay").textContent = `${hours}ч ${minutes}м`;
+const now=new Date();const end=new Date();end.setHours(19,0,0,0);
+let diff=end-now;let text="";
+if(diff<=0){text="Рабочий день завершен!";}else{const h=Math.floor(diff/1000/60/60);const m=Math.floor((diff/1000/60)%60);text=`${h}ч ${m}м`;}
+document.getElementById("timeToEndOfDay").textContent=text;
 }
-
-}
-
-function logout(){
-localStorage.removeItem("session");
-clearInterval(sessionTimer);
-location.reload();
-}
-
-function toggleMenu(){
-document.getElementById("sideMenu").classList.toggle("active");
-}
-
+function logout(){localStorage.removeItem("session");clearInterval(sessionTimer);location.reload();}
+function toggleMenu(){document.getElementById("sideMenu").classList.toggle("active");}
 </script>
 
 </body>
