@@ -14,7 +14,7 @@ padding:20px;
 margin:0;
 }
 
-/* маленькая кнопка назад */
+/* кнопка назад */
 .back-button{
 position:fixed;
 top:15px;
@@ -27,11 +27,6 @@ padding:8px 14px;
 border-radius:6px;
 cursor:pointer;
 font-size:13px;
-opacity:.9;
-}
-
-.back-button:hover{
-opacity:1;
 }
 
 /* контейнер */
@@ -45,13 +40,11 @@ box-shadow:0 4px 20px rgba(0,0,0,.1);
 box-sizing:border-box;
 }
 
-/* Заголовок */
 .header{
 text-align:center;
 margin-bottom:25px;
 }
 
-/* таблицы */
 table{
 width:100%;
 border-collapse:collapse;
@@ -69,11 +62,6 @@ background:#1976d2;
 color:white;
 }
 
-/* ширина колонок */
-td:nth-child(1){width:60px;}
-td:nth-child(3){width:90px;}
-td:nth-child(4){width:120px;}
-
 input{
 width:100%;
 border:none;
@@ -88,7 +76,6 @@ font-weight:bold;
 font-size:16px;
 }
 
-/* кнопки (основные остаются широкими) */
 .buttons{
 margin-top:20px;
 }
@@ -105,8 +92,14 @@ font-size:16px;
 cursor:pointer;
 }
 
-.buttons button:hover{
-opacity:.9;
+/* кнопка удалить */
+.delete-btn{
+background:#d32f2f;
+color:white;
+border:none;
+padding:6px 10px;
+border-radius:4px;
+cursor:pointer;
 }
 
 /* мобильная адаптация */
@@ -125,41 +118,20 @@ font-size:12px;
 padding:6px;
 }
 
-h2{
-font-size:18px;
-}
-
-.buttons button{
-font-size:14px;
-padding:10px;
-}
-
 }
 
 /* печать */
 @media print{
 
-body{
-background:white;
-padding:0;
+.buttons,
+.back-button,
+.delete-btn{
+display:none;
 }
 
 .container{
 box-shadow:none;
-width:100%;
 padding:0;
-}
-
-.buttons{
-display:none;
-}
-
-.back-button{
-display:none;
-}
-
-input{
-border:none;
 }
 
 }
@@ -170,7 +142,7 @@ border:none;
 
 <button class="back-button" onclick="history.back()">← Назад</button>
 
-<div class="container" id="print-area">
+<div class="container">
 
 <div class="header">
 <h2>СЧЕТ НА ОПЛАТУ № <span id="invoice-number"></span></h2>
@@ -179,7 +151,7 @@ border:none;
 
 <div>
 <b>Плательщик:</b>
-<input id="payer" placeholder="Введите организацию">
+<input placeholder="Введите организацию">
 </div>
 
 <br>
@@ -193,7 +165,7 @@ border:none;
 
 <br>
 
-<table id="items">
+<table>
 
 <thead>
 <tr>
@@ -201,6 +173,7 @@ border:none;
 <th>Наименование</th>
 <th>Кол-во</th>
 <th>Цена</th>
+<th></th>
 </tr>
 </thead>
 
@@ -208,7 +181,7 @@ border:none;
 
 <tfoot>
 <tr>
-<td colspan="3" class="total">Итого:</td>
+<td colspan="4" class="total">Итого:</td>
 <td id="total">0</td>
 </tr>
 </tfoot>
@@ -217,7 +190,6 @@ border:none;
 
 <div class="buttons">
 <button onclick="addRow()">Добавить строку</button>
-<button onclick="calc()">Рассчитать</button>
 <button onclick="printPDF()">Скачать PDF</button>
 </div>
 
@@ -233,33 +205,67 @@ new Date().toLocaleDateString("ru-RU");
 document.getElementById("invoice-number").innerText =
 Math.floor(Math.random()*21);
 
-/* строки */
+/* добавить строку */
 function addRow(){
-document.getElementById("tbody").insertAdjacentHTML("beforeend",`
-<tr>
+
+let row = document.createElement("tr");
+
+row.innerHTML = `
 <td><input></td>
 <td><input></td>
 <td><input type="number" class="qty" value="0"></td>
 <td><input type="number" class="price" value="0"></td>
-</tr>
-`);
+<td><button class="delete-btn">✕</button></td>
+`;
+
+document.getElementById("tbody").appendChild(row);
+
+/* удаление строки */
+row.querySelector(".delete-btn").onclick = ()=>{
+row.remove();
+calc();
+};
+
+/* авторасчет + автодобавление */
+row.querySelectorAll("input").forEach(input=>{
+input.addEventListener("input", ()=>{
+calc();
+autoAddRow();
+});
+});
+
 }
 
-/* стартовые строки */
-for(let i=0;i<8;i++) addRow();
+/* автодобавление строки если заполняется последняя */
+function autoAddRow(){
+
+let rows = document.querySelectorAll("#tbody tr");
+let last = rows[rows.length-1];
+
+let filled = false;
+
+last.querySelectorAll("input").forEach(i=>{
+if(i.value && i.value != 0) filled = true;
+});
+
+if(filled) addRow();
+
+}
 
 /* расчет */
 function calc(){
+
 let total=0;
 
 document.querySelectorAll("#tbody tr").forEach(row=>{
-let q = Number(row.querySelector(".qty").value);
-let p = Number(row.querySelector(".price").value);
+let q = Number(row.querySelector(".qty")?.value || 0);
+let p = Number(row.querySelector(".price")?.value || 0);
 total += q*p;
 });
 
 document.getElementById("total").innerText =
 total.toLocaleString('ru-RU');
+
 }
 
 /* печать */
@@ -267,6 +273,9 @@ function printPDF(){
 calc();
 window.print();
 }
+
+/* стартовая одна строка */
+addRow();
 
 </script>
 
