@@ -5,42 +5,70 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
-  /* Убираем отступы браузера */
-  html, body {
-    margin: 0;
-    padding: 0;
-    height: 100%;
-    background: #f5f5f5;
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  background: #f5f5f5;
+  font-family: Arial, sans-serif;
+}
+
+/* Кнопка назад */
+.back-button {
+  position: fixed;
+  top: 15px;
+  left: 15px;
+  z-index: 9999;
+  background: #000;
+  color: #fff;
+  border: none;
+  padding: 12px 18px;
+  font-size: 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  opacity: 0.85;
+  transition: 0.3s;
+}
+
+.back-button:hover {
+  opacity: 1;
+}
+
+/* Центрирование формы */
+.form-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  width: 100%;
+}
+
+/* iframe адаптация */
+.form-wrapper iframe {
+  width: 100%;
+  max-width: 900px;
+  height: 100vh;
+  border: none;
+}
+
+/* Мобильная адаптация */
+@media (max-width: 768px) {
+  .back-button {
+    font-size: 14px;
+    padding: 10px 14px;
   }
 
-  /* Контейнер по центру */
-  .form-wrapper {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh; /* весь экран */
-    width: 100%;
-  }
-
-  /* Адаптивный iframe */
   .form-wrapper iframe {
-    width: 100%;
-    max-width: 900px; /* ограничение для больших экранов */
-    height: 100vh; /* вся высота */
-    border: none;
+    max-width: 100%;
+    height: 100vh;
   }
-
-  /* Мобильная адаптация */
-  @media (max-width: 768px) {
-    .form-wrapper iframe {
-      max-width: 100%;
-      height: 100vh;
-    }
-  }
+}
 </style>
 </head>
 
 <body>
+
+<button class="back-button" onclick="history.back()">← Назад</button>
 
 <div class="form-wrapper">
   <iframe src="https://docs.google.com/forms/d/e/1FAIpQLScWIZFaR3dtwy6crYqgfQjcW0oyPT44qysIhbubXhftkjzK1A/viewform?embedded=true">
