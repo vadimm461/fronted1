@@ -57,7 +57,8 @@ select,input[type="password"],#adminMessage{width:100%;padding:12px;font-size:16
 .menu-btn:hover{transform:translateX(6px);background:linear-gradient(to right,#43a047,#1b5e20);}
 .logout-btn{background:linear-gradient(to right,#c62828,#8e0000);}
 .notification{position:relative;}
-.notification .badge{position:absolute;top:-5px;right:-5px;width:20px;height:20px;background:red;color:white;border-radius:50%;font-size:12px;text-align:center;line-height:20px;display:none;}
+.notification .badge{position:absolute;top:-5px;right:-5px;width:20px;height:20px;background:red;color:white;border-radius:50%;font-size:12px;text-align:center;line-height:20px;display:none;animation:badgeAnim 0.5s ease;}
+@keyframes badgeAnim{0%{transform:scale(0);}50%{transform:scale(1.2);}100%{transform:scale(1);}}
 @media(max-width:768px){body{padding:10px;}}
 </style>
 </head>
@@ -83,16 +84,13 @@ select,input[type="password"],#adminMessage{width:100%;padding:12px;font-size:16
 
 <div id="sideMenu" class="side-menu">
 <div class="user-name" id="currentUser"></div>
-
 <div class="session-time">
 Сессия истекает через:<div id="timeLeft"></div>
 </div>
-
 <div id="workingDayTimer" style="display:none;">
 Осталось времени до конца рабочего дня:<div id="timeToEndOfDay"></div>
 </div>
 
-<!-- Уведомления -->
 <div id="notificationArea">
 <button class="menu-btn notification" id="notifBtn" onclick="readNotification()">Уведомления
 <span class="badge" id="notifBadge">1</span>
@@ -100,7 +98,6 @@ select,input[type="password"],#adminMessage{width:100%;padding:12px;font-size:16
 <div id="notifText" style="margin-bottom:15px;display:none;background:#333;padding:10px;border-radius:6px;color:white;"></div>
 </div>
 
-<!-- Админ: выбор кому отправить уведомление и текст -->
 <div id="adminNotification" style="display:none;">
 <input type="text" id="adminMessage" placeholder="Введите текст уведомления">
 <select id="receiverSelect">
@@ -117,7 +114,7 @@ select,input[type="password"],#adminMessage{width:100%;padding:12px;font-size:16
 <button class="menu-btn logout-btn" onclick="logout()">ВЫЙТИ</button>
 </div>
 
-<!-- ===== КАЛЬКУЛЯТОРЫ И КНОПКИ ===== -->
+<!-- ===== КАЛЬКУЛЯТОРЫ ===== -->
 <div class="header"><div class="logo"><span class="green">A</span><span class="black">uto-</span><span class="green">S</span><span class="black">tyle</span></div><div class="manager-panel">Панель менеджера</div></div>
 <div class="wrapper">
 <!-- калькуляторы оставлены без изменений -->
@@ -159,9 +156,7 @@ results[i].textContent=(sum/parseFloat(c.textContent)).toLocaleString('ru-RU',{m
 /* ===== AUTH & SESSION ===== */
 const users={cashier:{name:"Кассир",pass:"2012"},evgeniy:{name:"Евгений",pass:"0186"},vadim:{name:"Вадим",pass:"2385"}};
 const sessionDuration=24*60*60*1000;
-let sessionTimer;
-let currentUser="";
-let currentNotification="";
+let sessionTimer,currentUser="";
 
 window.addEventListener("load",()=>{
 const saved=localStorage.getItem("session");
@@ -184,49 +179,63 @@ document.getElementById("loginScreen").style.display="none";
 document.getElementById("currentUser").textContent="👤 "+users[userKey].name;
 updateTimer(expire);
 sessionTimer=setInterval(()=>updateTimer(expire),1000);
-
-if(userKey==='vadim'){
-  document.getElementById('adminNotification').style.display='block';
-}
-if(userKey==='cashier' || userKey==='evgeniy'){
-  document.getElementById('notifBadge').style.display='none';
-}
+if(userKey==='vadim'){document.getElementById('adminNotification').style.display='block';}
+if(userKey==='cashier'){document.getElementById('workingDayTimer').style.display='block';updateWorkingDay();}
+setInterval(updateWorkingDay,1000);
+checkNotifications();
 }
 
+/* ===== TIMER ===== */
 function updateTimer(expire){const diff=expire-Date.now();if(diff<=0){logout();return;}const h=Math.floor(diff/1000/60/60);const m=Math.floor((diff/1000/60)%60);const s=Math.floor((diff/1000)%60);document.getElementById("timeLeft").textContent=`${h}ч ${m}м ${s}с`;}
+function logout(){localStorage.removeItem("session");clearInterval(sessionTimer);location.reload();}
+function toggleMenu(){document.getElementById("sideMenu").classList.toggle("active");}
 
-/* ===== Уведомления ===== */
+/* ===== WORKING DAY TIMER ===== */
+function updateWorkingDay(){
+if(currentUser!=='cashier')return;
+const now=new Date();
+const start=new Date();start.setHours(9,0,0,0);
+const end=new Date();end.setHours(19,0,0,0);
+let diff=end-now;
+if(diff<0)diff=0;
+const h=Math.floor(diff/1000/60/60);
+const m=Math.floor((diff/1000/60)%60);
+const s=Math.floor((diff/1000)%60);
+document.getElementById('timeToEndOfDay').textContent=`${h}ч ${m}м ${s}с`;
+}
+
+/* ===== NOTIFICATIONS ===== */
 function sendNotification(){
 const msg=document.getElementById('adminMessage').value.trim();
 if(!msg)return alert("Введите текст уведомления");
 const receiver=document.getElementById('receiverSelect').value;
 localStorage.setItem(receiver+"_notif",msg);
-if(currentUser===receiver){
-document.getElementById('notifText').textContent=msg;
-document.getElementById('notifText').style.display='block';
-document.getElementById('notifBadge').style.display='inline-block';
-} 
-alert("Уведомление отправлено!");
 document.getElementById('adminMessage').value="";
+checkNotifications();
+alert("Уведомление отправлено!");
+}
+
+function checkNotifications(){
+if(currentUser==='cashier' || currentUser==='evgeniy'){
+const notifKey=currentUser+"_notif";
+const msg=localStorage.getItem(notifKey);
+if(msg){document.getElementById('notifText').textContent=msg;
+document.getElementById('notifText').style.display='block';
+document.getElementById('notifBadge').style.display='inline-block';}else{
+document.getElementById('notifText').style.display='none';
+document.getElementById('notifBadge').style.display='none';
+}}
 }
 
 function readNotification(){
 const notifKey=currentUser+"_notif";
 const msg=localStorage.getItem(notifKey);
 if(msg){
-document.getElementById('notifText').textContent=msg;
 document.getElementById('notifText').style.display='block';
 document.getElementById('notifBadge').style.display='none';
 localStorage.removeItem(notifKey);
-}else{
-alert("Нет новых уведомлений");
+}else{alert("Нет новых уведомлений");}
 }
-}
-
-/* ===== LOGOUT ===== */
-function logout(){localStorage.removeItem("session");clearInterval(sessionTimer);location.reload();}
-function toggleMenu(){document.getElementById("sideMenu").classList.toggle("active");}
 </script>
-
 </body>
 </html>
