@@ -6,24 +6,22 @@
 <title>Калькулятор рассрочки</title>
 
 <style>
-
 *{box-sizing:border-box;}
-
 body{
-font-family: Arial, sans-serif;
+font-family:Arial,sans-serif;
 background:#f5f6f8;
 margin:0;
 padding:20px;
 overflow-x:hidden;
 }
 
-/* ---------- ШАПКА ---------- */
+/* ===== HEADER ===== */
 
 .header{
 background:white;
 padding:15px;
-border-radius:6px;
-box-shadow:0 2px 6px rgba(0,0,0,.1);
+border-radius:8px;
+box-shadow:0 4px 12px rgba(0,0,0,.08);
 margin-bottom:20px;
 text-align:center;
 }
@@ -33,7 +31,6 @@ font-size:28px;
 font-weight:bold;
 letter-spacing:1px;
 }
-
 .logo .green{color:#2e7d32;}
 .logo .black{color:#000;}
 
@@ -45,7 +42,7 @@ border-top:1px solid #eee;
 padding-top:8px;
 }
 
-/* ---------- КАЛЬКУЛЯТОРЫ ---------- */
+/* ===== CALCULATORS ===== */
 
 .wrapper{
 display:flex;
@@ -56,28 +53,22 @@ width:100%;
 
 .calculator{
 background:#fff;
-border-radius:6px;
+border-radius:8px;
 padding:20px;
-box-shadow:0 2px 6px rgba(0,0,0,0.1);
+box-shadow:0 4px 12px rgba(0,0,0,.08);
 flex:1 1 300px;
 width:100%;
+transition:.3s;
 }
 
-.title{
-font-size:20px;
-font-weight:bold;
+.calculator:hover{
+transform:translateY(-4px);
+box-shadow:0 10px 25px rgba(0,0,0,.12);
 }
 
-.subtitle{
-color:#d32f2f;
-font-weight:bold;
-margin-bottom:15px;
-}
-
-.hint{
-margin-bottom:10px;
-color:#555;
-}
+.title{font-size:20px;font-weight:bold;}
+.subtitle{color:#d32f2f;font-weight:bold;margin-bottom:15px;}
+.hint{margin-bottom:10px;color:#555;}
 
 .input{
 width:100%;
@@ -85,7 +76,7 @@ padding:10px;
 font-size:16px;
 margin-bottom:15px;
 border:1px solid #ccc;
-border-radius:4px;
+border-radius:6px;
 }
 
 .btn{
@@ -94,7 +85,7 @@ color:white;
 padding:12px;
 font-size:16px;
 border:none;
-border-radius:4px;
+border-radius:6px;
 cursor:pointer;
 margin-bottom:20px;
 transition:.2s;
@@ -107,67 +98,17 @@ transition:.2s;
 background:linear-gradient(to right,#1976d2,#0d47a1);
 }
 
-.btn-non-cash{
-background:linear-gradient(to right,#43a047,#2e7d32);
-}
-
-.btn-close-shift{
-background:linear-gradient(to right,#f57c00,#e65100);
-}
-
-.btn-discount{
-background:linear-gradient(to right,#8e24aa,#6a1b9a);
-}
-
 table{
 width:100%;
 border-collapse:collapse;
 font-size:14px;
 }
-
-th{
-text-align:left;
-padding-bottom:8px;
-border-bottom:1px solid #ddd;
-}
-
-td{
-padding:10px 0;
-border-bottom:1px solid #eee;
-}
-
+th{border-bottom:1px solid #ddd;padding-bottom:8px;text-align:left;}
+td{border-bottom:1px solid #eee;padding:10px 0;}
 .coef{color:#555;}
 .result{font-weight:bold;}
 
-.bottom-buttons{
-width:100%;
-margin-top:20px;
-display:flex;
-gap:20px;
-flex-wrap:wrap;
-}
-
-.bottom-buttons .btn{
-flex:1 1 250px;
-}
-
-/* ---------- МОБИЛЬНАЯ ФИКСАЦИЯ ---------- */
-
-@media (max-width:768px){
-
-body{padding:10px;}
-.wrapper{gap:12px;}
-.calculator{width:100%;padding:15px;}
-.logo{font-size:24px;}
-.title{font-size:18px;}
-table{font-size:13px;}
-.btn{padding:10px;font-size:15px;}
-
-}
-
-/* ================= ДОБАВЛЕНО ================= */
-
-/* LOGIN */
+/* ===== LOGIN ===== */
 
 .login-screen{
 position:fixed;
@@ -184,11 +125,12 @@ z-index:9999;
 .login-box{
 background:white;
 padding:30px 25px;
-border-radius:12px;
+border-radius:14px;
 width:100%;
 max-width:400px;
 text-align:center;
-box-shadow:0 15px 40px rgba(0,0,0,.35);
+box-shadow:0 20px 50px rgba(0,0,0,.4);
+animation:fadeIn .4s ease;
 }
 
 .login-logo{font-size:30px;font-weight:bold;margin-bottom:10px;}
@@ -216,102 +158,146 @@ background:linear-gradient(to right,#43a047,#1b5e20);
 
 .error-msg{color:#d32f2f;font-size:14px;margin-top:8px;}
 
-/* SIDE MENU */
+@keyframes fadeIn{
+from{opacity:0;transform:translateY(10px);}
+to{opacity:1;transform:translateY(0);}
+}
+
+/* ===== PREMIUM SIDE MENU ===== */
 
 .menu-toggle{
 position:fixed;
-top:15px;left:15px;
-width:40px;height:40px;
-background:#2e7d32;
+top:20px;
+left:20px;
+width:45px;
+height:45px;
+background:linear-gradient(135deg,#2e7d32,#1b5e20);
 color:white;
 display:flex;
 align-items:center;
 justify-content:center;
-border-radius:8px;
+border-radius:12px;
 cursor:pointer;
-z-index:2000;
-box-shadow:0 4px 10px rgba(0,0,0,.2);
+z-index:3000;
+box-shadow:0 6px 20px rgba(0,0,0,.3);
+transition:.3s;
 }
+
+.menu-toggle:hover{transform:scale(1.1);}
 
 .side-menu{
 position:fixed;
-top:0;left:-260px;
-width:260px;height:100%;
-background:#111;
+top:0;
+left:-320px;
+width:300px;
+height:100%;
+background:rgba(20,20,20,.95);
+backdrop-filter:blur(12px);
 color:white;
-padding:20px;
-transition:.3s;
-z-index:1999;
+padding:80px 20px 20px 20px;
+transition:.4s cubic-bezier(.77,0,.18,1);
+z-index:2500;
+box-shadow:10px 0 40px rgba(0,0,0,.5);
 }
 
 .side-menu.active{left:0;}
 
+.user-name{
+font-size:20px;
+font-weight:bold;
+margin-bottom:15px;
+color:#43a047;
+}
+
 .session-time{
-margin:15px 0;
-padding:10px;
-background:#222;
-border-radius:6px;
+margin-bottom:25px;
+padding:12px;
+background:rgba(255,255,255,.05);
+border-radius:10px;
 font-size:14px;
 }
 
-.logout-btn{
+.menu-btn{
 width:100%;
-padding:10px;
+padding:12px;
+margin-bottom:12px;
 border:none;
-border-radius:6px;
+border-radius:8px;
 cursor:pointer;
-background:linear-gradient(to right,#c62828,#8e0000);
 color:white;
+font-size:14px;
+transition:.3s;
+background:linear-gradient(to right,#333,#222);
+}
+
+.menu-btn:hover{
+transform:translateX(6px);
+background:linear-gradient(to right,#43a047,#1b5e20);
+}
+
+.logout-btn{
+background:linear-gradient(to right,#c62828,#8e0000);
+}
+
+/* mobile */
+@media(max-width:768px){
+body{padding:10px;}
 }
 
 </style>
 </head>
 <body>
 
-<!-- LOGIN SCREEN -->
+<!-- LOGIN -->
 <div id="loginScreen" class="login-screen">
-  <div class="login-box">
-    <div class="login-logo">
-      <span class="green">A</span><span class="black">uto-</span>
-      <span class="green">S</span><span class="black">tyle</span>
-    </div>
-    <div class="login-subtitle">Выберите пользователя</div>
-    <select id="userSelect">
-      <option value="cashier">Кассир</option>
-      <option value="evgeniy">Евгений</option>
-      <option value="vadim">Вадим</option>
-    </select>
-    <input type="password" id="passwordInput" placeholder="Введите пароль">
-    <button id="loginBtn" class="login-btn">ВОЙТИ</button>
-    <div id="errorMsg" class="error-msg"></div>
-  </div>
+<div class="login-box">
+<div class="login-logo">
+<span class="green">A</span><span class="black">uto-</span>
+<span class="green">S</span><span class="black">tyle</span>
+</div>
+<div class="login-subtitle">Выберите пользователя</div>
+<select id="userSelect">
+<option value="cashier">Кассир</option>
+<option value="evgeniy">Евгений</option>
+<option value="vadim">Вадим</option>
+</select>
+<input type="password" id="passwordInput" placeholder="Введите пароль">
+<button id="loginBtn" class="login-btn">ВОЙТИ</button>
+<div id="errorMsg" class="error-msg"></div>
+</div>
 </div>
 
 <div class="menu-toggle" onclick="toggleMenu()">☰</div>
 
 <div id="sideMenu" class="side-menu">
-  <h3 id="currentUser"></h3>
-  <div class="session-time">
-    Сессия истекает через:
-    <div id="timeLeft"></div>
-  </div>
-  <button class="logout-btn" onclick="logout()">Выйти</button>
+<div class="user-name" id="currentUser"></div>
+
+<div class="session-time">
+Сессия истекает через:
+<div id="timeLeft"></div>
 </div>
 
-<!-- ======= ВАШ САЙТ БЕЗ ИЗМЕНЕНИЙ ======= -->
+<button class="menu-btn" onclick="location.href='beznal.html'">ОФОРМИТЬ БЕЗНАЛ</button>
+<button class="menu-btn" onclick="location.href='smena.html'">ЗАКРЫТИЕ СМЕНЫ</button>
+<button class="menu-btn" onclick="location.href='discount.html'">СКИДОЧНАЯ КАРТА</button>
+<button class="menu-btn" onclick="location.href='pass.html'">ПАРОЛИ</button>
 
-<!-- ШАПКА -->
+<button class="menu-btn logout-btn" onclick="logout()">ВЫЙТИ</button>
+</div>
+
+<!-- ===== ВАШ КОНТЕНТ БЕЗ ИЗМЕНЕНИЙ ===== -->
+
 <div class="header">
 <div class="logo">
 <span class="green">A</span><span class="black">uto-</span>
 <span class="green">S</span><span class="black">tyle</span>
 </div>
-<div class="manager-panel">
-Панель менеджера
-</div>
+<div class="manager-panel">Панель менеджера</div>
 </div>
 
 <div class="wrapper">
+
+<!-- Калькуляторы полностью сохранены -->
 
 <!-- Калькулятор 1 -->
 <div class="calculator">
@@ -361,25 +347,15 @@ color:white;
 
 </div>
 
-<div class="bottom-buttons">
-<button id="btnBeznal" class="btn btn-non-cash">ОФОРМИТЬ БЕЗНАЛ</button>
-<button id="btnSmena" class="btn btn-close-shift">ЗАКРЫТИЕ СМЕНЫ</button>
-<button id="btnDiscount" class="btn btn-discount">РЕГИСТРАЦИЯ СКИДОЧНОЙ КАРТЫ</button>
-</div>
-
 <script>
 
-/* ===== ВАШ СТАРЫЙ JS (НЕ ИЗМЕНЁН) ===== */
-
-document.getElementById("btnBeznal").onclick=()=>{location.href="beznal.html";};
-document.getElementById("btnSmena").onclick=()=>{location.href="smena.html";};
-document.getElementById("btnDiscount").onclick=()=>{location.href="discount.html";};
+/* ORIGINAL JS */
 
 document.querySelectorAll('.calculator').forEach(calc=>{
-const btn = calc.querySelector('.btn-calc');
-btn.onclick = ()=>{
+const btn=calc.querySelector('.btn-calc');
+btn.onclick=()=>{
 const sum=parseFloat(calc.querySelector('.sum').value);
-if(!sum) return;
+if(!sum)return;
 const coefs=calc.querySelectorAll('.coef');
 const results=calc.querySelectorAll('.result');
 coefs.forEach((c,i)=>{
@@ -389,7 +365,7 @@ results[i].textContent=(sum/parseFloat(c.textContent))
 };
 });
 
-/* ===== ДОБАВЛЕНА АВТОРИЗАЦИЯ ===== */
+/* AUTH */
 
 const users={
 cashier:{name:"Кассир",pass:"2012"},
@@ -400,7 +376,7 @@ vadim:{name:"Вадим",pass:"2385"}
 const sessionDuration=24*60*60*1000;
 let sessionTimer;
 
-window.addEventListener("load",function(){
+window.addEventListener("load",()=>{
 const saved=localStorage.getItem("session");
 if(saved){
 const data=JSON.parse(saved);
@@ -425,7 +401,7 @@ document.getElementById("errorMsg").textContent="Неверный пароль";
 
 function startSession(userKey,expire){
 document.getElementById("loginScreen").style.display="none";
-document.getElementById("currentUser").textContent=users[userKey].name;
+document.getElementById("currentUser").textContent="👤 "+users[userKey].name;
 updateTimer(expire);
 sessionTimer=setInterval(()=>updateTimer(expire),1000);
 }
