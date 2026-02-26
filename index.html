@@ -3,20 +3,21 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Auto-Style | Панель менеджера</title>
+<title>Калькулятор рассрочки</title>
 
 <style>
 
 *{box-sizing:border-box;}
 
 body{
-font-family:Arial, sans-serif;
-margin:0;
+font-family: Arial, sans-serif;
 background:#f5f6f8;
+margin:0;
+padding:20px;
 overflow-x:hidden;
 }
 
-/* ====== СТРАНИЦА ВХОДА ====== */
+/* ===== ЭКРАН ВХОДА ===== */
 
 .login-screen{
 position:fixed;
@@ -33,18 +34,17 @@ z-index:9999;
 }
 
 .login-box{
-background:#fff;
+background:white;
 padding:30px 25px;
-border-radius:12px;
+border-radius:10px;
 width:100%;
 max-width:380px;
 text-align:center;
-box-shadow:0 15px 40px rgba(0,0,0,.35);
-animation:fadeIn .4s ease;
+box-shadow:0 10px 30px rgba(0,0,0,.3);
 }
 
 .login-logo{
-font-size:32px;
+font-size:30px;
 font-weight:bold;
 margin-bottom:10px;
 }
@@ -69,7 +69,7 @@ margin-bottom:15px;
 .login-input:focus{
 outline:none;
 border-color:#2e7d32;
-box-shadow:0 0 6px rgba(46,125,50,.4);
+box-shadow:0 0 5px rgba(46,125,50,.4);
 }
 
 .login-btn{
@@ -81,26 +81,17 @@ border-radius:6px;
 cursor:pointer;
 color:white;
 background:linear-gradient(to right,#43a047,#1b5e20);
-transition:.2s;
 }
-
-.login-btn:hover{opacity:.9;}
-.login-btn:active{transform:scale(.98);}
 
 .error-msg{
 color:#d32f2f;
-font-size:14px;
 margin-top:10px;
+font-size:14px;
 }
 
-@keyframes fadeIn{
-from{opacity:0;transform:translateY(10px);}
-to{opacity:1;transform:translateY(0);}
-}
+/* ===== ОСНОВНОЙ САЙТ ===== */
 
-/* ====== ОСНОВНОЙ САЙТ ====== */
-
-#mainContent{display:none;padding:20px;}
+#mainContent{display:none;}
 
 .header{
 background:white;
@@ -129,6 +120,7 @@ padding-top:8px;
 display:flex;
 gap:20px;
 flex-wrap:wrap;
+width:100%;
 }
 
 .calculator{
@@ -137,10 +129,12 @@ border-radius:6px;
 padding:20px;
 box-shadow:0 2px 6px rgba(0,0,0,0.1);
 flex:1 1 300px;
+width:100%;
 }
 
 .title{font-size:20px;font-weight:bold;}
 .subtitle{color:#d32f2f;font-weight:bold;margin-bottom:15px;}
+.hint{margin-bottom:10px;color:#555;}
 
 .input{
 width:100%;
@@ -160,11 +154,23 @@ border:none;
 border-radius:4px;
 cursor:pointer;
 margin-bottom:20px;
-transition:.2s;
 }
 
-.btn:hover{opacity:.9;}
-.btn-calc{background:linear-gradient(to right,#1976d2,#0d47a1);}
+.btn-calc{
+background:linear-gradient(to right,#1976d2,#0d47a1);
+}
+
+.btn-non-cash{
+background:linear-gradient(to right,#43a047,#2e7d32);
+}
+
+.btn-close-shift{
+background:linear-gradient(to right,#f57c00,#e65100);
+}
+
+.btn-discount{
+background:linear-gradient(to right,#8e24aa,#6a1b9a);
+}
 
 table{
 width:100%;
@@ -186,9 +192,28 @@ border-bottom:1px solid #eee;
 .coef{color:#555;}
 .result{font-weight:bold;}
 
-@media(max-width:768px){
+.bottom-buttons{
+width:100%;
+margin-top:20px;
+display:flex;
+gap:20px;
+flex-wrap:wrap;
+}
+
+.bottom-buttons .btn{
+flex:1 1 250px;
+}
+
+@media (max-width:768px){
+
+body{padding:10px;}
 .wrapper{gap:12px;}
+.calculator{width:100%;padding:15px;}
 .logo{font-size:24px;}
+.title{font-size:18px;}
+table{font-size:13px;}
+.btn{padding:10px;font-size:15px;}
+
 }
 
 </style>
@@ -196,6 +221,7 @@ border-bottom:1px solid #eee;
 <body>
 
 <!-- ===== ВХОД ===== -->
+
 <div id="loginScreen" class="login-screen">
 <div class="login-box">
 <div class="login-logo">
@@ -209,9 +235,11 @@ border-bottom:1px solid #eee;
 </div>
 </div>
 
-<!-- ===== ОСНОВНОЙ КОНТЕНТ ===== -->
+<!-- ===== ВЕСЬ ВАШ САЙТ ===== -->
+
 <div id="mainContent">
 
+<!-- ШАПКА -->
 <div class="header">
 <div class="logo">
 <span class="green">A</span><span class="black">uto-</span>
@@ -222,11 +250,14 @@ border-bottom:1px solid #eee;
 
 <div class="wrapper">
 
+<!-- Калькулятор 1 -->
 <div class="calculator">
 <div class="title">КАЛЬКУЛЯТОР РАССРОЧКИ</div>
 <div class="subtitle">АГРОПРОМБАНК</div>
-<input type="number" class="input sum" placeholder="Введите сумму">
+<div class="hint">Введите общую сумму чека</div>
+<input type="number" class="input sum">
 <button class="btn btn-calc">РАССЧИТАТЬ</button>
+
 <table>
 <tr><th>РАССРОЧКА</th><th>КОЭФФ.</th><th>ИТОГО</th></tr>
 <tr><td>АПБ 3</td><td class="coef">0.955</td><td class="result"></td></tr>
@@ -236,12 +267,49 @@ border-bottom:1px solid #eee;
 </table>
 </div>
 
+<!-- Калькулятор 2 -->
+<div class="calculator">
+<div class="title">КАЛЬКУЛЯТОР РАССРОЧКИ</div>
+<div class="subtitle">ЭКСИМБАНК</div>
+<input type="number" class="input sum">
+<button class="btn btn-calc">РАССЧИТАТЬ</button>
+<table>
+<tr><th>РАССРОЧКА</th><th>КОЭФФ.</th><th>ИТОГО</th></tr>
+<tr><td>3 мес</td><td class="coef">0.955</td><td class="result"></td></tr>
+<tr><td>6 мес</td><td class="coef">0.93</td><td class="result"></td></tr>
+<tr><td>9 мес</td><td class="coef">0.90</td><td class="result"></td></tr>
+<tr><td>12 мес</td><td class="coef">0.886</td><td class="result"></td></tr>
+</table>
 </div>
+
+<!-- Калькулятор 3 -->
+<div class="calculator">
+<div class="title">КАЛЬКУЛЯТОР РАССРОЧКИ</div>
+<div class="subtitle">СБЕРБАНК</div>
+<input type="number" class="input sum">
+<button class="btn btn-calc">РАССЧИТАТЬ</button>
+<table>
+<tr><th>РАССРОЧКА</th><th>КОЭФФ.</th><th>ИТОГО</th></tr>
+<tr><td>3 мес</td><td class="coef">0.96</td><td class="result"></td></tr>
+<tr><td>6 мес</td><td class="coef">0.93</td><td class="result"></td></tr>
+<tr><td>9 мес</td><td class="coef">0.90</td><td class="result"></td></tr>
+<tr><td>12 мес</td><td class="coef">0.88</td><td class="result"></td></tr>
+</table>
+</div>
+
+</div>
+
+<!-- нижние кнопки -->
+<div class="bottom-buttons">
+<button id="btnBeznal" class="btn btn-non-cash">ОФОРМИТЬ БЕЗНАЛ</button>
+<button id="btnSmena" class="btn btn-close-shift">ЗАКРЫТИЕ СМЕНЫ</button>
+<button id="btnDiscount" class="btn btn-discount">РЕГИСТРАЦИЯ СКИДОЧНОЙ КАРТЫ</button>
+</div>
+
 </div>
 
 <script>
 
-/* пароль */
 const correctPassword="2012";
 
 document.getElementById("loginBtn").onclick=function(){
@@ -257,6 +325,11 @@ document.getElementById("errorMsg").textContent="Неверный пароль";
 document.getElementById("passwordInput").addEventListener("keypress",function(e){
 if(e.key==="Enter"){document.getElementById("loginBtn").click();}
 });
+
+/* переходы */
+document.getElementById("btnBeznal").onclick=()=>{location.href="beznal.html";};
+document.getElementById("btnSmena").onclick=()=>{location.href="smena.html";};
+document.getElementById("btnDiscount").onclick=()=>{location.href="discount.html";};
 
 /* расчет */
 document.querySelectorAll('.calculator').forEach(calc=>{
