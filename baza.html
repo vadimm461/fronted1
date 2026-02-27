@@ -3,92 +3,151 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>База знаний - Auto-Style</title>
+<title>Auto-Style</title>
+
 <style>
-*, *::before, *::after { box-sizing: border-box; }
-:root {
+  *, *::before, *::after { box-sizing: border-box; }
+
+  :root {
     --green: #2e7d32;
     --green-dark: #1b5e20;
     --blue: #1976d2;
     --bg: #f4f6f9;
-}
-body { margin:0; font-family: Arial,sans-serif; background: var(--bg); overflow-x: hidden; }
+  }
 
-/* ===== HEADER ===== */
-.header{
-    background:white; padding:15px; text-align:center;
-    box-shadow:0 4px 15px rgba(0,0,0,.08);
-    position:sticky; top:0; z-index:100;
-}
-.logo{ font-size:26px; font-weight:bold; }
-.logo .green{ color: var(--green); }
-.logo .black{ color:#000; }
+  body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: var(--bg);
+    overflow-x: hidden;
+  }
 
-/* ===== MENU BUTTON ===== */
-.menu-toggle{
-    position:fixed; top:15px; left:15px;
-    width:48px; height:48px;
-    background:linear-gradient(135deg,var(--green),var(--green-dark));
-    color:white; display:flex; align-items:center; justify-content:center;
-    border-radius:14px; cursor:pointer;
-    z-index:3000; box-shadow:0 8px 20px rgba(0,0,0,.3);
-}
+  /* ===== HEADER ===== */
+  .header {
+    background: white;
+    padding: 15px;
+    text-align: center;
+    box-shadow: 0 4px 15px rgba(0,0,0,.08);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
 
-/* ===== GLASS MENU ===== */
-.side-menu{
-    position:fixed; top:0; left:0;
-    width:260px; height:100%;
-    padding:80px 20px;
-    background:rgba(20,20,20,.75);
-    backdrop-filter:blur(18px);
-    border-right:1px solid rgba(255,255,255,.1);
-    transform:translateX(-100%);
-    transition:transform .35s cubic-bezier(.77,0,.18,1);
-    z-index:2999;
-}
-.side-menu.active{ transform:translateX(0); }
-.side-menu button{
-    width:100%; padding:12px; margin-bottom:12px;
-    border:none; border-radius:14px;
-    background:rgba(255,255,255,.08); color:white;
-    font-weight:500; cursor:pointer; transition:.25s;
-}
-.side-menu button:hover{ background:var(--green); transform:translateX(5px); }
+  .logo {
+    font-size: 26px;
+    font-weight: bold;
+  }
 
-/* ===== OVERLAY ===== */
-.overlay{
-    position:fixed; inset:0;
-    background:rgba(0,0,0,.4);
-    backdrop-filter:blur(3px);
-    opacity:0; pointer-events:none;
-    transition:.3s; z-index:2000;
-}
-.overlay.active{ opacity:1; pointer-events:auto; }
+  .logo .green { color: var(--green); }
+  .logo .black { color: #000; }
 
-/* ===== ACCORDION ===== */
-.accordion { max-width:900px; margin:20px auto; padding:0 10px; }
-.accordion-item { border-radius:12px; overflow:hidden; margin-bottom:12px; box-shadow:0 5px 20px rgba(0,0,0,.05); background:white; }
-.accordion-header {
-    padding:15px 20px; font-weight:bold; cursor:pointer;
-    background:linear-gradient(135deg,var(--green),var(--green-dark));
-    color:white; user-select:none; transition: background .3s;
-}
-.accordion-header:hover { background:linear-gradient(135deg,#43a047,var(--green-dark)); }
-.accordion-body {
-    max-height:0; overflow:hidden;
-    transition:max-height .35s ease, padding .3s ease;
-    padding:0 20px; background:#f9f9f9;
-}
-.accordion-body form{ margin-top:10px; }
-.accordion-body input, .accordion-body select{ width:100%; padding:10px; margin-bottom:12px; border-radius:10px; border:1px solid #ccc; font-size:16px; }
-.accordion-body button{ width:100%; padding:12px; border:none; border-radius:12px; background:linear-gradient(135deg,var(--blue),#0d47a1); color:white; font-weight:bold; cursor:pointer; }
+  /* ===== MENU ===== */
+  .menu-toggle {
+    position: fixed;
+    top: 15px;
+    left: 15px;
+    width: 48px;
+    height: 48px;
+    background: linear-gradient(135deg, var(--green), var(--green-dark));
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 14px;
+    cursor: pointer;
+    z-index: 3000;
+    box-shadow: 0 8px 20px rgba(0,0,0,.3);
+  }
 
-/* ===== MEDIA ===== */
-@media(max-width:768px){
-    .accordion-body { padding:0 15px; }
-    .accordion-header { font-size:16px; padding:12px 15px; }
-    .accordion-body input, .accordion-body select, .accordion-body button{ font-size:14px; padding:10px; }
-}
+  .side-menu {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 260px;
+    height: 100%;
+    padding: 80px 20px;
+    background: rgba(20,20,20,.75);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    border-right: 1px solid rgba(255,255,255,.1);
+    transform: translateX(-100%);
+    transition: transform .35s cubic-bezier(.77,0,.18,1);
+    z-index: 2999;
+  }
+
+  .side-menu.active { transform: translateX(0); }
+
+  .side-menu button {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 12px;
+    border: none;
+    border-radius: 14px;
+    background: rgba(255,255,255,.08);
+    color: white;
+    font-weight: 500;
+    cursor: pointer;
+    transition: .25s;
+  }
+
+  .side-menu button:hover {
+    background: var(--green);
+    transform: translateX(5px);
+  }
+
+  /* ===== OVERLAY ===== */
+  .overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,.4);
+    backdrop-filter: blur(3px);
+    opacity: 0;
+    pointer-events: none;
+    transition: .3s;
+    z-index: 2000;
+  }
+
+  .overlay.active { opacity: 1; pointer-events: auto; }
+
+  /* ===== BUTTONS LIST ===== */
+  .buttons-wrapper {
+    display: grid;
+    grid-template-columns: repeat(auto-fit,minmax(200px,1fr));
+    gap: 20px;
+    padding: 20px;
+    max-width: 1400px;
+    margin: auto;
+  }
+
+  .button-item {
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0,0,0,.08);
+    text-align: center;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 18px;
+    color: var(--blue);
+    transition: transform .3s, background .3s, color .3s;
+  }
+
+  .button-item:hover {
+    transform: scale(1.05);
+    background: var(--green);
+    color: white;
+  }
+
+  .button-item a {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+  }
+
+  @media(max-width:768px){
+    .buttons-wrapper { grid-template-columns: 1fr; padding: 15px; }
+  }
+
 </style>
 </head>
 <body>
@@ -98,166 +157,58 @@ body { margin:0; font-family: Arial,sans-serif; background: var(--bg); overflow-
 <!-- MENU -->
 <div class="menu-toggle" onclick="openMenu()">☰</div>
 <div id="sideMenu" class="side-menu">
-    <div id="currentUser" style="color:white;margin-bottom:20px;font-weight:bold;">👤 Менеджер</div>
-    <button onclick="location.href='beznal.html'">ОФОРМИТЬ БЕЗНАЛ</button>
-    <button onclick="location.href='smena.html'">ЗАКРЫТИЕ СМЕНЫ</button>
-    <button onclick="location.href='discount.html'">СКИДОЧНАЯ КАРТА</button>
-    <button onclick="location.href='pass.html'">ПАРОЛИ</button>
+  <div id="currentUser" style="color:white;margin-bottom:20px;font-weight:bold;">Меню</div>
+  <button onclick="location.href='#'">ОФОРМИТЬ БЕЗНАЛ</button>
+  <button onclick="location.href='#'">ЗАКРЫТИЕ СМЕНЫ</button>
+  <button onclick="location.href='#'">СКИДОЧНАЯ КАРТА</button>
+  <button onclick="location.href='#'">ПАРОЛИ</button>
+  <button onclick="logout()">ВЫЙТИ</button>
 </div>
 
 <!-- HEADER -->
 <div class="header">
-    <div class="logo">
-        <span class="green">A</span><span class="black">uto-</span>
-        <span class="green">S</span><span class="black">tyle </span>База знаний
-    </div>
+  <div class="logo">
+    <span class="green">A</span><span class="black">uto-</span>
+    <span class="green">S</span><span class="black">tyle</span>
+    <span class="green">П</span><span class="black">анель-</span>
+    <span class="green">М</span><span class="black">енеджера</span>
+  </div>
 </div>
 
-<!-- ACCORDION CONTENT -->
-<div class="accordion">
-
-    <div class="accordion-item">
-        <div class="accordion-header">1. Подбор масла</div>
-        <div class="accordion-body">
-            <p>Выберите марку и тип масла для вашего автомобиля.</p>
-            <form id="oilForm">
-                <label for="oilBrand">Марка масла:</label>
-                <select id="oilBrand">
-                    <option value="castrol">Castrol</option>
-                    <option value="mobil">Mobil</option>
-                    <option value="shell">Shell</option>
-                    <option value="motul">Motul</option>
-                </select>
-                <br>
-                <label for="oilType">Тип масла:</label>
-                <select id="oilType">
-                    <option value="synthetic">Синтетическое</option>
-                    <option value="semi">Полусинтетическое</option>
-                    <option value="mineral">Минеральное</option>
-                </select>
-                <br><br>
-                <button type="submit" class="btn">Подобрать масло</button>
-            </form>
-        </div>
-    </div>
-
-    <div class="accordion-item">
-        <div class="accordion-header">2. Подбор фильтров</div>
-        <div class="accordion-body">
-            <p>Выберите автомобильные фильтры для вашего авто.</p>
-            <form id="filterForm">
-                <label for="filterBrand">Бренд фильтра:</label>
-                <select id="filterBrand">
-                    <option value="fram">Fram</option>
-                    <option value="mahle">Mahle</option>
-                    <option value="purflux">Purflux</option>
-                    <option value="bosch">Bosch</option>
-                </select>
-                <br><br>
-                <button type="submit" class="btn">Подобрать фильтры</button>
-            </form>
-        </div>
-    </div>
-
-    <div class="accordion-item">
-        <div class="accordion-header">3. Подбор лампочек</div>
-        <div class="accordion-body">
-            <p>Выбор автомобильных лампочек для фар и указателей.</p>
-            <form id="lampForm">
-                <label for="lampType">Тип лампы:</label>
-                <select id="lampType">
-                    <option value="h1">H1</option>
-                    <option value="h4">H4</option>
-                    <option value="h7">H7</option>
-                    <option value="led">LED</option>
-                </select>
-                <br>
-                <label for="lampBrand">Бренд лампы:</label>
-                <select id="lampBrand">
-                    <option value="philips">Philips</option>
-                    <option value="osram">Osram</option>
-                    <option value="bosch">Bosch</option>
-                    <option value="neolux">Neolux</option>
-                </select>
-                <br><br>
-                <button type="submit" class="btn">Подобрать лампы</button>
-            </form>
-        </div>
-    </div>
-
-    <div class="accordion-item">
-        <div class="accordion-header">4. Подбор дворников</div>
-        <div class="accordion-body">
-            <p>Подбор автомобильных дворников для моделей машин.</p>
-            <form id="wiperForm">
-                <label for="carBrand">Марка автомобиля:</label>
-                <select id="carBrand">
-                    <option value="toyota">Toyota</option>
-                    <option value="volkswagen">Volkswagen</option>
-                    <option value="bmw">BMW</option>
-                    <option value="audi">Audi</option>
-                </select>
-                <br>
-                <label for="carModel">Модель автомобиля:</label>
-                <select id="carModel">
-                    <option value="" disabled selected>Выберите модель</option>
-                </select>
-                <br><br>
-                <button type="submit" class="btn">Подобрать дворники</button>
-            </form>
-        </div>
-    </div>
-
+<!-- BUTTONS LIST -->
+<div class="buttons-wrapper">
+  <div class="button-item"><a href="#" target="_blank">Подбор масла</a></div>
+  <div class="button-item"><a href="#" target="_blank">Подбор фильтров</a></div>
+  <div class="button-item"><a href="#" target="_blank">Подбор лампочек</a></div>
+  <div class="button-item"><a href="#" target="_blank">Подбор дворников</a></div>
+  <div class="button-item"><a href="#" target="_blank">Подбор Аккумуляторов</a></div>
 </div>
 
 <script>
-/* ===== MENU CONTROL ===== */
-function openMenu(){ sideMenu.classList.add("active"); overlay.classList.add("active"); }
-function closeMenu(){ sideMenu.classList.remove("active"); overlay.classList.remove("active"); }
-overlay.onclick = closeMenu;
+  // Меню
+  const sideMenu = document.getElementById("sideMenu");
+  const overlay = document.getElementById("overlay");
 
-/* ===== ACCORDION ===== */
-const accordionItems = document.querySelectorAll(".accordion-item");
-accordionItems.forEach(item => {
-    const header = item.querySelector(".accordion-header");
-    const body = item.querySelector(".accordion-body");
+  function openMenu() {
+    sideMenu.classList.add("active");
+    overlay.classList.add("active");
+  }
+  function closeMenu() {
+    sideMenu.classList.remove("active");
+    overlay.classList.remove("active");
+  }
+  overlay.onclick = closeMenu;
 
-    header.addEventListener("click", () => {
-        const isActive = item.classList.contains("active");
-        // Закрыть все
-        accordionItems.forEach(i=>{
-            i.classList.remove("active");
-            i.querySelector(".accordion-body").style.maxHeight = null;
-            i.querySelector(".accordion-body").style.padding = "0 20px";
-        });
-        if(!isActive){
-            item.classList.add("active");
-            body.style.maxHeight = body.scrollHeight + "px";
-            body.style.padding = "15px 20px";
-        }
-    });
-});
+  // SWIPE для открытия/закрытия меню
+  let startX = 0;
+  document.addEventListener("touchstart", e => { startX = e.touches[0].clientX; });
+  document.addEventListener("touchend", e => {
+    let endX = e.changedTouches[0].clientX;
+    if (startX < 40 && endX > 120) openMenu();
+    if (startX > 150 && endX < 80) closeMenu();
+  });
 
-/* ===== DYNAMIC WIPER MODELS ===== */
-const carModels = {
-    toyota:['Corolla','Camry','Yaris'],
-    volkswagen:['Passat','Golf','Jetta'],
-    bmw:['X5','X3','3 Series'],
-    audi:['A3','A4','Q7']
-};
-document.getElementById("carBrand").addEventListener("change", function(){
-    const brand = this.value;
-    const carModelSelect = document.getElementById("carModel");
-    carModelSelect.innerHTML = '<option value="" disabled selected>Выберите модель</option>';
-    if(brand && carModels[brand]){
-        carModels[brand].forEach(model=>{
-            const option = document.createElement('option');
-            option.value = model.toLowerCase();
-            option.textContent = model;
-            carModelSelect.appendChild(option);
-        });
-    }
-});
+  function logout() { alert('Выход'); }
 </script>
 
 </body>
