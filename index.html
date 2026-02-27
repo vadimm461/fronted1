@@ -8,192 +8,258 @@
 <style>
 :root{
 --green:#2e7d32;
---dark:#1c1c1c;
---glass:rgba(255,255,255,.08);
+--green-dark:#1b5e20;
+--blue:#1976d2;
+--bg:#f4f6f9;
 }
 
+/* ===== BASE ===== */
 body{
-font-family:Arial,sans-serif;
 margin:0;
-padding:20px;
-background:#f5f6f8;
+font-family:Arial,sans-serif;
+background:var(--bg);
 overflow-x:hidden;
-min-height:100vh;
 }
 
-/* LOGIN */
+.container{
+padding:15px;
+max-width:1400px;
+margin:auto;
+}
+
+/* ===== LOGIN ===== */
 .login-screen{
-position:fixed;inset:0;
-background:linear-gradient(135deg,#1b5e20,#000);
-display:flex;justify-content:center;align-items:center;
+position:fixed;
+inset:0;
+display:flex;
+justify-content:center;
+align-items:center;
+background:linear-gradient(135deg,var(--green-dark),#000);
 z-index:9999;
 }
+
 .login-box{
-background:#fff;padding:30px 25px;border-radius:16px;
-width:100%;max-width:400px;text-align:center;
-box-shadow:0 30px 60px rgba(0,0,0,.4);
+background:white;
+padding:40px 30px;
+border-radius:20px;
+width:90%;
+max-width:400px;
+text-align:center;
+box-shadow:0 30px 70px rgba(0,0,0,.4);
 animation:fadeIn .5s ease;
 }
+
 @keyframes fadeIn{
 from{opacity:0;transform:translateY(20px);}
 to{opacity:1;transform:translateY(0);}
 }
 
-/* HEADER */
-.header{
-background:white;padding:15px;border-radius:12px;
-box-shadow:0 8px 25px rgba(0,0,0,.08);
-margin-bottom:20px;text-align:center;
+.login-title{
+font-size:26px;
+font-weight:bold;
+margin-bottom:20px;
 }
-.logo{font-size:28px;font-weight:bold;}
+
+select,input{
+width:100%;
+padding:12px;
+margin-bottom:15px;
+border-radius:12px;
+border:1px solid #ccc;
+font-size:16px;
+}
+
+.login-btn{
+width:100%;
+padding:14px;
+border:none;
+border-radius:14px;
+background:linear-gradient(135deg,var(--green),var(--green-dark));
+color:white;
+font-size:16px;
+font-weight:bold;
+cursor:pointer;
+transition:.3s;
+box-shadow:0 8px 20px rgba(0,0,0,.2);
+}
+
+.login-btn:hover{
+transform:translateY(-2px);
+box-shadow:0 12px 25px rgba(0,0,0,.3);
+}
+
+.error-msg{
+color:#d32f2f;
+margin-top:10px;
+font-size:14px;
+}
+
+/* ===== HEADER ===== */
+.header{
+background:white;
+padding:15px;
+text-align:center;
+box-shadow:0 4px 15px rgba(0,0,0,.08);
+position:sticky;
+top:0;
+z-index:100;
+}
+
+.logo{
+font-size:26px;
+font-weight:bold;
+}
 .logo .green{color:var(--green);}
 .logo .black{color:#000;}
 
-/* MENU */
+/* ===== MENU ===== */
 .menu-toggle{
-position:fixed;top:20px;left:20px;
-width:50px;height:50px;
-background:linear-gradient(135deg,var(--green),#145a18);
-color:white;display:flex;align-items:center;justify-content:center;
-border-radius:14px;cursor:pointer;z-index:3001;
-box-shadow:0 10px 25px rgba(0,0,0,.25);
+position:fixed;
+top:15px;
+left:15px;
+width:48px;
+height:48px;
+background:linear-gradient(135deg,var(--green),var(--green-dark));
+color:white;
+display:flex;
+justify-content:center;
+align-items:center;
+border-radius:14px;
+cursor:pointer;
+z-index:3000;
+box-shadow:0 10px 25px rgba(0,0,0,.3);
 }
 
 .side-menu{
-position:fixed;top:0;left:0;height:100%;
-width:280px;background:#111;color:white;
-padding:80px 20px 20px;
+position:fixed;
+top:0;
+left:0;
+width:260px;
+height:100%;
+background:#111;
+color:white;
+padding:80px 20px;
 transform:translateX(-100%);
-transition:transform .35s cubic-bezier(.77,0,.18,1);
-z-index:3002;
-box-shadow:20px 0 60px rgba(0,0,0,.6);
+transition:.3s;
+z-index:2999;
 }
-.side-menu.active{transform:translateX(0);}
+
+.side-menu.active{
+transform:translateX(0);
+}
+
+.side-menu button{
+width:100%;
+padding:12px;
+margin-bottom:12px;
+border:none;
+border-radius:12px;
+background:#222;
+color:white;
+cursor:pointer;
+transition:.3s;
+}
+
+.side-menu button:hover{
+background:var(--green);
+}
 
 .overlay{
-position:fixed;inset:0;
-background:rgba(0,0,0,.5);
-backdrop-filter:blur(6px);
-opacity:0;pointer-events:none;
+position:fixed;
+inset:0;
+background:rgba(0,0,0,.4);
+opacity:0;
+pointer-events:none;
 transition:.3s;
-z-index:3000;
-}
-.overlay.active{
-opacity:1;pointer-events:auto;
+z-index:2000;
 }
 
-/* CALCULATORS GRID */
+.overlay.active{
+opacity:1;
+pointer-events:auto;
+}
+
+/* ===== CALCULATORS ===== */
 .wrapper{
 display:grid;
 grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
 gap:20px;
-width:100%;
+padding:20px 15px 40px 15px;
 }
 
 .calculator{
 background:white;
-border-radius:16px;
 padding:20px;
+border-radius:20px;
 box-shadow:0 10px 30px rgba(0,0,0,.08);
 transition:.3s;
-animation:fadeIn .6s ease;
 }
+
 .calculator:hover{
-transform:translateY(-6px);
-box-shadow:0 20px 40px rgba(0,0,0,.12);
+transform:translateY(-5px);
+box-shadow:0 20px 40px rgba(0,0,0,.15);
 }
 
-.title{font-size:18px;font-weight:bold;}
-.subtitle{color:#d32f2f;font-weight:bold;margin-bottom:15px;}
+.title{
+font-size:18px;
+font-weight:bold;
+margin-bottom:5px;
+}
 
-.input{
-width:100%;padding:10px;
-border-radius:8px;border:1px solid #ccc;
+.subtitle{
+color:#d32f2f;
+font-weight:bold;
 margin-bottom:15px;
 }
 
 .btn{
-width:100%;padding:10px;
-border:none;border-radius:8px;
-background:linear-gradient(135deg,#1976d2,#0d47a1);
-color:white;cursor:pointer;margin-bottom:15px;
-}
-
-table{width:100%;font-size:14px;border-collapse:collapse;}
-th{text-align:left;padding-bottom:8px;border-bottom:1px solid #ddd;}
-td{padding:8px 0;border-bottom:1px solid #eee;}
-.result{font-weight:bold;}
-
-/* CHAT */
-#chatToggle{
-position:fixed;bottom:20px;right:20px;
-background:var(--green);color:white;
-padding:14px 18px;border-radius:40px;
-cursor:pointer;z-index:3003;
-box-shadow:0 10px 25px rgba(0,0,0,.3);
-}
-
-#chatWindow{
-position:fixed;bottom:80px;right:20px;
-width:340px;height:450px;
-background:var(--dark);
-border-radius:18px;
-display:flex;flex-direction:column;
-overflow:hidden;
-opacity:0;pointer-events:none;
-transform:translateY(20px);
-transition:.3s;
-z-index:3003;
-}
-#chatWindow.active{
-opacity:1;pointer-events:auto;
-transform:translateY(0);
-}
-
-#chatMessages{
-flex:1;padding:12px;
-overflow-y:auto;
-display:flex;flex-direction:column;
-gap:8px;
-}
-
-.msg{
-padding:8px 12px;
-border-radius:14px;
-max-width:75%;
-font-size:14px;
-animation:fadeIn .2s ease;
-}
-.me{
-background:var(--green);
-align-self:flex-end;
-color:white;
-border-bottom-right-radius:4px;
-}
-.other{
-background:#333;
-align-self:flex-start;
-color:white;
-border-bottom-left-radius:4px;
-}
-
-#chatInputArea{
-display:flex;padding:10px;background:#111;
-}
-#chatInput{
-flex:1;border:none;border-radius:8px;padding:8px;
-}
-#chatSend{
-margin-left:6px;background:var(--green);color:white;border:none;border-radius:8px;padding:8px 12px;
-}
-
-/* MOBILE */
-@media(max-width:768px){
-body{padding:10px;}
-#chatWindow{
 width:100%;
-right:0;bottom:0;height:80vh;
-border-radius:20px 20px 0 0;
+padding:12px;
+border:none;
+border-radius:14px;
+background:linear-gradient(135deg,var(--blue),#0d47a1);
+color:white;
+font-weight:bold;
+cursor:pointer;
+transition:.3s;
+margin-bottom:15px;
+}
+
+.btn:hover{
+transform:translateY(-2px);
+box-shadow:0 8px 20px rgba(0,0,0,.2);
+}
+
+table{
+width:100%;
+border-collapse:collapse;
+font-size:14px;
+}
+
+th{
+text-align:left;
+border-bottom:1px solid #ddd;
+padding-bottom:6px;
+}
+
+td{
+padding:8px 0;
+border-bottom:1px solid #eee;
+}
+
+.result{
+font-weight:bold;
+}
+
+/* ===== MOBILE FIX ===== */
+@media(max-width:768px){
+.wrapper{
+grid-template-columns:1fr;
+padding:15px;
+}
+.menu-toggle{
+top:10px;
+left:10px;
 }
 }
 </style>
@@ -205,31 +271,36 @@ border-radius:20px 20px 0 0;
 <!-- LOGIN -->
 <div id="loginScreen" class="login-screen">
 <div class="login-box">
-<h2>Auto-Style</h2>
+<div class="login-title">Auto-Style</div>
 <select id="userSelect">
 <option value="cashier">Кассир</option>
 <option value="evgeniy">Евгений</option>
 <option value="vadim">Вадим</option>
 </select>
 <input type="password" id="passwordInput" placeholder="Введите пароль">
-<button id="loginBtn" style="background:var(--green);width:100%;padding:10px;border:none;border-radius:8px;color:white;">Войти</button>
-<div id="errorMsg" style="color:red;margin-top:10px;"></div>
+<button id="loginBtn" class="login-btn">ВОЙТИ</button>
+<div id="errorMsg" class="error-msg"></div>
 </div>
 </div>
 
+<!-- MENU -->
 <div class="menu-toggle" onclick="toggleMenu()">☰</div>
 <div id="sideMenu" class="side-menu">
-<div id="currentUser"></div>
+<div id="currentUser" style="margin-bottom:20px;font-weight:bold;"></div>
 <button>ОФОРМИТЬ БЕЗНАЛ</button>
 <button>ЗАКРЫТИЕ СМЕНЫ</button>
 <button>СКИДОЧНАЯ КАРТА</button>
 <button onclick="logout()">ВЫЙТИ</button>
 </div>
 
+<!-- HEADER -->
 <div class="header">
-<div class="logo"><span class="green">A</span><span class="black">uto-</span><span class="green">S</span><span class="black">tyle</span></div>
+<div class="logo">
+<span class="green">A</span><span class="black">uto-</span><span class="green">S</span><span class="black">tyle</span>
+</div>
 </div>
 
+<!-- CALCULATORS -->
 <div class="wrapper">
 
 <!-- АГРОПРОМБАНК -->
@@ -254,7 +325,6 @@ border-radius:20px 20px 0 0;
 <input type="number" class="input sum">
 <button class="btn btn-calc">РАССЧИТАТЬ</button>
 <table>
-<tr><th>РАССРОЧКА</th><th>КОЭФФ.</th><th>ИТОГО</th></tr>
 <tr><td>3 мес.</td><td class="coef">0.955</td><td class="result"></td></tr>
 <tr><td>6 мес.</td><td class="coef">0.93</td><td class="result"></td></tr>
 <tr><td>9 мес.</td><td class="coef">0.90</td><td class="result"></td></tr>
@@ -269,7 +339,6 @@ border-radius:20px 20px 0 0;
 <input type="number" class="input sum">
 <button class="btn btn-calc">РАССЧИТАТЬ</button>
 <table>
-<tr><th>РАССРОЧКА</th><th>КОЭФФ.</th><th>ИТОГО</th></tr>
 <tr><td>3 мес.</td><td class="coef">0.96</td><td class="result"></td></tr>
 <tr><td>6 мес.</td><td class="coef">0.93</td><td class="result"></td></tr>
 <tr><td>9 мес.</td><td class="coef">0.90</td><td class="result"></td></tr>
@@ -279,16 +348,6 @@ border-radius:20px 20px 0 0;
 
 </div>
 
-<!-- CHAT -->
-<div id="chatToggle" onclick="toggleChat()">Чат</div>
-<div id="chatWindow">
-<div id="chatMessages"></div>
-<div id="chatInputArea">
-<input id="chatInput" placeholder="Сообщение">
-<button id="chatSend">➤</button>
-</div>
-</div>
-
 <script>
 const users={
 cashier:{name:"Кассир",pass:"2012"},
@@ -296,7 +355,6 @@ evgeniy:{name:"Евгений",pass:"0186"},
 vadim:{name:"Вадим",pass:"2385"}
 };
 let currentUser="";
-const chatKey="chatHistory";
 
 /* LOGIN */
 loginBtn.onclick=function(){
@@ -305,51 +363,15 @@ if(passwordInput.value===users[u].pass){
 currentUser=u;
 loginScreen.style.display="none";
 document.getElementById("currentUser").textContent="👤 "+users[u].name;
-renderChat();
 }else errorMsg.textContent="Неверный пароль";
 };
 
-/* CALCULATORS */
-document.querySelectorAll(".calculator").forEach(calc=>{
-calc.querySelector(".btn-calc").onclick=function(){
-const sum=parseFloat(calc.querySelector(".sum").value);
-if(isNaN(sum))return;
-calc.querySelectorAll(".coef").forEach((c,i)=>{
-calc.querySelectorAll(".result")[i].textContent=
-(sum/parseFloat(c.textContent)).toLocaleString("ru-RU",{minimumFractionDigits:2});
-});
-};
-});
-
-/* CHAT */
-function toggleChat(){chatWindow.classList.toggle("active");}
-
-chatSend.onclick=function(){
-const text=chatInput.value.trim();
-if(!text)return;
-let data=JSON.parse(localStorage.getItem(chatKey)||"[]");
-data.push({user:currentUser,text});
-localStorage.setItem(chatKey,JSON.stringify(data));
-chatInput.value="";
-renderChat();
-};
-
-function renderChat(){
-chatMessages.innerHTML="";
-let data=JSON.parse(localStorage.getItem(chatKey)||"[]");
-data.forEach(m=>{
-const div=document.createElement("div");
-div.className="msg "+(m.user===currentUser?"me":"other");
-div.textContent=users[m.user].name+": "+m.text;
-chatMessages.appendChild(div);
-});
-chatMessages.scrollTop=chatMessages.scrollHeight;
-}
-setInterval(renderChat,1000);
+function logout(){location.reload();}
 
 /* MENU */
 const sideMenu=document.getElementById("sideMenu");
 const overlay=document.getElementById("overlay");
+
 function toggleMenu(){
 sideMenu.classList.toggle("active");
 overlay.classList.toggle("active");
@@ -365,7 +387,17 @@ if(startX<30 && endX>100)toggleMenu();
 if(startX>200 && endX<100)toggleMenu();
 });
 
-function logout(){location.reload();}
+/* CALCULATORS */
+document.querySelectorAll(".calculator").forEach(calc=>{
+calc.querySelector(".btn-calc").onclick=function(){
+const sum=parseFloat(calc.querySelector(".sum").value);
+if(isNaN(sum))return;
+calc.querySelectorAll(".coef").forEach((c,i)=>{
+calc.querySelectorAll(".result")[i].textContent=
+(sum/parseFloat(c.textContent)).toLocaleString("ru-RU",{minimumFractionDigits:2});
+});
+};
+});
 </script>
 
 </body>
