@@ -2,218 +2,240 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Auto-Style</title>
 
 <style>
-body{
-    font-family: Arial, sans-serif;
-    margin:0;
-    padding:20px;
-    background:#f5f6f8;
-    overflow-x:hidden;
-    min-height:100vh;
+:root{
+--green:#2e7d32;
+--dark:#1c1c1c;
+--glass:rgba(255,255,255,.08);
 }
 
-/* ---------- LOGIN ---------- */
+body{
+font-family:Arial,sans-serif;
+margin:0;
+padding:20px;
+background:#f5f6f8;
+overflow-x:hidden;
+min-height:100vh;
+}
+
+/* LOGIN */
 .login-screen{
-    position:fixed;top:0;left:0;width:100%;height:100vh;
-    background:linear-gradient(135deg,#1b5e20,#000);
-    display:flex;justify-content:center;align-items:center;z-index:9999;
+position:fixed;inset:0;
+background:linear-gradient(135deg,#1b5e20,#000);
+display:flex;justify-content:center;align-items:center;
+z-index:9999;
 }
 .login-box{
-    background:#fff;padding:30px 25px;border-radius:14px;width:100%;max-width:400px;text-align:center;
-    box-shadow:0 20px 50px rgba(0,0,0,.4);
+background:#fff;padding:30px 25px;border-radius:16px;
+width:100%;max-width:400px;text-align:center;
+box-shadow:0 30px 60px rgba(0,0,0,.4);
+animation:fadeIn .5s ease;
 }
-.login-logo{font-size:30px;font-weight:bold;margin-bottom:10px;}
-.login-logo .green{color:#2e7d32;}
-.login-logo .black{color:#000;}
-.login-subtitle{color:#555;margin-bottom:15px;}
-select,input[type="password"]{
-    width:100%;padding:12px;font-size:16px;margin-bottom:15px;border:1px solid #ccc;border-radius:6px;
+@keyframes fadeIn{
+from{opacity:0;transform:translateY(20px);}
+to{opacity:1;transform:translateY(0);}
 }
-.login-btn{
-    width:100%;padding:12px;font-size:16px;border:none;border-radius:6px;cursor:pointer;color:white;
-    background:linear-gradient(to right,#43a047,#1b5e20);
-}
-.error-msg{color:#d32f2f;font-size:14px;margin-top:8px;}
 
-/* ---------- HEADER ---------- */
+/* HEADER */
 .header{
-    background:white;padding:15px;border-radius:6px;
-    box-shadow:0 2px 6px rgba(0,0,0,.1);
-    margin-bottom:20px;text-align:center;
+background:white;padding:15px;border-radius:12px;
+box-shadow:0 8px 25px rgba(0,0,0,.08);
+margin-bottom:20px;text-align:center;
 }
 .logo{font-size:28px;font-weight:bold;}
-.logo .green{color:#2e7d32;}
+.logo .green{color:var(--green);}
 .logo .black{color:#000;}
 
-/* ---------- MENU ---------- */
+/* MENU */
 .menu-toggle{
-    position:fixed;top:20px;left:20px;width:45px;height:45px;
-    background:linear-gradient(135deg,#2e7d32,#1b5e20);
-    color:white;display:flex;align-items:center;justify-content:center;
-    border-radius:12px;cursor:pointer;z-index:3000;
-    box-shadow:0 6px 20px rgba(0,0,0,.3);
+position:fixed;top:20px;left:20px;
+width:50px;height:50px;
+background:linear-gradient(135deg,var(--green),#145a18);
+color:white;display:flex;align-items:center;justify-content:center;
+border-radius:14px;cursor:pointer;z-index:3001;
+box-shadow:0 10px 25px rgba(0,0,0,.25);
 }
 
 .side-menu{
-    position:fixed;
-    top:0;
-    left:0;
-    width:300px;
-    height:100%;
-    background:rgba(20,20,20,.95);
-    backdrop-filter:blur(12px);
-    color:white;
-    padding:80px 20px 20px 20px;
-    transform:translateX(-100%);
-    transition:transform .4s cubic-bezier(.77,0,.18,1);
-    z-index:2500;
-    box-shadow:10px 0 40px rgba(0,0,0,.5);
+position:fixed;top:0;left:0;height:100%;
+width:280px;background:#111;color:white;
+padding:80px 20px 20px;
+transform:translateX(-100%);
+transition:transform .35s cubic-bezier(.77,0,.18,1);
+z-index:3002;
+box-shadow:20px 0 60px rgba(0,0,0,.6);
 }
-.side-menu.active{
-    transform:translateX(0);
+.side-menu.active{transform:translateX(0);}
+
+.overlay{
+position:fixed;inset:0;
+background:rgba(0,0,0,.5);
+backdrop-filter:blur(6px);
+opacity:0;pointer-events:none;
+transition:.3s;
+z-index:3000;
+}
+.overlay.active{
+opacity:1;pointer-events:auto;
 }
 
-.user-name{font-size:20px;font-weight:bold;margin-bottom:15px;color:#43a047;}
-.menu-btn{
-    width:100%;padding:12px;margin-bottom:12px;border:none;border-radius:8px;
-    cursor:pointer;color:white;font-size:14px;
-    background:linear-gradient(to right,#333,#222);
+/* CALCULATORS GRID */
+.wrapper{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
+gap:20px;
+width:100%;
 }
-.logout-btn{background:linear-gradient(to right,#c62828,#8e0000);}
 
-/* ---------- CALCULATORS ---------- */
-.wrapper{display:flex;gap:20px;flex-wrap:wrap;width:100%;}
 .calculator{
-    background:#fff;border-radius:6px;padding:20px;
-    box-shadow:0 2px 6px rgba(0,0,0,0.1);
-    flex:1 1 300px;width:100%;
+background:white;
+border-radius:16px;
+padding:20px;
+box-shadow:0 10px 30px rgba(0,0,0,.08);
+transition:.3s;
+animation:fadeIn .6s ease;
 }
-.title{font-size:20px;font-weight:bold;}
+.calculator:hover{
+transform:translateY(-6px);
+box-shadow:0 20px 40px rgba(0,0,0,.12);
+}
+
+.title{font-size:18px;font-weight:bold;}
 .subtitle{color:#d32f2f;font-weight:bold;margin-bottom:15px;}
-.hint{margin-bottom:10px;color:#555;}
+
 .input{
-    width:100%;padding:10px;font-size:16px;margin-bottom:15px;
-    border:1px solid #ccc;border-radius:4px;
+width:100%;padding:10px;
+border-radius:8px;border:1px solid #ccc;
+margin-bottom:15px;
 }
+
 .btn{
-    width:100%;color:white;padding:12px;font-size:16px;
-    border:none;border-radius:4px;cursor:pointer;margin-bottom:20px;
+width:100%;padding:10px;
+border:none;border-radius:8px;
+background:linear-gradient(135deg,#1976d2,#0d47a1);
+color:white;cursor:pointer;margin-bottom:15px;
 }
-.btn-calc{background:linear-gradient(to right,#1976d2,#0d47a1);}
-table{width:100%;border-collapse:collapse;font-size:14px;}
+
+table{width:100%;font-size:14px;border-collapse:collapse;}
 th{text-align:left;padding-bottom:8px;border-bottom:1px solid #ddd;}
-td{padding:10px 0;border-bottom:1px solid #eee;}
-.coef{color:#555;}
+td{padding:8px 0;border-bottom:1px solid #eee;}
 .result{font-weight:bold;}
 
-/* ---------- CHAT ---------- */
+/* CHAT */
 #chatToggle{
-    position:fixed;bottom:20px;right:20px;
-    background:#2e7d32;color:white;padding:12px 15px;
-    border-radius:30px;cursor:pointer;z-index:3000;
+position:fixed;bottom:20px;right:20px;
+background:var(--green);color:white;
+padding:14px 18px;border-radius:40px;
+cursor:pointer;z-index:3003;
+box-shadow:0 10px 25px rgba(0,0,0,.3);
 }
 
 #chatWindow{
-    position:fixed;
-    bottom:80px;
-    right:20px;
-    width:320px;
-    height:420px;
-    background:#1c1c1c;
-    border-radius:12px;
-    display:flex;
-    flex-direction:column;
-    overflow:hidden;
-    z-index:3000;
-    opacity:0;
-    pointer-events:none;
-    transform:translateY(20px);
-    transition:.3s;
+position:fixed;bottom:80px;right:20px;
+width:340px;height:450px;
+background:var(--dark);
+border-radius:18px;
+display:flex;flex-direction:column;
+overflow:hidden;
+opacity:0;pointer-events:none;
+transform:translateY(20px);
+transition:.3s;
+z-index:3003;
 }
 #chatWindow.active{
-    opacity:1;
-    pointer-events:auto;
-    transform:translateY(0);
+opacity:1;pointer-events:auto;
+transform:translateY(0);
 }
 
-#chatHeader{
-    background:#2e7d32;color:white;padding:10px;font-weight:bold;
-}
 #chatMessages{
-    flex:1;padding:10px;color:white;
-    overflow-y:auto;font-size:14px;
+flex:1;padding:12px;
+overflow-y:auto;
+display:flex;flex-direction:column;
+gap:8px;
 }
+
+.msg{
+padding:8px 12px;
+border-radius:14px;
+max-width:75%;
+font-size:14px;
+animation:fadeIn .2s ease;
+}
+.me{
+background:var(--green);
+align-self:flex-end;
+color:white;
+border-bottom-right-radius:4px;
+}
+.other{
+background:#333;
+align-self:flex-start;
+color:white;
+border-bottom-left-radius:4px;
+}
+
 #chatInputArea{
-    display:flex;padding:10px;background:#111;
+display:flex;padding:10px;background:#111;
 }
 #chatInput{
-    flex:1;padding:8px;border:none;border-radius:6px;
+flex:1;border:none;border-radius:8px;padding:8px;
 }
 #chatSend{
-    margin-left:5px;padding:8px 10px;
-    background:#2e7d32;color:white;border:none;border-radius:6px;
+margin-left:6px;background:var(--green);color:white;border:none;border-radius:8px;padding:8px 12px;
 }
 
-/* ---------- MOBILE ---------- */
-@media (max-width:768px){
-  body{padding:10px;}
-  .wrapper{flex-direction:column;}
-  .calculator{flex:1 1 100%;}
-  #chatWindow{
-    width:100%;
-    height:75vh;
-    right:0;
-    bottom:0;
-    border-radius:15px 15px 0 0;
-  }
+/* MOBILE */
+@media(max-width:768px){
+body{padding:10px;}
+#chatWindow{
+width:100%;
+right:0;bottom:0;height:80vh;
+border-radius:20px 20px 0 0;
+}
 }
 </style>
 </head>
 <body>
 
+<div class="overlay" id="overlay"></div>
+
 <!-- LOGIN -->
 <div id="loginScreen" class="login-screen">
-  <div class="login-box">
-    <div class="login-logo"><span class="green">A</span><span class="black">uto-</span><span class="green">S</span><span class="black">tyle</span></div>
-    <div class="login-subtitle">Выберите пользователя</div>
-    <select id="userSelect">
-      <option value="cashier">Кассир</option>
-      <option value="evgeniy">Евгений</option>
-      <option value="vadim">Вадим</option>
-    </select>
-    <input type="password" id="passwordInput" placeholder="Введите пароль">
-    <button id="loginBtn" class="login-btn">ВОЙТИ</button>
-    <div id="errorMsg" class="error-msg"></div>
-  </div>
+<div class="login-box">
+<h2>Auto-Style</h2>
+<select id="userSelect">
+<option value="cashier">Кассир</option>
+<option value="evgeniy">Евгений</option>
+<option value="vadim">Вадим</option>
+</select>
+<input type="password" id="passwordInput" placeholder="Введите пароль">
+<button id="loginBtn" style="background:var(--green);width:100%;padding:10px;border:none;border-radius:8px;color:white;">Войти</button>
+<div id="errorMsg" style="color:red;margin-top:10px;"></div>
+</div>
 </div>
 
-<!-- MENU -->
 <div class="menu-toggle" onclick="toggleMenu()">☰</div>
 <div id="sideMenu" class="side-menu">
-  <div class="user-name" id="currentUser"></div>
-  <button class="menu-btn" onclick="location.href='beznal.html'">ОФОРМИТЬ БЕЗНАЛ</button>
-  <button class="menu-btn" onclick="location.href='smena.html'">ЗАКРЫТИЕ СМЕНЫ</button>
-  <button class="menu-btn" onclick="location.href='discount.html'">СКИДОЧНАЯ КАРТА</button>
-  <button class="menu-btn" onclick="location.href='pass.html'">ПАРОЛИ</button>
-  <button class="menu-btn logout-btn" onclick="logout()">ВЫЙТИ</button>
+<div id="currentUser"></div>
+<button>ОФОРМИТЬ БЕЗНАЛ</button>
+<button>ЗАКРЫТИЕ СМЕНЫ</button>
+<button>СКИДОЧНАЯ КАРТА</button>
+<button onclick="logout()">ВЫЙТИ</button>
 </div>
 
-<!-- HEADER -->
 <div class="header">
-  <div class="logo"><span class="green">A</span><span class="black">uto-</span><span class="green">S</span><span class="black">tyle</span></div>
+<div class="logo"><span class="green">A</span><span class="black">uto-</span><span class="green">S</span><span class="black">tyle</span></div>
 </div>
 
-<!-- CALCULATORS -->
 <div class="wrapper">
 
 <!-- АГРОПРОМБАНК -->
 <div class="calculator">
 <div class="title">КАЛЬКУЛЯТОР РАССРОЧКИ</div>
 <div class="subtitle">АГРОПРОМБАНК</div>
-<div class="hint">Введите сумму чека</div>
 <input type="number" class="input sum">
 <button class="btn btn-calc">РАССЧИТАТЬ</button>
 <table>
@@ -229,7 +251,6 @@ td{padding:10px 0;border-bottom:1px solid #eee;}
 <div class="calculator">
 <div class="title">КАЛЬКУЛЯТОР РАССРОЧКИ</div>
 <div class="subtitle">ЭКСИМБАНК</div>
-<div class="hint">Введите сумму чека</div>
 <input type="number" class="input sum">
 <button class="btn btn-calc">РАССЧИТАТЬ</button>
 <table>
@@ -245,7 +266,6 @@ td{padding:10px 0;border-bottom:1px solid #eee;}
 <div class="calculator">
 <div class="title">КАЛЬКУЛЯТОР РАССРОЧКИ</div>
 <div class="subtitle">СБЕРБАНК</div>
-<div class="hint">Введите сумму чека</div>
 <input type="number" class="input sum">
 <button class="btn btn-calc">РАССЧИТАТЬ</button>
 <table>
@@ -262,11 +282,10 @@ td{padding:10px 0;border-bottom:1px solid #eee;}
 <!-- CHAT -->
 <div id="chatToggle" onclick="toggleChat()">Чат</div>
 <div id="chatWindow">
-<div id="chatHeader">Чат</div>
 <div id="chatMessages"></div>
 <div id="chatInputArea">
-<input type="text" id="chatInput" placeholder="Введите сообщение">
-<button id="chatSend">Отправить</button>
+<input id="chatInput" placeholder="Сообщение">
+<button id="chatSend">➤</button>
 </div>
 </div>
 
@@ -281,86 +300,72 @@ const chatKey="chatHistory";
 
 /* LOGIN */
 loginBtn.onclick=function(){
-const user=userSelect.value;
-if(passwordInput.value===users[user].pass){
-localStorage.setItem("session",JSON.stringify({user,expire:Date.now()+86400000}));
-startSession(user);
+const u=userSelect.value;
+if(passwordInput.value===users[u].pass){
+currentUser=u;
+loginScreen.style.display="none";
+document.getElementById("currentUser").textContent="👤 "+users[u].name;
+renderChat();
 }else errorMsg.textContent="Неверный пароль";
 };
 
-window.onload=function(){
-const saved=localStorage.getItem("session");
-if(saved){
-const data=JSON.parse(saved);
-if(Date.now()<data.expire)startSession(data.user);
-}
-};
-
-function startSession(user){
-currentUser=user;
-loginScreen.style.display="none";
-document.getElementById("currentUser").textContent="👤 "+users[user].name;
-loadChat();
-}
-
-function logout(){
-localStorage.removeItem("session");
-location.reload();
-}
-
-function toggleMenu(){
-sideMenu.classList.toggle("active");
-}
-
 /* CALCULATORS */
-document.querySelectorAll('.calculator').forEach(calc=>{
-const btn=calc.querySelector('.btn-calc');
-btn.addEventListener('click',()=>{
-const sum=parseFloat(calc.querySelector('.sum').value);
-if(isNaN(sum)||sum<0)return;
-calc.querySelectorAll('.coef').forEach((c,i)=>{
-calc.querySelectorAll('.result')[i].textContent=
-(sum/parseFloat(c.textContent)).toLocaleString('ru-RU',{minimumFractionDigits:2});
+document.querySelectorAll(".calculator").forEach(calc=>{
+calc.querySelector(".btn-calc").onclick=function(){
+const sum=parseFloat(calc.querySelector(".sum").value);
+if(isNaN(sum))return;
+calc.querySelectorAll(".coef").forEach((c,i)=>{
+calc.querySelectorAll(".result")[i].textContent=
+(sum/parseFloat(c.textContent)).toLocaleString("ru-RU",{minimumFractionDigits:2});
 });
-});
+};
 });
 
 /* CHAT */
-function toggleChat(){
-chatWindow.classList.toggle("active");
-}
+function toggleChat(){chatWindow.classList.toggle("active");}
 
 chatSend.onclick=function(){
-const msg=chatInput.value.trim();
-if(!msg)return;
+const text=chatInput.value.trim();
+if(!text)return;
 let data=JSON.parse(localStorage.getItem(chatKey)||"[]");
-data.push({user:currentUser,text:msg});
+data.push({user:currentUser,text});
 localStorage.setItem(chatKey,JSON.stringify(data));
 chatInput.value="";
-loadChat();
+renderChat();
 };
 
-function loadChat(){
+function renderChat(){
 chatMessages.innerHTML="";
-const data=JSON.parse(localStorage.getItem(chatKey)||"[]");
+let data=JSON.parse(localStorage.getItem(chatKey)||"[]");
 data.forEach(m=>{
-const d=document.createElement("div");
-d.style.marginBottom="8px";
-d.innerHTML="<strong>"+users[m.user].name+":</strong> "+m.text;
-chatMessages.appendChild(d);
+const div=document.createElement("div");
+div.className="msg "+(m.user===currentUser?"me":"other");
+div.textContent=users[m.user].name+": "+m.text;
+chatMessages.appendChild(div);
 });
 chatMessages.scrollTop=chatMessages.scrollHeight;
 }
+setInterval(renderChat,1000);
 
-/* SYNC */
-window.addEventListener("storage",e=>{
-if(e.key===chatKey)loadChat();
+/* MENU */
+const sideMenu=document.getElementById("sideMenu");
+const overlay=document.getElementById("overlay");
+function toggleMenu(){
+sideMenu.classList.toggle("active");
+overlay.classList.toggle("active");
+}
+overlay.onclick=toggleMenu;
+
+/* SWIPE */
+let startX=0;
+document.addEventListener("touchstart",e=>{startX=e.touches[0].clientX;});
+document.addEventListener("touchend",e=>{
+let endX=e.changedTouches[0].clientX;
+if(startX<30 && endX>100)toggleMenu();
+if(startX>200 && endX<100)toggleMenu();
 });
-window.addEventListener("focus",loadChat);
-document.addEventListener("visibilitychange",()=>{
-if(!document.hidden)loadChat();
-});
-setInterval(loadChat,1500);
+
+function logout(){location.reload();}
 </script>
 
 </body>
