@@ -1,150 +1,191 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>База знаний</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>База знаний</title>
 
-<style>
-*, *::before, *::after{box-sizing:border-box;}
+    <style>
+        *, *::before, *::after {
+            box-sizing: border-box;
+        }
 
-:root{
---green:#2e7d32;
---green-dark:#1b5e20;
---blue:#1976d2;
---bg:#f4f6f9;
-}
+        :root {
+            --green: #2e7d32;
+            --green-dark: #1b5e20;
+            --blue: #1976d2;
+            --bg: #f4f6f9;
+        }
 
-body{
-margin:0;
-font-family:Arial,sans-serif;
-background:var(--bg);
-overflow-x:hidden;
-}
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: var(--bg);
+            overflow-x: hidden;
+        }
 
-/* ===== HEADER ===== */
-.header{
-background:white;padding:15px;text-align:center;
-box-shadow:0 4px 15px rgba(0,0,0,.08);
-position:sticky;top:0;z-index:100;
-}
+        /* ===== HEADER ===== */
+        .header {
+            background: white;
+            padding: 15px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
 
-.logo{font-size:26px;font-weight:bold;}
-.logo .green{color:var(--green);}
-.logo .black{color:#000;}
+        .logo {
+            font-size: 26px;
+            font-weight: bold;
+        }
 
-/* ===== MENU BUTTON ===== */
-.menu-toggle{
-position:fixed;top:15px;left:15px;
-width:48px;height:48px;
-background:linear-gradient(135deg,var(--green),var(--green-dark));
-color:white;display:flex;align-items:center;justify-content:center;
-border-radius:14px;cursor:pointer;
-z-index:3000;
-box-shadow:0 6px 15px rgba(0,0,0,.2);
-}
+        .logo .green {
+            color: var(--green);
+        }
 
-/* ===== SIDE MENU ===== */
-.side-menu{
-position:fixed;top:0;left:0;
-width:260px;height:100%;
-padding:80px 20px;
-background:#1f1f1f;
-border-right:1px solid #2a2a2a;
-transform:translateX(-100%);
-transition:transform .25s ease;
-z-index:2999;
-will-change:transform;
-}
+        .logo .black {
+            color: #000;
+        }
 
-.side-menu.active{
-transform:translateX(0);
-}
+        /* ===== MENU BUTTON ===== */
+        .menu-toggle {
+            position: fixed;
+            top: 15px;
+            left: 15px;
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, var(--green), var(--green-dark));
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 14px;
+            cursor: pointer;
+            z-index: 3000;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        }
 
-.side-menu button{
-width:100%;padding:12px;margin-bottom:12px;
-border:none;border-radius:12px;
-background:#2a2a2a;
-color:white;font-weight:500;
-cursor:pointer;transition:.2s;
-}
+        /* ===== SIDE MENU ===== */
+        .side-menu {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 260px;
+            height: 100%;
+            padding: 80px 20px;
+            background: rgba(20, 20, 20, 0.75);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
+            transform: translateX(-100%);
+            transition: transform 0.25s ease;
+            z-index: 2999;
+            will-change: transform;
+        }
 
-.side-menu button:hover{
-background:var(--green);
-}
+        .side-menu.active {
+            transform: translateX(0);
+        }
 
-/* ===== OVERLAY ===== */
-.overlay{
-position:fixed;inset:0;
-background:rgba(0,0,0,.35);
-opacity:0;pointer-events:none;
-transition:.2s;
-z-index:2000;
-}
+        .side-menu button {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 12px;
+            border: none;
+            border-radius: 12px;
+            background: #2a2a2a;
+            color: white;
+            font-weight: 500;
+            cursor: pointer;
+            transition: 0.2s;
+        }
 
-.overlay.active{
-opacity:1;pointer-events:auto;
-}
+        .side-menu button:hover {
+            background: var(--green);
+        }
 
-/* ===== CONTENT ===== */
-.wrapper{
-max-width:900px;margin:20px auto;padding:0 15px;
-}
+        /* ===== OVERLAY ===== */
+        .overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.35);
+            opacity: 0;
+            pointer-events: none;
+            transition: 0.2s;
+            z-index: 2000;
+        }
 
-/* ===== ACCORDION / DROPDOWN ===== */
-.accordion-item{
-background:white;
-border-radius:12px;
-margin-bottom:15px;
-overflow:hidden;
-box-shadow:0 6px 15px rgba(0,0,0,.08);
-}
+        .overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
 
-.accordion-header{
-padding:15px 20px;
-cursor:pointer;
-font-weight:bold;
-background:linear-gradient(135deg,var(--green),var(--green-dark));
-color:white;
-transition:background .3s;
-display:flex;justify-content:space-between;align-items:center;
-}
+        /* ===== CONTENT ===== */
+        .wrapper {
+            max-width: 900px;
+            margin: 20px auto;
+            padding: 0 15px;
+        }
 
-.accordion-header:hover{background:linear-gradient(135deg,#43a047,var(--green-dark));}
+        /* ===== ACCORDION / DROPDOWN ===== */
+        .accordion-item {
+            background: white;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            overflow: hidden;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.08);
+        }
 
-.accordion-body{
-max-height:0;
-overflow:hidden;
-transition:max-height .35s ease, padding .3s ease;
-padding:0 20px;
-background:#f9f9f9;
-}
+        .accordion-header {
+            padding: 15px 20px;
+            cursor: pointer;
+            font-weight: bold;
+            background: linear-gradient(135deg, var(--green), var(--green-dark));
+            color: white;
+            transition: background 0.3s;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
 
-.accordion-body p{
-margin:10px 0;
-}
+        .accordion-header:hover {
+            background: linear-gradient(135deg, #43a047, var(--green-dark));
+        }
 
-/* стрелка */
-.accordion-header::after{
-content:"\25BC";
-transition:transform .3s;
-}
+        .accordion-body {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.35s ease, padding 0.3s ease;
+            padding: 0 20px;
+            background: #f9f9f9;
+        }
 
-.accordion-item.active .accordion-header::after{
-transform:rotate(180deg);
-}
+        .accordion-body p {
+            margin: 10px 0;
+        }
 
-/* ===== MOBILE ===== */
-@media(max-width:768px){
-.side-menu{
-background:rgba(20,20,20,.75);
-backdrop-filter:blur(18px);
--webkit-backdrop-filter:blur(18px);
-border-right:1px solid rgba(255,255,255,.1);
-transition:transform .35s cubic-bezier(.77,0,.18,1);
-}
-}
-</style>
+        .accordion-header::after {
+            content: "\25BC";
+            transition: transform 0.3s;
+        }
+
+        .accordion-item.active .accordion-header::after {
+            transform: rotate(180deg);
+        }
+
+        /* ===== MOBILE ===== */
+        @media(max-width:768px) {
+            .side-menu {
+                background: rgba(20, 20, 20, 0.75);
+                backdrop-filter: blur(18px);
+                -webkit-backdrop-filter: blur(18px);
+                border-right: 1px solid rgba(255, 255, 255, 0.1);
+                transition: transform 0.35s cubic-bezier(0.77, 0, 0.18, 1);
+            }
+        }
+
+    </style>
 </head>
 <body>
 
@@ -153,99 +194,174 @@ transition:transform .35s cubic-bezier(.77,0,.18,1);
 <!-- MENU -->
 <div class="menu-toggle" onclick="openMenu()">☰</div>
 <div id="sideMenu" class="side-menu">
-<div id="currentUser" style="color:white;margin-bottom:20px;font-weight:bold;">👤 Менеджер</div>
-<button onclick="location.href='beznal.html'">ОФОРМИТЬ БЕЗНАЛ</button>
-<button onclick="location.href='smena.html'">ЗАКРЫТИЕ СМЕНЫ</button>
-<button onclick="location.href='discount.html'">СКИДОЧНАЯ КАРТА</button>
-<button onclick="location.href='pass.html'">ПАРОЛИ</button>
+    <div id="currentUser" style="color:white; margin-bottom:20px; font-weight:bold;">👤 Менеджер</div>
+    <button onclick="location.href='beznal.html'">ОФОРМИТЬ БЕЗНАЛ</button>
+    <button onclick="location.href='smena.html'">ЗАКРЫТИЕ СМЕНЫ</button>
+    <button onclick="location.href='discount.html'">СКИДОЧНАЯ КАРТА</button>
+    <button onclick="location.href='pass.html'">ПАРОЛИ</button>
 </div>
 
 <!-- HEADER -->
 <div class="header">
-<div class="logo">
-<span class="green">A</span><span class="black">uto-</span>
-<span class="green">S</span><span class="black">tyle</span>
-<span class="green">Б</span><span class="black">аза-</span>
-<span class="green">З</span><span class="black">наний</span>
-</div>
+    <div class="logo">
+        <span class="green">A</span><span class="black">uto-</span>
+        <span class="green">S</span><span class="black">tyle</span>
+        <span class="green">Б</span><span class="black">аза-</span>
+        <span class="green">З</span><span class="black">наний</span>
+    </div>
 </div>
 
 <!-- CONTENT -->
 <div class="wrapper">
 
-<div class="accordion-item">
-<div class="accordion-header">1. Подбор масла</div>
-<div class="accordion-body">
-<p>Здесь можно подобрать подходящее масло для вашего автомобиля, учитывая тип двигателя, вязкость и бренд.</p>
-</div>
-</div>
+    <div class="accordion-item">
+        <div class="accordion-header">1. Подбор масла</div>
+        <div class="accordion-body">
+            <p>Здесь можно подобрать подходящее масло для вашего автомобиля, учитывая тип двигателя, вязкость и бренд.</p>
+            <form id="oilForm">
+                <label for="oilBrand">Выберите бренд масла:</label>
+                <select id="oilBrand">
+                    <option value="shell">Shell</option>
+                    <option value="mobil">Mobil</option>
+                    <option value="castrol">Castrol</option>
+                    <option value="liqui">Liqui Moly</option>
+                </select>
+                <br><br>
+                <label for="oilType">Тип масла:</label>
+                <select id="oilType">
+                    <option value="synthetic">Синтетическое</option>
+                    <option value="semi-synthetic">Полусинтетическое</option>
+                    <option value="mineral">Минеральное</option>
+                </select>
+                <br><br>
+                <button type="submit" class="btn">Подобрать масло</button>
+            </form>
+        </div>
+    </div>
 
-<div class="accordion-item">
-<div class="accordion-header">2. Подбор фильтров</div>
-<div class="accordion-body">
-<p>Подбор воздушных, масляных и топливных фильтров для различных моделей автомобилей.</p>
-</div>
-</div>
+    <div class="accordion-item">
+        <div class="accordion-header">2. Подбор фильтров</div>
+        <div class="accordion-body">
+            <p>Подбор воздушных, масляных и топливных фильтров для различных моделей автомобилей.</p>
+            <form id="filterForm">
+                <label for="filterType">Тип фильтра:</label>
+                <select id="filterType">
+                    <option value="oil">Масляный</option>
+                    <option value="air">Воздушный</option>
+                    <option value="fuel">Топливный</option>
+                </select>
+                <br><br>
+                <label for="filterBrand">Выберите бренд:</label>
+                <select id="filterBrand">
+                    <option value="fram">Fram</option>
+                    <option value="mahle">Mahle</option>
+                    <option value="purflux">Purflux</option>
+                    <option value="bosch">Bosch</option>
+                </select>
+                <br><br>
+                <button type="submit" class="btn">Подобрать фильтры</button>
+            </form>
+        </div>
+    </div>
 
-<div class="accordion-item">
-<div class="accordion-header">3. Подбор лампочек</div>
-<div class="accordion-body">
-<p>Выбор лампочек для фар, габаритов и салона, совместимые с вашей моделью автомобиля.</p>
-</div>
-</div>
+    <div class="accordion-item">
+        <div class="accordion-header">3. Подбор лампочек</div>
+        <div class="accordion-body">
+            <p>Выбор автомобильных лампочек для фар, указателей поворота и других.</p>
+            <form id="lampForm">
+                <label for="lampType">Тип лампы:</label>
+                <select id="lampType">
+                    <option value="h1">H1</option>
+                    <option value="h4">H4</option>
+                    <option value="h7">H7</option>
+                    <option value="led">LED</option>
+                </select>
+                <br><br>
+                <label for="lampBrand">Выберите бренд:</label>
+                <select id="lampBrand">
+                    <option value="philips">Philips</option>
+                    <option value="osram">Osram</option>
+                    <option value="bosch">Bosch</option>
+                    <option value="neolux">Neolux</option>
+                </select>
+                <br><br>
+                <button type="submit" class="btn">Подобрать лампы</button>
+            </form>
+        </div>
+    </div>
 
-<div class="accordion-item">
-<div class="accordion-header">4. Подбор дворников</div>
-<div class="accordion-body">
-<p>Подбор щёток стеклоочистителя для лобового и заднего стекла с указанием размера и крепления.</p>
-</div>
-</div>
+    <div class="accordion-item">
+        <div class="accordion-header">4. Подбор дворников</div>
+        <div class="accordion-body">
+            <p>Подбор автомобильных дворников для различных моделей машин.</p>
+            <form id="wiperForm">
+                <label for="carBrand">Марка автомобиля:</label>
+                <select id="carBrand">
+                    <option value="toyota">Toyota</option>
+                    <option value="volkswagen">Volkswagen</option>
+                    <option value="bmw">BMW</option>
+                    <option value="audi">Audi</option>
+                </select>
+                <br><br>
+                <label for="carModel">Модель автомобиля:</label>
+                <select id="carModel">
+                    <!-- Динамически изменяется -->
+                </select>
+                <br><br>
+                <button type="submit" class="btn">Подобрать дворники</button>
+            </form>
+        </div>
+    </div>
 
 </div>
 
 <script>
-/* ===== MENU CONTROL ===== */
-const sideMenu=document.getElementById("sideMenu");
-const overlay=document.getElementById("overlay");
+    // Открытие и закрытие меню
+    const sideMenu = document.getElementById("sideMenu");
+    const overlay = document.getElementById("overlay");
 
-function openMenu(){
-sideMenu.classList.add("active");
-overlay.classList.add("active");
-}
-function closeMenu(){
-sideMenu.classList.remove("active");
-overlay.classList.remove("active");
-}
-overlay.onclick=closeMenu;
+    function openMenu() {
+        sideMenu.classList.add("active");
+        overlay.classList.add("active");
+    }
 
-/* ===== SWIPE FOR MOBILE ===== */
-let startX=0;
+    function closeMenu() {
+        sideMenu.classList.remove("active");
+        overlay.classList.remove("active");
+    }
 
-document.addEventListener("touchstart",e=>{
-startX=e.touches[0].clientX;
-});
+    overlay.onclick = closeMenu;
 
-document.addEventListener("touchend",e=>{
-let endX=e.changedTouches[0].clientX;
-if(startX<40 && endX>120) openMenu();   // открыть
-if(startX>150 && endX<80) closeMenu();  // закрыть
-});
+    // Обработчик для аккордеона
+    const accordionItems = document.querySelectorAll(".accordion-item");
+    accordionItems.forEach(item => {
+        item.querySelector(".accordion-header").onclick = function () {
+            item.classList.toggle("active");
+        };
+    });
 
-/* ===== ACCORDION ===== */
-document.querySelectorAll('.accordion-header').forEach(header=>{
-header.addEventListener('click',()=>{
-const item=header.parentElement;
-item.classList.toggle('active');
-const body=item.querySelector('.accordion-body');
-if(item.classList.contains('active')){
-body.style.maxHeight=body.scrollHeight+"px";
-body.style.padding="10px 20px";
-}else{
-body.style.maxHeight="0";
-body.style.padding="0 20px";
-}
-});
-});
+    // Динамическая подмена моделей автомобилей
+    const carModels = {
+        toyota: ['Corolla', 'Camry', 'Yaris'],
+        volkswagen: ['Passat', 'Golf', 'Jetta'],
+        bmw: ['X5', 'X3', '3 Series'],
+        audi: ['A3', 'A4', 'Q7'],
+    };
+
+    document.getElementById("carBrand").addEventListener("change", function () {
+        const brand = this.value;
+        const carModelSelect = document.getElementById("carModel");
+        carModelSelect.innerHTML = '<option value="" disabled selected>Выберите модель</option>';
+
+        if (brand && carModels[brand]) {
+            carModels[brand].forEach(function (model) {
+                const option = document.createElement('option');
+                option.value = model.toLowerCase();
+                option.textContent = model;
+                carModelSelect.appendChild(option);
+            });
+        }
+    });
 </script>
 
 </body>
