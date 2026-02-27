@@ -1,191 +1,95 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>База знаний</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>База знаний - Auto-Style</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; }
+:root {
+    --green: #2e7d32;
+    --green-dark: #1b5e20;
+    --blue: #1976d2;
+    --bg: #f4f6f9;
+}
+body { margin:0; font-family: Arial,sans-serif; background: var(--bg); overflow-x: hidden; }
 
-    <style>
-        *, *::before, *::after {
-            box-sizing: border-box;
-        }
+/* ===== HEADER ===== */
+.header{
+    background:white; padding:15px; text-align:center;
+    box-shadow:0 4px 15px rgba(0,0,0,.08);
+    position:sticky; top:0; z-index:100;
+}
+.logo{ font-size:26px; font-weight:bold; }
+.logo .green{ color: var(--green); }
+.logo .black{ color:#000; }
 
-        :root {
-            --green: #2e7d32;
-            --green-dark: #1b5e20;
-            --blue: #1976d2;
-            --bg: #f4f6f9;
-        }
+/* ===== MENU BUTTON ===== */
+.menu-toggle{
+    position:fixed; top:15px; left:15px;
+    width:48px; height:48px;
+    background:linear-gradient(135deg,var(--green),var(--green-dark));
+    color:white; display:flex; align-items:center; justify-content:center;
+    border-radius:14px; cursor:pointer;
+    z-index:3000; box-shadow:0 8px 20px rgba(0,0,0,.3);
+}
 
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background: var(--bg);
-            overflow-x: hidden;
-        }
+/* ===== GLASS MENU ===== */
+.side-menu{
+    position:fixed; top:0; left:0;
+    width:260px; height:100%;
+    padding:80px 20px;
+    background:rgba(20,20,20,.75);
+    backdrop-filter:blur(18px);
+    border-right:1px solid rgba(255,255,255,.1);
+    transform:translateX(-100%);
+    transition:transform .35s cubic-bezier(.77,0,.18,1);
+    z-index:2999;
+}
+.side-menu.active{ transform:translateX(0); }
+.side-menu button{
+    width:100%; padding:12px; margin-bottom:12px;
+    border:none; border-radius:14px;
+    background:rgba(255,255,255,.08); color:white;
+    font-weight:500; cursor:pointer; transition:.25s;
+}
+.side-menu button:hover{ background:var(--green); transform:translateX(5px); }
 
-        /* ===== HEADER ===== */
-        .header {
-            background: white;
-            padding: 15px;
-            text-align: center;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
+/* ===== OVERLAY ===== */
+.overlay{
+    position:fixed; inset:0;
+    background:rgba(0,0,0,.4);
+    backdrop-filter:blur(3px);
+    opacity:0; pointer-events:none;
+    transition:.3s; z-index:2000;
+}
+.overlay.active{ opacity:1; pointer-events:auto; }
 
-        .logo {
-            font-size: 26px;
-            font-weight: bold;
-        }
+/* ===== ACCORDION ===== */
+.accordion { max-width:900px; margin:20px auto; padding:0 10px; }
+.accordion-item { border-radius:12px; overflow:hidden; margin-bottom:12px; box-shadow:0 5px 20px rgba(0,0,0,.05); background:white; }
+.accordion-header {
+    padding:15px 20px; font-weight:bold; cursor:pointer;
+    background:linear-gradient(135deg,var(--green),var(--green-dark));
+    color:white; user-select:none; transition: background .3s;
+}
+.accordion-header:hover { background:linear-gradient(135deg,#43a047,var(--green-dark)); }
+.accordion-body {
+    max-height:0; overflow:hidden;
+    transition:max-height .35s ease, padding .3s ease;
+    padding:0 20px; background:#f9f9f9;
+}
+.accordion-body form{ margin-top:10px; }
+.accordion-body input, .accordion-body select{ width:100%; padding:10px; margin-bottom:12px; border-radius:10px; border:1px solid #ccc; font-size:16px; }
+.accordion-body button{ width:100%; padding:12px; border:none; border-radius:12px; background:linear-gradient(135deg,var(--blue),#0d47a1); color:white; font-weight:bold; cursor:pointer; }
 
-        .logo .green {
-            color: var(--green);
-        }
-
-        .logo .black {
-            color: #000;
-        }
-
-        /* ===== MENU BUTTON ===== */
-        .menu-toggle {
-            position: fixed;
-            top: 15px;
-            left: 15px;
-            width: 48px;
-            height: 48px;
-            background: linear-gradient(135deg, var(--green), var(--green-dark));
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 14px;
-            cursor: pointer;
-            z-index: 3000;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
-        }
-
-        /* ===== SIDE MENU ===== */
-        .side-menu {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 260px;
-            height: 100%;
-            padding: 80px 20px;
-            background: rgba(20, 20, 20, 0.75);
-            backdrop-filter: blur(18px);
-            -webkit-backdrop-filter: blur(18px);
-            border-right: 1px solid rgba(255, 255, 255, 0.1);
-            transform: translateX(-100%);
-            transition: transform 0.25s ease;
-            z-index: 2999;
-            will-change: transform;
-        }
-
-        .side-menu.active {
-            transform: translateX(0);
-        }
-
-        .side-menu button {
-            width: 100%;
-            padding: 12px;
-            margin-bottom: 12px;
-            border: none;
-            border-radius: 12px;
-            background: #2a2a2a;
-            color: white;
-            font-weight: 500;
-            cursor: pointer;
-            transition: 0.2s;
-        }
-
-        .side-menu button:hover {
-            background: var(--green);
-        }
-
-        /* ===== OVERLAY ===== */
-        .overlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.35);
-            opacity: 0;
-            pointer-events: none;
-            transition: 0.2s;
-            z-index: 2000;
-        }
-
-        .overlay.active {
-            opacity: 1;
-            pointer-events: auto;
-        }
-
-        /* ===== CONTENT ===== */
-        .wrapper {
-            max-width: 900px;
-            margin: 20px auto;
-            padding: 0 15px;
-        }
-
-        /* ===== ACCORDION / DROPDOWN ===== */
-        .accordion-item {
-            background: white;
-            border-radius: 12px;
-            margin-bottom: 15px;
-            overflow: hidden;
-            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.08);
-        }
-
-        .accordion-header {
-            padding: 15px 20px;
-            cursor: pointer;
-            font-weight: bold;
-            background: linear-gradient(135deg, var(--green), var(--green-dark));
-            color: white;
-            transition: background 0.3s;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .accordion-header:hover {
-            background: linear-gradient(135deg, #43a047, var(--green-dark));
-        }
-
-        .accordion-body {
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.35s ease, padding 0.3s ease;
-            padding: 0 20px;
-            background: #f9f9f9;
-        }
-
-        .accordion-body p {
-            margin: 10px 0;
-        }
-
-        .accordion-header::after {
-            content: "\25BC";
-            transition: transform 0.3s;
-        }
-
-        .accordion-item.active .accordion-header::after {
-            transform: rotate(180deg);
-        }
-
-        /* ===== MOBILE ===== */
-        @media(max-width:768px) {
-            .side-menu {
-                background: rgba(20, 20, 20, 0.75);
-                backdrop-filter: blur(18px);
-                -webkit-backdrop-filter: blur(18px);
-                border-right: 1px solid rgba(255, 255, 255, 0.1);
-                transition: transform 0.35s cubic-bezier(0.77, 0, 0.18, 1);
-            }
-        }
-
-    </style>
+/* ===== MEDIA ===== */
+@media(max-width:768px){
+    .accordion-body { padding:0 15px; }
+    .accordion-header { font-size:16px; padding:12px 15px; }
+    .accordion-body input, .accordion-body select, .accordion-body button{ font-size:14px; padding:10px; }
+}
+</style>
 </head>
 <body>
 
@@ -194,7 +98,7 @@
 <!-- MENU -->
 <div class="menu-toggle" onclick="openMenu()">☰</div>
 <div id="sideMenu" class="side-menu">
-    <div id="currentUser" style="color:white; margin-bottom:20px; font-weight:bold;">👤 Менеджер</div>
+    <div id="currentUser" style="color:white;margin-bottom:20px;font-weight:bold;">👤 Менеджер</div>
     <button onclick="location.href='beznal.html'">ОФОРМИТЬ БЕЗНАЛ</button>
     <button onclick="location.href='smena.html'">ЗАКРЫТИЕ СМЕНЫ</button>
     <button onclick="location.href='discount.html'">СКИДОЧНАЯ КАРТА</button>
@@ -205,32 +109,30 @@
 <div class="header">
     <div class="logo">
         <span class="green">A</span><span class="black">uto-</span>
-        <span class="green">S</span><span class="black">tyle</span>
-        <span class="green">Б</span><span class="black">аза-</span>
-        <span class="green">З</span><span class="black">наний</span>
+        <span class="green">S</span><span class="black">tyle </span>База знаний
     </div>
 </div>
 
-<!-- CONTENT -->
-<div class="wrapper">
+<!-- ACCORDION CONTENT -->
+<div class="accordion">
 
     <div class="accordion-item">
         <div class="accordion-header">1. Подбор масла</div>
         <div class="accordion-body">
-            <p>Здесь можно подобрать подходящее масло для вашего автомобиля, учитывая тип двигателя, вязкость и бренд.</p>
+            <p>Выберите марку и тип масла для вашего автомобиля.</p>
             <form id="oilForm">
-                <label for="oilBrand">Выберите бренд масла:</label>
+                <label for="oilBrand">Марка масла:</label>
                 <select id="oilBrand">
-                    <option value="shell">Shell</option>
-                    <option value="mobil">Mobil</option>
                     <option value="castrol">Castrol</option>
-                    <option value="liqui">Liqui Moly</option>
+                    <option value="mobil">Mobil</option>
+                    <option value="shell">Shell</option>
+                    <option value="motul">Motul</option>
                 </select>
-                <br><br>
+                <br>
                 <label for="oilType">Тип масла:</label>
                 <select id="oilType">
                     <option value="synthetic">Синтетическое</option>
-                    <option value="semi-synthetic">Полусинтетическое</option>
+                    <option value="semi">Полусинтетическое</option>
                     <option value="mineral">Минеральное</option>
                 </select>
                 <br><br>
@@ -242,16 +144,9 @@
     <div class="accordion-item">
         <div class="accordion-header">2. Подбор фильтров</div>
         <div class="accordion-body">
-            <p>Подбор воздушных, масляных и топливных фильтров для различных моделей автомобилей.</p>
+            <p>Выберите автомобильные фильтры для вашего авто.</p>
             <form id="filterForm">
-                <label for="filterType">Тип фильтра:</label>
-                <select id="filterType">
-                    <option value="oil">Масляный</option>
-                    <option value="air">Воздушный</option>
-                    <option value="fuel">Топливный</option>
-                </select>
-                <br><br>
-                <label for="filterBrand">Выберите бренд:</label>
+                <label for="filterBrand">Бренд фильтра:</label>
                 <select id="filterBrand">
                     <option value="fram">Fram</option>
                     <option value="mahle">Mahle</option>
@@ -267,7 +162,7 @@
     <div class="accordion-item">
         <div class="accordion-header">3. Подбор лампочек</div>
         <div class="accordion-body">
-            <p>Выбор автомобильных лампочек для фар, указателей поворота и других.</p>
+            <p>Выбор автомобильных лампочек для фар и указателей.</p>
             <form id="lampForm">
                 <label for="lampType">Тип лампы:</label>
                 <select id="lampType">
@@ -276,8 +171,8 @@
                     <option value="h7">H7</option>
                     <option value="led">LED</option>
                 </select>
-                <br><br>
-                <label for="lampBrand">Выберите бренд:</label>
+                <br>
+                <label for="lampBrand">Бренд лампы:</label>
                 <select id="lampBrand">
                     <option value="philips">Philips</option>
                     <option value="osram">Osram</option>
@@ -293,7 +188,7 @@
     <div class="accordion-item">
         <div class="accordion-header">4. Подбор дворников</div>
         <div class="accordion-body">
-            <p>Подбор автомобильных дворников для различных моделей машин.</p>
+            <p>Подбор автомобильных дворников для моделей машин.</p>
             <form id="wiperForm">
                 <label for="carBrand">Марка автомобиля:</label>
                 <select id="carBrand">
@@ -302,10 +197,10 @@
                     <option value="bmw">BMW</option>
                     <option value="audi">Audi</option>
                 </select>
-                <br><br>
+                <br>
                 <label for="carModel">Модель автомобиля:</label>
                 <select id="carModel">
-                    <!-- Динамически изменяется -->
+                    <option value="" disabled selected>Выберите модель</option>
                 </select>
                 <br><br>
                 <button type="submit" class="btn">Подобрать дворники</button>
@@ -316,52 +211,53 @@
 </div>
 
 <script>
-    // Открытие и закрытие меню
-    const sideMenu = document.getElementById("sideMenu");
-    const overlay = document.getElementById("overlay");
+/* ===== MENU CONTROL ===== */
+function openMenu(){ sideMenu.classList.add("active"); overlay.classList.add("active"); }
+function closeMenu(){ sideMenu.classList.remove("active"); overlay.classList.remove("active"); }
+overlay.onclick = closeMenu;
 
-    function openMenu() {
-        sideMenu.classList.add("active");
-        overlay.classList.add("active");
-    }
+/* ===== ACCORDION ===== */
+const accordionItems = document.querySelectorAll(".accordion-item");
+accordionItems.forEach(item => {
+    const header = item.querySelector(".accordion-header");
+    const body = item.querySelector(".accordion-body");
 
-    function closeMenu() {
-        sideMenu.classList.remove("active");
-        overlay.classList.remove("active");
-    }
-
-    overlay.onclick = closeMenu;
-
-    // Обработчик для аккордеона
-    const accordionItems = document.querySelectorAll(".accordion-item");
-    accordionItems.forEach(item => {
-        item.querySelector(".accordion-header").onclick = function () {
-            item.classList.toggle("active");
-        };
-    });
-
-    // Динамическая подмена моделей автомобилей
-    const carModels = {
-        toyota: ['Corolla', 'Camry', 'Yaris'],
-        volkswagen: ['Passat', 'Golf', 'Jetta'],
-        bmw: ['X5', 'X3', '3 Series'],
-        audi: ['A3', 'A4', 'Q7'],
-    };
-
-    document.getElementById("carBrand").addEventListener("change", function () {
-        const brand = this.value;
-        const carModelSelect = document.getElementById("carModel");
-        carModelSelect.innerHTML = '<option value="" disabled selected>Выберите модель</option>';
-
-        if (brand && carModels[brand]) {
-            carModels[brand].forEach(function (model) {
-                const option = document.createElement('option');
-                option.value = model.toLowerCase();
-                option.textContent = model;
-                carModelSelect.appendChild(option);
-            });
+    header.addEventListener("click", () => {
+        const isActive = item.classList.contains("active");
+        // Закрыть все
+        accordionItems.forEach(i=>{
+            i.classList.remove("active");
+            i.querySelector(".accordion-body").style.maxHeight = null;
+            i.querySelector(".accordion-body").style.padding = "0 20px";
+        });
+        if(!isActive){
+            item.classList.add("active");
+            body.style.maxHeight = body.scrollHeight + "px";
+            body.style.padding = "15px 20px";
         }
     });
+});
+
+/* ===== DYNAMIC WIPER MODELS ===== */
+const carModels = {
+    toyota:['Corolla','Camry','Yaris'],
+    volkswagen:['Passat','Golf','Jetta'],
+    bmw:['X5','X3','3 Series'],
+    audi:['A3','A4','Q7']
+};
+document.getElementById("carBrand").addEventListener("change", function(){
+    const brand = this.value;
+    const carModelSelect = document.getElementById("carModel");
+    carModelSelect.innerHTML = '<option value="" disabled selected>Выберите модель</option>';
+    if(brand && carModels[brand]){
+        carModels[brand].forEach(model=>{
+            const option = document.createElement('option');
+            option.value = model.toLowerCase();
+            option.textContent = model;
+            carModelSelect.appendChild(option);
+        });
+    }
+});
 </script>
 
 </body>
