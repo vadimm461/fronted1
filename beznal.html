@@ -191,7 +191,7 @@ margin:0;
 
 <thead>
 <tr>
-<th>Код</th>
+<th>№</th>
 <th>Наименование</th>
 <th>Кол-во</th>
 <th>Цена</th>
@@ -205,7 +205,7 @@ margin:0;
 <tfoot>
 <tr>
 <td colspan="4" class="total">Итого:</td>
-<td id="total">0</td>
+<td id="total">0 руб.</td>
 <td></td>
 </tr>
 </tfoot>
@@ -288,7 +288,7 @@ __________________<br>
 <tr>
 <td colspan="3"></td>
 <td class="total">Итого:</td>
-<td id="nakladnaya-total">0</td>
+<td id="nakladnaya-total">0 руб.</td>
 </tr>
 </tfoot>
 
@@ -322,7 +322,7 @@ let number=Math.floor(Math.random()*1000);
 document.getElementById("invoice-number").innerText=number;
 document.getElementById("invoice-number2").innerText=number;
 
-/* число прописью (простейшая версия) */
+/* число прописью (базовая версия) */
 function numToText(n){
 const ones = ["","один","два","три","четыре","пять","шесть","семь","восемь","девять"];
 const tens = ["","десять","двадцать","тридцать","сорок","пятьдесят","шестьдесят","семьдесят","восемьдесят","девяносто"];
@@ -337,23 +337,34 @@ return s.trim()+" рублей 00 копеек";
 
 /* добавить строку */
 function addRow(){
+let tbody=document.getElementById("tbody");
 let row=document.createElement("tr");
 row.innerHTML=`
-<td><input></td>
+<td></td>
 <td><input class="name"></td>
 <td><input type="number" class="qty" value="0"></td>
 <td><input type="number" class="price" value="0"></td>
 <td class="sum">0</td>
 <td><button class="delete-btn">✕</button></td>
 `;
-document.getElementById("tbody").appendChild(row);
+tbody.appendChild(row);
+updateNumbers();
+
 row.querySelector(".delete-btn").onclick=()=>{
-row.remove(); calc(); fillNakladnaya();
+row.remove(); calc(); fillNakladnaya(); updateNumbers();
 };
+
 row.querySelectorAll("input").forEach(input=>{
 input.addEventListener("input",()=>{
 calc(); fillNakladnaya();
 });
+});
+}
+
+/* обновить порядковые номера */
+function updateNumbers(){
+document.querySelectorAll("#tbody tr").forEach((row,i)=>{
+row.children[0].innerText=i+1;
 });
 }
 
@@ -367,7 +378,7 @@ let sum=q*p;
 row.querySelector(".sum").innerText=sum;
 total+=sum;
 });
-document.getElementById("total").innerText="Итого к оплате: "+total+" руб.";
+document.getElementById("total").innerText=total+" руб.";
 document.getElementById("sum-text").innerText="Итого к оплате: "+total+" руб.\nСумма прописью: "+numToText(total);
 }
 
@@ -392,7 +403,7 @@ tr.innerHTML=`
 body.appendChild(tr);
 }
 });
-document.getElementById("nakladnaya-total").innerText="Итого к оплате: "+total+" руб.";
+document.getElementById("nakladnaya-total").innerText=total+" руб.";
 document.getElementById("sum-text2").innerText="Итого к оплате: "+total+" руб.\nСумма прописью: "+numToText(total);
 }
 
@@ -405,7 +416,6 @@ payer.addEventListener("input",()=>{ receiver.value=payer.value; });
 function printPDF(){ calc(); fillNakladnaya(); window.print(); }
 
 addRow();
-
 </script>
 
 </body>
