@@ -7,152 +7,167 @@
 
 <style>
 body{
-font-family: Arial, sans-serif;
-background:#f2f4f8;
-padding:20px;
-margin:0;
+  font-family: Arial, sans-serif;
+  background:#f2f4f8;
+  padding:20px;
+  margin:0;
 }
 
 .back-button{
-position:fixed;
-top:15px;
-left:15px;
-z-index:9999;
-background:#000;
-color:#fff;
-border:none;
-padding:8px 14px;
-border-radius:6px;
-cursor:pointer;
-font-size:13px;
+  position:fixed;
+  top:15px;
+  left:15px;
+  z-index:9999;
+  background:#000;
+  color:#fff;
+  border:none;
+  padding:8px 14px;
+  border-radius:6px;
+  cursor:pointer;
+  font-size:13px;
 }
 
 .container{
-max-width:900px;
-width:100%;
-margin:auto;
-background:white;
-padding:40px;
-box-shadow:0 4px 20px rgba(0,0,0,.1);
-box-sizing:border-box;
-margin-bottom:40px;
+  max-width:900px;
+  width:100%;
+  margin:auto;
+  background:white;
+  padding:40px;
+  box-shadow:0 4px 20px rgba(0,0,0,.1);
+  box-sizing:border-box;
+  margin-bottom:40px;
 }
 
 .header{
-text-align:center;
-margin-bottom:25px;
+  text-align:center;
+  margin-bottom:25px;
 }
 
 table{
-width:100%;
-border-collapse:collapse;
-margin-top:10px;
-table-layout:fixed;
-page-break-inside:auto;
+  width:100%;
+  border-collapse:collapse;
+  margin-top:10px;
+  table-layout:fixed;
+  page-break-inside:auto;
 }
 
 tr{
-page-break-inside:avoid;
-page-break-after:auto;
+  page-break-inside:avoid;
+  page-break-after:auto;
 }
 
 th,td{
-border:1px solid #ccc;
-padding:8px;
-font-size:14px;
-vertical-align:top;
-word-wrap:break-word;
-white-space:normal;
+  border:1px solid #ccc;
+  padding:8px;
+  font-size:14px;
+  vertical-align:top;
+  word-wrap:break-word;
+  white-space:normal;
 }
 
 th{
-background:#1976d2;
-color:white;
+  background:#1976d2;
+  color:white;
 }
 
 input{
-width:100%;
-border:none;
-outline:none;
-font-size:14px;
-background:transparent;
+  width:100%;
+  border:none;
+  outline:none;
+  font-size:14px;
+  background:transparent;
 }
 
 .total{
-text-align:right;
-font-weight:bold;
-font-size:16px;
+  text-align:right;
+  font-weight:bold;
+  font-size:16px;
 }
 
 .buttons{
-margin-top:20px;
+  margin-top:20px;
 }
 
 .buttons button{
-width:100%;
-padding:12px;
-margin-bottom:10px;
-border:none;
-border-radius:6px;
-background:#2e7d32;
-color:white;
-font-size:16px;
-cursor:pointer;
+  width:100%;
+  padding:12px;
+  margin-bottom:10px;
+  border:none;
+  border-radius:6px;
+  background:#2e7d32;
+  color:white;
+  font-size:16px;
+  cursor:pointer;
 }
 
 .delete-btn{
-background:#d32f2f;
-color:white;
-border:none;
-padding:6px 10px;
-border-radius:4px;
-cursor:pointer;
+  background:#d32f2f;
+  color:white;
+  border:none;
+  padding:6px 10px;
+  border-radius:4px;
+  cursor:pointer;
 }
 
 .invoice-page{
-page-break-before:always;
-break-before:page;
+  page-break-before:always;
+  break-before:page;
 }
 
 .signatures{
-margin-top:40px;
-display:flex;
-justify-content:space-between;
+  margin-top:40px;
+  display:flex;
+  justify-content:space-between;
 }
 
 .sign{
-width:40%;
-text-align:center;
+  width:40%;
+  text-align:center;
 }
 
 .sum-text{
-margin-top:15px;
-font-weight:bold;
-line-height:1.6;
+  margin-top:15px;
+  font-weight:bold;
+  line-height:1.6;
 }
 
 .doc-fields{
-margin-top:15px;
+  margin-top:15px;
+}
+
+@media (max-width:768px){
+  body{
+    padding:10px;
+  }
+  .container{
+    padding:15px;
+  }
+  th,td{
+    font-size:12px;
+    padding:6px;
+  }
+  .buttons button{
+    font-size:14px;
+    padding:10px;
+  }
 }
 
 @media print{
-.buttons,
-.back-button,
-.delete-btn{
-display:none;
-}
-
-.container{
-box-shadow:none;
-padding:0;
-margin:0;
-}
-
-iframe{
-height:100vh;
-width:100%;
-border:none;
-}
+  .buttons,
+  .back-button,
+  .delete-btn{
+    display:none;
+  }
+  .container{
+    box-shadow:none;
+    padding:0;
+    margin:0;
+  }
+  iframe,img{
+    width:100%;
+    height:100vh;
+    border:none;
+  }
 }
 </style>
 </head>
@@ -163,7 +178,6 @@ border:none;
 <!-- СЧЕТ -->
 
 <div class="container">
-
 <div class="header">
 <h2>СЧЕТ ФАКТУРА № <span id="invoice-number"></span></h2>
 <div>Дата: <span id="date"></span></div>
@@ -215,7 +229,6 @@ border:none;
 <td></td>
 </tr>
 </tfoot>
-
 </table>
 
 <div class="sum-text" id="sum-text">
@@ -225,13 +238,10 @@ border:none;
 
 <div class="signatures">
 <div class="sign">
-Поставщик __________________<br>
-М.П.
+Поставщик __________________<br>М.П.
 </div>
-
 <div class="sign">
-__________________<br>
-М.П.
+__________________<br>М.П.
 </div>
 </div>
 
@@ -239,13 +249,11 @@ __________________<br>
 <button onclick="addRow()">Добавить строку</button>
 <button onclick="printPDF()">Скачать PDF</button>
 </div>
-
 </div>
 
 <!-- НАКЛАДНАЯ -->
 
 <div class="container invoice-page">
-
 <div class="header">
 <h2>ТОВАРНАЯ НАКЛАДНАЯ № <span id="invoice-number2"></span></h2>
 <div>Дата: <span id="date2"></span></div>
@@ -297,7 +305,6 @@ __________________<br>
 <td id="nakladnaya-total">0 руб.</td>
 </tr>
 </tfoot>
-
 </table>
 
 <div class="sum-text" id="sum-text2">
@@ -307,21 +314,17 @@ __________________<br>
 
 <div class="signatures">
 <div class="sign">
-Поставщик __________________<br>
-М.П.
+Поставщик __________________<br>М.П.
 </div>
-
 <div class="sign">
-__________________<br>
-М.П.
+__________________<br>М.П.
 </div>
 </div>
-
 </div>
 
-<!-- ТРЕТИЙ ЛИСТ: PDF -->
+<!-- ТРЕТИЙ ЛИСТ: Фото PDF -->
 <div class="container invoice-page">
-  <iframe src="patent.pdf" style="width:100%; height:100vh;" frameborder="0"></iframe>
+  <img src="patent.png" style="width:100%; height:100vh; object-fit:cover;">
 </div>
 
 <script>
@@ -333,7 +336,7 @@ let number=Math.floor(Math.random()*1000);
 document.getElementById("invoice-number").innerText=number;
 document.getElementById("invoice-number2").innerText=number;
 
-/* число прописью (базовая версия) */
+/* число прописью */
 function numToText(n){
 const ones = ["","один","два","три","четыре","пять","шесть","семь","восемь","девять"];
 const tens = ["","десять","двадцать","тридцать","сорок","пятьдесят","шестьдесят","семьдесят","восемьдесят","девяносто"];
@@ -372,7 +375,7 @@ calc(); fillNakladnaya();
 });
 }
 
-/* обновить порядковые номера */
+/* обновить номера */
 function updateNumbers(){
 document.querySelectorAll("#tbody tr").forEach((row,i)=>{
 row.children[0].innerText=i+1;
