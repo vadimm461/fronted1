@@ -12,47 +12,66 @@
 --green-dark:#1b5e20;
 --blue:#1976d2;
 --bg:#f4f6f9;
+--text:#222;
+--card:#fff;
+--overlay:rgba(0,0,0,.35);
+--transition:.3s ease;
 }
 body{
 margin:0;
 font-family:Arial,sans-serif;
 background:var(--bg);
+color:var(--text);
 overflow-x:hidden;
+transition:background var(--transition), color var(--transition);
 }
+
 /* ===== LOGIN ===== */
 .login-screen{
 position:fixed;inset:0;
 display:flex;justify-content:center;align-items:center;
 background:linear-gradient(135deg,var(--green-dark),#000);
 z-index:9999;padding:15px;
+opacity:1;
+transition:opacity var(--transition);
 }
 .login-box{
-background:white;
+background:var(--card);
 padding:30px 25px;
 border-radius:20px;
 width:100%;max-width:400px;
 text-align:center;
 box-shadow:0 30px 70px rgba(0,0,0,.4);
+opacity:0;
+transform:translateY(20px);
+transition:opacity var(--transition), transform var(--transition);
 }
+.login-box.show{opacity:1; transform:translateY(0);}
 .login-title{font-size:26px;font-weight:bold;margin-bottom:20px;}
 select,input{
 width:100%;padding:12px;margin-bottom:15px;
 border-radius:12px;border:1px solid #ccc;font-size:16px;
+transition:border-color var(--transition);
 }
+select:focus,input:focus{border-color:var(--green);}
 .login-btn{
 width:100%;padding:14px;border:none;border-radius:14px;
 background:linear-gradient(135deg,var(--green),var(--green-dark));
 color:white;font-size:16px;font-weight:bold;cursor:pointer;
+transition:transform var(--transition);
 }
+.login-btn:hover{transform:scale(1.03);}
+
 /* ===== HEADER ===== */
 .header{
-background:white;padding:15px;text-align:center;
+background:var(--card);padding:15px;text-align:center;
 box-shadow:0 4px 15px rgba(0,0,0,.08);
 position:sticky;top:0;z-index:100;
 }
 .logo{font-size:26px;font-weight:bold;}
 .logo .green{color:var(--green);}
 .logo .black{color:#000;}
+
 /* ===== MENU BUTTON ===== */
 .menu-toggle{
 position:fixed;top:15px;left:15px;
@@ -63,45 +82,42 @@ border-radius:14px;cursor:pointer;
 z-index:3000;
 box-shadow:0 6px 15px rgba(0,0,0,.2);
 display:none;
+transition:transform var(--transition);
 }
-/* ===== SIDE MENU (PC LIGHT VERSION) ===== */
+.menu-toggle:hover{transform:scale(1.1);}
+
+/* ===== SIDE MENU ===== */
 .side-menu{
 position:fixed;top:0;left:0;
 width:260px;height:100%;
 padding:80px 20px;
-background:#1f1f1f;
+background:rgba(31,31,31,.95);
 border-right:1px solid #2a2a2a;
 transform:translateX(-100%);
-transition:transform .25s ease;
+transition:transform .35s cubic-bezier(.77,0,.18,1);
 z-index:2999;
-will-change:transform;
 display:none;
 }
-.side-menu.active{
-transform:translateX(0);
-}
+.side-menu.active{transform:translateX(0);}
 .side-menu button{
 width:100%;padding:12px;margin-bottom:12px;
 border:none;border-radius:12px;
-background:#2a2a2a;
-color:white;font-weight:500;
-cursor:pointer;transition:.2s;
+background:#2a2a2a;color:white;font-weight:500;
+cursor:pointer;transition:all var(--transition);
 }
-.side-menu button:hover{
-background:var(--green);
-}
-/* ===== OVERLAY (PC WITHOUT BLUR) ===== */
+.side-menu button:hover{background:var(--green); transform:scale(1.03);}
+
+/* ===== OVERLAY ===== */
 .overlay{
 position:fixed;inset:0;
-background:rgba(0,0,0,.35);
+background:var(--overlay);
 opacity:0;pointer-events:none;
-transition:.2s;
+transition:opacity var(--transition);
 z-index:2000;
 display:none;
 }
-.overlay.active{
-opacity:1;pointer-events:auto;
-}
+.overlay.active{opacity:1;pointer-events:auto;}
+
 /* ===== CALCULATORS ===== */
 .wrapper{
 display:grid;
@@ -109,11 +125,14 @@ grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
 gap:20px;padding:20px;
 max-width:1400px;margin:auto;
 display:none;
+transition:opacity var(--transition);
 }
 .calculator{
-background:white;padding:20px;border-radius:20px;
+background:var(--card);padding:20px;border-radius:20px;
 box-shadow:0 8px 20px rgba(0,0,0,.06);
+transition:transform var(--transition), box-shadow var(--transition);
 }
+.calculator:hover{transform:translateY(-5px); box-shadow:0 12px 25px rgba(0,0,0,.1);}
 .title{font-size:18px;font-weight:bold;margin-bottom:5px;}
 .subtitle{color:#d32f2f;font-weight:bold;margin-bottom:15px;}
 .calculator input{width:100%;}
@@ -122,11 +141,14 @@ width:100%;padding:12px;margin-bottom:15px;
 border:none;border-radius:14px;
 background:linear-gradient(135deg,var(--blue),#0d47a1);
 color:white;font-weight:bold;cursor:pointer;
+transition:transform var(--transition);
 }
+.btn:hover{transform:scale(1.03);}
 table{width:100%;border-collapse:collapse;font-size:14px;}
 td{padding:8px 0;border-bottom:1px solid #eee;}
 .result{font-weight:bold;}
-/* ===== MOBILE VERSION (GLASS EFFECT) ===== */
+
+/* ===== MOBILE ===== */
 @media(max-width:768px){
 .wrapper{grid-template-columns:1fr;padding:15px;}
 .side-menu{
@@ -134,12 +156,8 @@ background:rgba(20,20,20,.75);
 backdrop-filter:blur(18px);
 -webkit-backdrop-filter:blur(18px);
 border-right:1px solid rgba(255,255,255,.1);
-transition:transform .35s cubic-bezier(.77,0,.18,1);
 }
-.overlay{
-background:rgba(0,0,0,.4);
-backdrop-filter:blur(3px);
-}
+.overlay{background:rgba(0,0,0,.4);backdrop-filter:blur(3px);}
 }
 </style>
 </head>
@@ -164,7 +182,6 @@ backdrop-filter:blur(3px);
 
 <!-- MENU -->
 <div class="menu-toggle" id="menuToggle" onclick="openMenu()">☰</div>
-
 <div id="sideMenu" class="side-menu">
 <div id="currentUser" style="color:white;margin-bottom:20px;font-weight:bold;"></div>
 <button onclick="location.href='beznal.html'">ОФОРМИТЬ БЕЗНАЛ</button>
@@ -185,7 +202,6 @@ backdrop-filter:blur(3px);
 
 <!-- CALCULATORS -->
 <div class="wrapper" id="wrapper">
-
 <div class="calculator">
 <div class="title">КАЛЬКУЛЯТОР РАССРОЧКИ</div>
 <div class="subtitle">АГРОПРОМБАНК</div>
@@ -198,7 +214,6 @@ backdrop-filter:blur(3px);
 <tr><td>12 мес.</td><td class="coef">0.875</td><td class="result"></td></tr>
 </table>
 </div>
-
 <div class="calculator">
 <div class="title">КАЛЬКУЛЯТОР РАССРОЧКИ</div>
 <div class="subtitle">ЭКСИМБАНК</div>
@@ -211,7 +226,6 @@ backdrop-filter:blur(3px);
 <tr><td>12 мес.</td><td class="coef">0.886</td><td class="result"></td></tr>
 </table>
 </div>
-
 <div class="calculator">
 <div class="title">КАЛЬКУЛЯТОР РАССРОЧКИ</div>
 <div class="subtitle">СБЕРБАНК</div>
@@ -224,101 +238,75 @@ backdrop-filter:blur(3px);
 <tr><td>12 мес.</td><td class="coef">0.88</td><td class="result"></td></tr>
 </table>
 </div>
-
 </div>
 
 <script>
-const users = {
-  cashier: { name: "Кассир", pass: "2012" },
-  evgeniy: { name: "Евгений", pass: "0186" },
-  vadim: { name: "Вадим", pass: "2385" }
-};
-
-const loginScreen = document.getElementById("loginScreen");
-const userSelect = document.getElementById("userSelect");
-const passwordInput = document.getElementById("passwordInput");
-const loginBtn = document.getElementById("loginBtn");
-const errorMsg = document.getElementById("errorMsg");
-const currentUserDisplay = document.getElementById("currentUser");
-const menuToggle = document.getElementById("menuToggle");
-const sideMenu = document.getElementById("sideMenu");
-const overlay = document.getElementById("overlay");
-const wrapper = document.getElementById("wrapper");
+const users={cashier:{name:"Кассир",pass:"2012"},evgeniy:{name:"Евгений",pass:"0186"},vadim:{name:"Вадим",pass:"2385"}};
+const loginScreen=document.getElementById("loginScreen");
+const userSelect=document.getElementById("userSelect");
+const passwordInput=document.getElementById("passwordInput");
+const loginBtn=document.getElementById("loginBtn");
+const errorMsg=document.getElementById("errorMsg");
+const currentUserDisplay=document.getElementById("currentUser");
+const menuToggle=document.getElementById("menuToggle");
+const sideMenu=document.getElementById("sideMenu");
+const overlay=document.getElementById("overlay");
+const wrapper=document.getElementById("wrapper");
 
 // Проверка сессии
-const session = JSON.parse(localStorage.getItem("session"));
-if (session && session.expire > Date.now()) {
-  loginScreen.style.display = "none";
-  menuToggle.style.display = "flex";
-  sideMenu.style.display = "block";
-  overlay.style.display = "block";
-  wrapper.style.display = "grid";
-  currentUserDisplay.textContent = "👤 " + session.name;
+const session=JSON.parse(localStorage.getItem("session"));
+if(session&&session.expire>Date.now()){
+  loginScreen.style.display="none";
+  menuToggle.style.display="flex";
+  sideMenu.style.display="block";
+  overlay.style.display="block";
+  wrapper.style.display="grid";
+  document.querySelector(".login-box").classList.add("show");
+  currentUserDisplay.textContent="👤 "+session.name;
+}else{
+  document.querySelector(".login-box").classList.add("show");
 }
 
 // Функция логина
-function login() {
-  const u = userSelect.value;
-  if (passwordInput.value === users[u].pass) {
-    // Сохраняем сессию на 24 часа
-    const expire = Date.now() + 24 * 60 * 60 * 1000; // 24 часа
-    localStorage.setItem("session", JSON.stringify({ name: users[u].name, expire }));
-
-    loginScreen.style.display = "none";
-    menuToggle.style.display = "flex";
-    sideMenu.style.display = "block";
-    overlay.style.display = "block";
-    wrapper.style.display = "grid";
-    currentUserDisplay.textContent = "👤 " + users[u].name;
-    errorMsg.textContent = "";
-  } else {
-    errorMsg.textContent = "Неверный пароль";
-  }
+function login(){
+  const u=userSelect.value;
+  if(passwordInput.value===users[u].pass){
+    const expire=Date.now()+24*60*60*1000;
+    localStorage.setItem("session",JSON.stringify({name:users[u].name,expire}));
+    loginScreen.style.display="none";
+    menuToggle.style.display="flex";
+    sideMenu.style.display="block";
+    overlay.style.display="block";
+    wrapper.style.display="grid";
+    currentUserDisplay.textContent="👤 "+users[u].name;
+    errorMsg.textContent="";
+  }else errorMsg.textContent="Неверный пароль";
 }
+loginBtn.onclick=login;
+passwordInput.addEventListener("keyup",e=>{if(e.key==="Enter") login();});
+function logout(){localStorage.removeItem("session");location.reload();}
 
-// Вход по кнопке
-loginBtn.onclick = login;
+// MENU
+function openMenu(){sideMenu.classList.add("active");overlay.classList.add("active");}
+function closeMenu(){sideMenu.classList.remove("active");overlay.classList.remove("active");}
+overlay.onclick=closeMenu;
 
-// Вход по Enter
-passwordInput.addEventListener("keyup", function(e) {
-  if (e.key === "Enter") login();
+// SWIPE
+let startX=0;
+document.addEventListener("touchstart",e=>{startX=e.touches[0].clientX;});
+document.addEventListener("touchend",e=>{
+  let endX=e.changedTouches[0].clientX;
+  if(startX<40&&endX>120) openMenu();
+  if(startX>150&&endX<80) closeMenu();
 });
 
-function logout() {
-  localStorage.removeItem("session");
-  location.reload();
-}
-
-/* ===== MENU CONTROL ===== */
-function openMenu() {
-  sideMenu.classList.add("active");
-  overlay.classList.add("active");
-}
-function closeMenu() {
-  sideMenu.classList.remove("active");
-  overlay.classList.remove("active");
-}
-overlay.onclick = closeMenu;
-
-/* ===== SWIPE ===== */
-let startX = 0;
-document.addEventListener("touchstart", e => {
-  startX = e.touches[0].clientX;
-});
-document.addEventListener("touchend", e => {
-  let endX = e.changedTouches[0].clientX;
-  if (startX < 40 && endX > 120) openMenu();
-  if (startX > 150 && endX < 80) closeMenu();
-});
-
-/* ===== CALCULATORS ===== */
-document.querySelectorAll(".calculator").forEach(calc => {
-  calc.querySelector(".btn-calc").onclick = function () {
-    const sum = parseFloat(calc.querySelector(".sum").value);
-    if (isNaN(sum)) return;
-    calc.querySelectorAll(".coef").forEach((c, i) => {
-      calc.querySelectorAll(".result")[i].textContent =
-        (sum / parseFloat(c.textContent)).toLocaleString("ru-RU", { minimumFractionDigits: 2 });
+// CALCULATORS
+document.querySelectorAll(".calculator").forEach(calc=>{
+  calc.querySelector(".btn-calc").onclick=function(){
+    const sum=parseFloat(calc.querySelector(".sum").value);
+    if(isNaN(sum)) return;
+    calc.querySelectorAll(".coef").forEach((c,i)=>{
+      calc.querySelectorAll(".result")[i].textContent=(sum/parseFloat(c.textContent)).toLocaleString("ru-RU",{minimumFractionDigits:2});
     });
   };
 });
