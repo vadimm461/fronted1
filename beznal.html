@@ -100,10 +100,25 @@ border-radius:4px;
 cursor:pointer;
 }
 
-/* разрыв страницы */
 .invoice-page{
 page-break-before:always;
 break-before:page;
+}
+
+.signatures{
+margin-top:40px;
+display:flex;
+justify-content:space-between;
+}
+
+.sign{
+width:40%;
+text-align:center;
+}
+
+.sum-text{
+margin-top:15px;
+font-weight:bold;
 }
 
 @media print{
@@ -161,6 +176,7 @@ margin:0;
 <th>Наименование</th>
 <th>Кол-во</th>
 <th>Цена</th>
+<th>Сумма</th>
 <th></th>
 </tr>
 </thead>
@@ -171,10 +187,25 @@ margin:0;
 <tr>
 <td colspan="4" class="total">Итого:</td>
 <td id="total">0</td>
+<td></td>
 </tr>
 </tfoot>
 
 </table>
+
+<div class="sum-text" id="sum-text"></div>
+
+<div class="signatures">
+<div class="sign">
+Поставщик __________________<br>
+М.П.
+</div>
+
+<div class="sign">
+__________________<br>
+М.П.
+</div>
+</div>
 
 <div class="buttons">
 <button onclick="addRow()">Добавить строку</button>
@@ -189,7 +220,7 @@ margin:0;
 <div class="container invoice-page">
 
 <div class="header">
-<h2>ТОВАРНАЯ НАКЛАДНАЯ</h2>
+<h2>ТОВАРНАЯ НАКЛАДНАЯ № <span id="invoice-number2"></span></h2>
 <div>Дата: <span id="date2"></span></div>
 </div>
 
@@ -229,84 +260,98 @@ margin:0;
 
 </table>
 
-<br><br>
+<div class="sum-text" id="sum-text2"></div>
 
-<table>
-<tr>
-<td>Отпустил</td>
-<td>_____________________</td>
-</tr>
+<div class="signatures">
+<div class="sign">
+Поставщик __________________<br>
+М.П.
+</div>
 
-<tr>
-<td>Получил</td>
-<td>_____________________</td>
-</tr>
-</table>
+<div class="sign">
+__________________<br>
+М.П.
+</div>
+</div>
 
 </div>
 
 
 <script>
 
-/* дата */
-
 let today = new Date().toLocaleDateString("ru-RU");
-document.getElementById("date").innerText = today;
-document.getElementById("date2").innerText = today;
+document.getElementById("date").innerText=today;
+document.getElementById("date2").innerText=today;
 
-/* номер счета */
+let number=Math.floor(Math.random()*1000);
 
-document.getElementById("invoice-number").innerText =
-Math.floor(Math.random()*1000);
+document.getElementById("invoice-number").innerText=number;
+document.getElementById("invoice-number2").innerText=number;
+
+
+/* число прописью */
+
+function numToText(n){
+
+let a=["","один","два","три","четыре","пять","шесть","семь","восемь","девять"];
+let b=["","десять","двадцать","тридцать","сорок","пятьдесят","шестьдесят","семьдесят","восемьдесят","девяносто"];
+let c=["","сто","двести","триста","четыреста","пятьсот","шестьсот","семьсот","восемьсот","девятьсот"];
+
+n=Math.floor(n);
+
+let s="";
+
+if(n>=100){
+s+=c[Math.floor(n/100)]+" ";
+n%=100;
+}
+
+if(n>=10){
+s+=b[Math.floor(n/10)]+" ";
+n%=10;
+}
+
+if(n>0){
+s+=a[n];
+}
+
+return s.trim();
+
+}
+
 
 /* добавить строку */
 
 function addRow(){
 
-let row = document.createElement("tr");
+let row=document.createElement("tr");
 
-row.innerHTML = `
+row.innerHTML=`
 <td><input></td>
 <td><input class="name"></td>
 <td><input type="number" class="qty" value="0"></td>
 <td><input type="number" class="price" value="0"></td>
+<td class="sum">0</td>
 <td><button class="delete-btn">✕</button></td>
 `;
 
 document.getElementById("tbody").appendChild(row);
 
-row.querySelector(".delete-btn").onclick = ()=>{
+row.querySelector(".delete-btn").onclick=()=>{
 row.remove();
 calc();
 fillNakladnaya();
 };
 
-row.querySelectorAll("input").forEach(input=>{
-input.addEventListener("input", ()=>{
+row.querySelectorAll("input").forEach(i=>{
+i.addEventListener("input",()=>{
 calc();
-autoAddRow();
 fillNakladnaya();
 });
 });
 
 }
 
-/* авто строка */
-
-function autoAddRow(){
-
-let rows = document.querySelectorAll("#tbody tr");
-let last = rows[rows.length-1];
-
-let filled=false;
-
-last.querySelectorAll("input").forEach(i=>{
-if(i.value && i.value!=0) filled=true;
-});
-
-if(filled) addRow();
-
-}
 
 /* расчет */
 
@@ -316,23 +361,31 @@ let total=0;
 
 document.querySelectorAll("#tbody tr").forEach(row=>{
 
-let q = Number(row.querySelector(".qty")?.value || 0);
-let p = Number(row.querySelector(".price")?.value || 0);
+let q=Number(row.querySelector(".qty").value);
+let p=Number(row.querySelector(".price").value);
 
-total += q*p;
+let sum=q*p;
+
+row.querySelector(".sum").innerText=sum;
+
+total+=sum;
 
 });
 
-document.getElementById("total").innerText =
-total.toLocaleString('ru-RU');
+document.getElementById("total").innerText=total;
+
+document.getElementById("sum-text").innerText=
+"Сумма прописью: "+numToText(total);
 
 }
 
-/* заполнение накладной */
+
+/* накладная */
 
 function fillNakladnaya(){
 
 let body=document.getElementById("nakladnaya-body");
+
 body.innerHTML="";
 
 let total=0;
@@ -340,13 +393,14 @@ let i=1;
 
 document.querySelectorAll("#tbody tr").forEach(row=>{
 
-let name=row.querySelector(".name")?.value;
-let q=Number(row.querySelector(".qty")?.value);
-let p=Number(row.querySelector(".price")?.value);
+let name=row.querySelector(".name").value;
+let q=Number(row.querySelector(".qty").value);
+let p=Number(row.querySelector(".price").value);
 
 if(name && q>0){
 
 let sum=q*p;
+
 total+=sum;
 
 let tr=document.createElement("tr");
@@ -365,20 +419,25 @@ body.appendChild(tr);
 
 });
 
-document.getElementById("nakladnaya-total").innerText=
-total.toLocaleString('ru-RU');
+document.getElementById("nakladnaya-total").innerText=total;
+
+document.getElementById("sum-text2").innerText=
+"Сумма прописью: "+numToText(total);
 
 }
+
 
 /* печать */
 
 function printPDF(){
+
 calc();
 fillNakladnaya();
+
 setTimeout(()=>window.print(),200);
+
 }
 
-/* первая строка */
 
 addRow();
 
