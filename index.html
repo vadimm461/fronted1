@@ -4,25 +4,21 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Auto-Style</title>
-  <title>Панель Менеджера</title>
 
 <style>
 *, *::before, *::after{box-sizing:border-box;}
-
 :root{
 --green:#2e7d32;
 --green-dark:#1b5e20;
 --blue:#1976d2;
 --bg:#f4f6f9;
 }
-
 body{
 margin:0;
 font-family:Arial,sans-serif;
 background:var(--bg);
 overflow-x:hidden;
 }
-
 /* ===== LOGIN ===== */
 .login-screen{
 position:fixed;inset:0;
@@ -30,7 +26,6 @@ display:flex;justify-content:center;align-items:center;
 background:linear-gradient(135deg,var(--green-dark),#000);
 z-index:9999;padding:15px;
 }
-
 .login-box{
 background:white;
 padding:30px 25px;
@@ -39,31 +34,25 @@ width:100%;max-width:400px;
 text-align:center;
 box-shadow:0 30px 70px rgba(0,0,0,.4);
 }
-
 .login-title{font-size:26px;font-weight:bold;margin-bottom:20px;}
-
 select,input{
 width:100%;padding:12px;margin-bottom:15px;
 border-radius:12px;border:1px solid #ccc;font-size:16px;
 }
-
 .login-btn{
 width:100%;padding:14px;border:none;border-radius:14px;
 background:linear-gradient(135deg,var(--green),var(--green-dark));
 color:white;font-size:16px;font-weight:bold;cursor:pointer;
 }
-
 /* ===== HEADER ===== */
 .header{
 background:white;padding:15px;text-align:center;
 box-shadow:0 4px 15px rgba(0,0,0,.08);
 position:sticky;top:0;z-index:100;
 }
-
 .logo{font-size:26px;font-weight:bold;}
 .logo .green{color:var(--green);}
 .logo .black{color:#000;}
-
 /* ===== MENU BUTTON ===== */
 .menu-toggle{
 position:fixed;top:15px;left:15px;
@@ -73,8 +62,8 @@ color:white;display:flex;align-items:center;justify-content:center;
 border-radius:14px;cursor:pointer;
 z-index:3000;
 box-shadow:0 6px 15px rgba(0,0,0,.2);
+display:none;
 }
-
 /* ===== SIDE MENU (PC LIGHT VERSION) ===== */
 .side-menu{
 position:fixed;top:0;left:0;
@@ -86,12 +75,11 @@ transform:translateX(-100%);
 transition:transform .25s ease;
 z-index:2999;
 will-change:transform;
+display:none;
 }
-
 .side-menu.active{
 transform:translateX(0);
 }
-
 .side-menu button{
 width:100%;padding:12px;margin-bottom:12px;
 border:none;border-radius:12px;
@@ -99,11 +87,9 @@ background:#2a2a2a;
 color:white;font-weight:500;
 cursor:pointer;transition:.2s;
 }
-
 .side-menu button:hover{
 background:var(--green);
 }
-
 /* ===== OVERLAY (PC WITHOUT BLUR) ===== */
 .overlay{
 position:fixed;inset:0;
@@ -111,46 +97,38 @@ background:rgba(0,0,0,.35);
 opacity:0;pointer-events:none;
 transition:.2s;
 z-index:2000;
+display:none;
 }
-
 .overlay.active{
 opacity:1;pointer-events:auto;
 }
-
 /* ===== CALCULATORS ===== */
 .wrapper{
 display:grid;
 grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
 gap:20px;padding:20px;
 max-width:1400px;margin:auto;
+display:none;
 }
-
 .calculator{
 background:white;padding:20px;border-radius:20px;
 box-shadow:0 8px 20px rgba(0,0,0,.06);
 }
-
 .title{font-size:18px;font-weight:bold;margin-bottom:5px;}
 .subtitle{color:#d32f2f;font-weight:bold;margin-bottom:15px;}
-
 .calculator input{width:100%;}
-
 .btn{
 width:100%;padding:12px;margin-bottom:15px;
 border:none;border-radius:14px;
 background:linear-gradient(135deg,var(--blue),#0d47a1);
 color:white;font-weight:bold;cursor:pointer;
 }
-
 table{width:100%;border-collapse:collapse;font-size:14px;}
 td{padding:8px 0;border-bottom:1px solid #eee;}
 .result{font-weight:bold;}
-
 /* ===== MOBILE VERSION (GLASS EFFECT) ===== */
 @media(max-width:768px){
-
 .wrapper{grid-template-columns:1fr;padding:15px;}
-
 .side-menu{
 background:rgba(20,20,20,.75);
 backdrop-filter:blur(18px);
@@ -158,12 +136,10 @@ backdrop-filter:blur(18px);
 border-right:1px solid rgba(255,255,255,.1);
 transition:transform .35s cubic-bezier(.77,0,.18,1);
 }
-
 .overlay{
 background:rgba(0,0,0,.4);
 backdrop-filter:blur(3px);
 }
-
 }
 </style>
 </head>
@@ -187,7 +163,7 @@ backdrop-filter:blur(3px);
 </div>
 
 <!-- MENU -->
-<div class="menu-toggle" onclick="openMenu()">☰</div>
+<div class="menu-toggle" id="menuToggle" onclick="openMenu()">☰</div>
 
 <div id="sideMenu" class="side-menu">
 <div id="currentUser" style="color:white;margin-bottom:20px;font-weight:bold;"></div>
@@ -208,7 +184,7 @@ backdrop-filter:blur(3px);
 </div>
 
 <!-- CALCULATORS -->
-<div class="wrapper">
+<div class="wrapper" id="wrapper">
 
 <div class="calculator">
 <div class="title">КАЛЬКУЛЯТОР РАССРОЧКИ</div>
@@ -252,73 +228,101 @@ backdrop-filter:blur(3px);
 </div>
 
 <script>
-const users={
-cashier:{name:"Кассир",pass:"2012"},
-evgeniy:{name:"Евгений",pass:"0186"},
-vadim:{name:"Вадим",pass:"2385"}
+const users = {
+  cashier: { name: "Кассир", pass: "2012" },
+  evgeniy: { name: "Евгений", pass: "0186" },
+  vadim: { name: "Вадим", pass: "2385" }
 };
 
-loginBtn.onclick=function(){
-const u=userSelect.value;
-if(passwordInput.value===users[u].pass){
-loginScreen.style.display="none";
-document.getElementById("currentUser").textContent="👤 "+users[u].name;
-}else errorMsg.textContent="Неверный пароль";
-};
+const loginScreen = document.getElementById("loginScreen");
+const userSelect = document.getElementById("userSelect");
+const passwordInput = document.getElementById("passwordInput");
+const loginBtn = document.getElementById("loginBtn");
+const errorMsg = document.getElementById("errorMsg");
+const currentUserDisplay = document.getElementById("currentUser");
+const menuToggle = document.getElementById("menuToggle");
+const sideMenu = document.getElementById("sideMenu");
+const overlay = document.getElementById("overlay");
+const wrapper = document.getElementById("wrapper");
 
-function logout(){location.reload();}
-
-/* ===== MENU CONTROL ===== */
-const sideMenu=document.getElementById("sideMenu");
-const overlay=document.getElementById("overlay");
-
-function openMenu(){
-sideMenu.classList.add("active");
-overlay.classList.add("active");
+// Проверка сессии
+const session = JSON.parse(localStorage.getItem("session"));
+if (session && session.expire > Date.now()) {
+  loginScreen.style.display = "none";
+  menuToggle.style.display = "flex";
+  sideMenu.style.display = "block";
+  overlay.style.display = "block";
+  wrapper.style.display = "grid";
+  currentUserDisplay.textContent = "👤 " + session.name;
 }
-function closeMenu(){
-sideMenu.classList.remove("active");
-overlay.classList.remove("active");
+
+// Функция логина
+function login() {
+  const u = userSelect.value;
+  if (passwordInput.value === users[u].pass) {
+    // Сохраняем сессию на 24 часа
+    const expire = Date.now() + 24 * 60 * 60 * 1000; // 24 часа
+    localStorage.setItem("session", JSON.stringify({ name: users[u].name, expire }));
+
+    loginScreen.style.display = "none";
+    menuToggle.style.display = "flex";
+    sideMenu.style.display = "block";
+    overlay.style.display = "block";
+    wrapper.style.display = "grid";
+    currentUserDisplay.textContent = "👤 " + users[u].name;
+    errorMsg.textContent = "";
+  } else {
+    errorMsg.textContent = "Неверный пароль";
+  }
 }
-overlay.onclick=closeMenu;
 
-/* ===== SWIPE ===== */
-let startX=0;
+// Вход по кнопке
+loginBtn.onclick = login;
 
-document.addEventListener("touchstart",e=>{
-startX=e.touches[0].clientX;
+// Вход по Enter
+passwordInput.addEventListener("keyup", function(e) {
+  if (e.key === "Enter") login();
 });
 
-document.addEventListener("touchend",e=>{
-let endX=e.changedTouches[0].clientX;
-
-/* открыть */
-if(startX<40 && endX>120){
-openMenu();
+function logout() {
+  localStorage.removeItem("session");
+  location.reload();
 }
 
-/* закрыть */
-if(startX>150 && endX<80){
-closeMenu();
+/* ===== MENU CONTROL ===== */
+function openMenu() {
+  sideMenu.classList.add("active");
+  overlay.classList.add("active");
 }
+function closeMenu() {
+  sideMenu.classList.remove("active");
+  overlay.classList.remove("active");
+}
+overlay.onclick = closeMenu;
+
+/* ===== SWIPE ===== */
+let startX = 0;
+document.addEventListener("touchstart", e => {
+  startX = e.touches[0].clientX;
+});
+document.addEventListener("touchend", e => {
+  let endX = e.changedTouches[0].clientX;
+  if (startX < 40 && endX > 120) openMenu();
+  if (startX > 150 && endX < 80) closeMenu();
 });
 
 /* ===== CALCULATORS ===== */
-document.querySelectorAll(".calculator").forEach(calc=>{
-calc.querySelector(".btn-calc").onclick=function(){
-const sum=parseFloat(calc.querySelector(".sum").value);
-if(isNaN(sum))return;
-calc.querySelectorAll(".coef").forEach((c,i)=>{
-calc.querySelectorAll(".result")[i].textContent=
-(sum/parseFloat(c.textContent)).toLocaleString("ru-RU",{minimumFractionDigits:2});
-});
-};
+document.querySelectorAll(".calculator").forEach(calc => {
+  calc.querySelector(".btn-calc").onclick = function () {
+    const sum = parseFloat(calc.querySelector(".sum").value);
+    if (isNaN(sum)) return;
+    calc.querySelectorAll(".coef").forEach((c, i) => {
+      calc.querySelectorAll(".result")[i].textContent =
+        (sum / parseFloat(c.textContent)).toLocaleString("ru-RU", { minimumFractionDigits: 2 });
+    });
+  };
 });
 </script>
 
 </body>
 </html>
-
-
-
-
