@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Оформление безнала</title>
+<title>Счет</title>
 <style>
 body{
   font-family: Arial, sans-serif;
@@ -130,33 +130,17 @@ input{
   margin-top:15px;
 }
 @media (max-width:768px){
-  body{
-    padding:10px;
-  }
-  .container{
-    padding:15px;
-  }
-  th,td{
-    font-size:12px;
-    padding:6px;
-  }
-  .buttons button{
-    font-size:14px;
-    padding:10px;
-  }
+  body{padding:10px;}
+  .container{padding:15px;}
+  th,td{font-size:12px; padding:6px;}
+  .buttons button{font-size:14px; padding:10px;}
 }
 @media print{
   .buttons,
   .back-button,
   #history-btn,
-  .delete-btn{
-    display:none;
-  }
-  .container{
-    box-shadow:none;
-    padding:0;
-    margin:0;
-  }
+  .delete-btn{display:none;}
+  .container{box-shadow:none;padding:0;margin:0;}
 }
 /* Модальное окно истории */
 #history-modal{
@@ -390,8 +374,8 @@ row.innerHTML=`
 <td><button class="delete-btn">✕</button></td>`;
 tbody.appendChild(row);
 updateNumbers();
-row.querySelector(".delete-btn").onclick=()=>{row.remove();calc();fillNakladnaya();updateNumbers();saveHistory();};
-row.querySelectorAll("input").forEach(input=>{input.addEventListener("input",()=>{calc();fillNakladnaya();saveHistory();});});
+row.querySelector(".delete-btn").onclick=()=>{row.remove();calc();fillNakladnaya();updateNumbers();};
+row.querySelectorAll("input").forEach(input=>{input.addEventListener("input",()=>{calc();fillNakladnaya();});});
 }
 
 /* обновить номера */
@@ -435,15 +419,9 @@ let payer=document.getElementById("payer");
 let receiver=document.getElementById("receiver");
 payer.addEventListener("input",()=>{ receiver.value=payer.value; });
 
-/* печать */
-function printPDF(){ calc(); fillNakladnaya(); window.print(); }
-
-addRow();
-
 /* ---- История ---- */
 const HISTORY_KEY="invoiceHistory";
 const HISTORY_DAYS=30;
-
 function saveHistory(){
   let history=JSON.parse(localStorage.getItem(HISTORY_KEY))||[];
   let now=new Date();
@@ -457,14 +435,24 @@ function saveHistory(){
   localStorage.setItem(HISTORY_KEY,JSON.stringify(history));
 }
 
+/* печать и сохранение истории */
+function printPDF(){ 
+  calc(); 
+  fillNakladnaya(); 
+  saveHistory();
+  window.print(); 
+}
+
+addRow();
+
+/* История модальное окно */
 const modal=document.getElementById("history-modal");
 const list=document.getElementById("history-list");
 document.getElementById("history-btn").onclick=()=>{
-  saveHistory();
   let history=JSON.parse(localStorage.getItem(HISTORY_KEY))||[];
   if(history.length===0){alert("История пуста"); return;}
   list.innerHTML="";
-  history.slice().reverse().forEach((item,index)=>{
+  history.slice().reverse().forEach((item)=>{
     const div=document.createElement("div");
     div.className="history-item";
     div.innerText=`№${item.invoiceNumber} | ${new Date(item.date).toLocaleString()}`;
@@ -478,18 +466,16 @@ document.getElementById("history-btn").onclick=()=>{
         lastRow.querySelector(".qty").value=it.qty;
         lastRow.querySelector(".price").value=it.price;
       });
-      calc();
-      fillNakladnaya();
+      calc(); fillNakladnaya();
       modal.style.display="none";
     };
     list.appendChild(div);
   });
   modal.style.display="block";
 };
-
 document.getElementById("history-close").onclick=()=>{modal.style.display="none";};
 window.onclick=(e)=>{if(e.target===modal) modal.style.display="none";};
 
 </script>
 </body>
-</html>м
+</html>
