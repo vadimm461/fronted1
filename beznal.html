@@ -169,6 +169,14 @@ input{
     border:none;
   }
 }
+
+/* Третий лист: фото */
+.invoice-page img {
+  width: 100%;
+  height: auto;
+  max-height: 100vh;
+  object-fit: contain;
+}
 </style>
 </head>
 <body>
@@ -233,7 +241,7 @@ input{
 
 <div class="sum-text" id="sum-text">
 Итого к оплате: 0 руб.<br>
-Сумма прописью: ноль рублей 00 копеек
+Сумма прописью: ноль руб. 00 коп.
 </div>
 
 <div class="signatures">
@@ -309,7 +317,7 @@ __________________<br>М.П.
 
 <div class="sum-text" id="sum-text2">
 Итого к оплате: 0 руб.<br>
-Сумма прописью: ноль рублей 00 копеек
+Сумма прописью: ноль руб. 00 коп.
 </div>
 
 <div class="signatures">
@@ -336,17 +344,46 @@ let number=Math.floor(Math.random()*1000);
 document.getElementById("invoice-number").innerText=number;
 document.getElementById("invoice-number2").innerText=number;
 
-/* число прописью */
-function numToText(n){
-const ones = ["","один","два","три","четыре","пять","шесть","семь","восемь","девять"];
-const tens = ["","десять","двадцать","тридцать","сорок","пятьдесят","шестьдесят","семьдесят","восемьдесят","девяносто"];
-const hundreds = ["","сто","двести","триста","четыреста","пятьсот","шестьсот","семьсот","восемьсот","девятьсот"];
-n=Math.floor(n);
-let s="";
-if(n>=100){ s+=hundreds[Math.floor(n/100)]+" "; n%=100; }
-if(n>=10){ s+=tens[Math.floor(n/10)]+" "; n%=10; }
-if(n>0){ s+=ones[n]+" "; }
-return s.trim()+" рублей 00 копеек";
+/* число прописью до миллионов */
+function numToText(n) {
+    n = Math.floor(n);
+    if (isNaN(n)) return "ноль руб. 00 коп.";
+    
+    const ones = ["","один","два","три","четыре","пять","шесть","семь","восемь","девять"];
+    const onesFemale = ["","одна","две","три","четыре","пять","шесть","семь","восемь","девять"];
+    const teens = ["десять","одиннадцать","двенадцать","тринадцать","четырнадцать","пятнадцать","шестнадцать","семнадцать","восемнадцать","девятнадцать"];
+    const tens = ["","","двадцать","тридцать","сорок","пятьдесят","шестьдесят","семьдесят","восемьдесят","девяносто"];
+    const hundreds = ["","сто","двести","триста","четыреста","пятьсот","шестьсот","семьсот","восемьсот","девятьсот"];
+    
+    function convert_hundreds(num, female=false){
+        let str = '';
+        if(num >= 100){
+            str += hundreds[Math.floor(num/100)] + ' ';
+            num %= 100;
+        }
+        if(num >= 20){
+            str += tens[Math.floor(num/10)] + ' ';
+            num %= 10;
+        } else if(num >= 10){
+            str += teens[num-10] + ' ';
+            num = 0;
+        }
+        if(num > 0){
+            str += (female ? onesFemale[num] : ones[num]) + ' ';
+        }
+        return str.trim();
+    }
+
+    let result = '';
+    let millions = Math.floor(n / 1_000_000);
+    let thousands = Math.floor((n % 1_000_000) / 1000);
+    let rest = n % 1000;
+
+    if(millions > 0) result += convert_hundreds(millions) + ' миллион' + (millions>1?'ов ':' ');
+    if(thousands > 0) result += convert_hundreds(thousands,true) + ' тысяч ';
+    if(rest > 0) result += convert_hundreds(rest) + ' ';
+    
+    return result.trim() + ' руб. 00 коп.';
 }
 
 /* добавить строку */
@@ -364,23 +401,12 @@ row.innerHTML=`
 tbody.appendChild(row);
 updateNumbers();
 
-row.querySelector(".delete-btn").onclick=()=>{
-row.remove(); calc(); fillNakladnaya(); updateNumbers();
-};
-
-row.querySelectorAll("input").forEach(input=>{
-input.addEventListener("input",()=>{
-calc(); fillNakladnaya();
-});
-});
+row.querySelector(".delete-btn").onclick=()=>{ row.remove(); calc(); fillNakladnaya(); updateNumbers(); };
+row.querySelectorAll("input").forEach(input=>{ input.addEventListener("input",()=>{ calc(); fillNakladnaya(); }); });
 }
 
 /* обновить номера */
-function updateNumbers(){
-document.querySelectorAll("#tbody tr").forEach((row,i)=>{
-row.children[0].innerText=i+1;
-});
-}
+function updateNumbers(){ document.querySelectorAll("#tbody tr").forEach((row,i)=>{ row.children[0].innerText=i+1; }); }
 
 /* расчет */
 function calc(){
