@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>Auto-Style</title>
+<title>Главная страница панели менеджера — Магазин Auto-Style</title>
 
 <style>
 *, *::before, *::after{box-sizing:border-box;}
@@ -64,13 +64,23 @@ transition:transform var(--transition);
 
 /* ===== HEADER ===== */
 .header{
-background:var(--card);padding:15px;text-align:center;
+background:linear-gradient(135deg,var(--green),var(--green-dark));
+padding:20px;text-align:center;
 box-shadow:0 4px 15px rgba(0,0,0,.08);
 position:sticky;top:0;z-index:100;
+color:white;
 }
-.logo{font-size:26px;font-weight:bold;}
-.logo .green{color:var(--green);}
-.logo .black{color:#000;}
+.header h1{
+margin:0;
+font-size:24px;
+font-weight:bold;
+}
+.header p{
+margin:5px 0 0 0;
+font-size:16px;
+font-weight:500;
+opacity:0.8;
+}
 
 /* ===== MENU BUTTON ===== */
 .menu-toggle{
@@ -90,7 +100,7 @@ transition:transform var(--transition);
 .side-menu{
 position:fixed;top:0;left:0;
 width:260px;height:100%;
-padding:80px 20px;
+padding:100px 20px 20px 20px;
 background:rgba(31,31,31,.95);
 border-right:1px solid #2a2a2a;
 transform:translateX(-100%);
@@ -180,6 +190,12 @@ border-right:1px solid rgba(255,255,255,.1);
 </div>
 </div>
 
+<!-- HEADER -->
+<div class="header">
+<h1>Главная страница панели менеджера</h1>
+<p>Магазин <span style="font-weight:bold;">Auto-Style</span></p>
+</div>
+
 <!-- MENU -->
 <div class="menu-toggle" id="menuToggle" onclick="openMenu()">☰</div>
 <div id="sideMenu" class="side-menu">
@@ -190,14 +206,6 @@ border-right:1px solid rgba(255,255,255,.1);
 <button onclick="location.href='baza.html'">БАЗА ЗНАНИЙ</button>
 <button onclick="location.href='pass.html'">ПАРОЛИ</button>
 <button onclick="logout()">ВЫЙТИ</button>
-</div>
-
-<!-- HEADER -->
-<div class="header">
-<div class="logo">
-<span class="green">A</span><span class="black">uto-</span>
-<span class="green">S</span><span class="black">tyle</span>
-</div>
 </div>
 
 <!-- CALCULATORS -->
@@ -302,13 +310,17 @@ document.addEventListener("touchend",e=>{
 
 // CALCULATORS
 document.querySelectorAll(".calculator").forEach(calc=>{
-  calc.querySelector(".btn-calc").onclick=function(){
-    const sum=parseFloat(calc.querySelector(".sum").value);
+  const input=calc.querySelector(".sum");
+  const btn=calc.querySelector(".btn-calc");
+  function calculate(){
+    const sum=parseFloat(input.value);
     if(isNaN(sum)) return;
     calc.querySelectorAll(".coef").forEach((c,i)=>{
       calc.querySelectorAll(".result")[i].textContent=(sum/parseFloat(c.textContent)).toLocaleString("ru-RU",{minimumFractionDigits:2});
     });
-  };
+  }
+  btn.onclick=calculate;
+  input.addEventListener("keyup",e=>{if(e.key==="Enter") calculate();});
 });
 </script>
 
