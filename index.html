@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>Главная страница панели менеджера — Магазин Auto-Style</title>
+<title>Auto-Style</title>
 
 <style>
 *, *::before, *::after{box-sizing:border-box;}
@@ -62,44 +62,15 @@ transition:transform var(--transition);
 }
 .login-btn:hover{transform:scale(1.03);}
 
-/* ===== HEADER (modern) ===== */
+/* ===== HEADER ===== */
 .header{
-  background: linear-gradient(135deg, #2e7d32, #1b5e20);
-  padding: 25px 20px;
-  box-shadow: 0 4px 25px rgba(0,0,0,0.15);
-  color: white;
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  border-bottom-left-radius: 20px;
-  border-bottom-right-radius: 20px;
-  transition: all 0.3s ease;
+background:var(--card);padding:15px;text-align:center;
+box-shadow:0 4px 15px rgba(0,0,0,.08);
+position:sticky;top:0;z-index:100;
 }
-.header h1{
-  margin: 0;
-  font-size: 26px;
-  font-weight: 700;
-  letter-spacing: 0.5px;
-  text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
-}
-.header p{
-  margin: 6px 0 0 0;
-  font-size: 16px;
-  font-weight: 400;
-  opacity: 0.85;
-  letter-spacing: 0.3px;
-  animation: fadeIn 1s ease forwards;
-}
-
-/* Лёгкая анимация для подзаголовка */
-@keyframes fadeIn{
-  0%{opacity:0; transform: translateY(10px);}
-  100%{opacity:0.85; transform: translateY(0);}
-}
+.logo{font-size:26px;font-weight:bold;}
+.logo .green{color:var(--green);}
+.logo .black{color:#000;}
 
 /* ===== MENU BUTTON ===== */
 .menu-toggle{
@@ -119,7 +90,7 @@ transition:transform var(--transition);
 .side-menu{
 position:fixed;top:0;left:0;
 width:260px;height:100%;
-padding:100px 20px 20px 20px;
+padding:80px 20px;
 background:rgba(31,31,31,.95);
 border-right:1px solid #2a2a2a;
 transform:translateX(-100%);
@@ -209,12 +180,6 @@ border-right:1px solid rgba(255,255,255,.1);
 </div>
 </div>
 
-<!-- HEADER -->
-<div class="header">
-<h1>Главная страница панели менеджера</h1>
-<p>Магазин <span style="font-weight:bold;">Auto-Style</span></p>
-</div>
-
 <!-- MENU -->
 <div class="menu-toggle" id="menuToggle" onclick="openMenu()">☰</div>
 <div id="sideMenu" class="side-menu">
@@ -223,4 +188,129 @@ border-right:1px solid rgba(255,255,255,.1);
 <button onclick="location.href='smena.html'">ЗАКРЫТИЕ СМЕНЫ</button>
 <button onclick="location.href='discount.html'">СКИДОЧНАЯ КАРТА</button>
 <button onclick="location.href='baza.html'">БАЗА ЗНАНИЙ</button>
-<button onclick="location.href='pass.html'">ПАРОЛ
+<button onclick="location.href='pass.html'">ПАРОЛИ</button>
+<button onclick="logout()">ВЫЙТИ</button>
+</div>
+
+<!-- HEADER -->
+<div class="header">
+<div class="logo">
+<span class="green">A</span><span class="black">uto-</span>
+<span class="green">S</span><span class="black">tyle</span>
+</div>
+</div>
+
+<!-- CALCULATORS -->
+<div class="wrapper" id="wrapper">
+<div class="calculator">
+<div class="title">КАЛЬКУЛЯТОР РАССРОЧКИ</div>
+<div class="subtitle">АГРОПРОМБАНК</div>
+<input type="number" class="sum">
+<button class="btn btn-calc">РАССЧИТАТЬ</button>
+<table>
+<tr><td>3 мес.</td><td class="coef">0.955</td><td class="result"></td></tr>
+<tr><td>6 мес.</td><td class="coef">0.93</td><td class="result"></td></tr>
+<tr><td>9 мес.</td><td class="coef">0.90</td><td class="result"></td></tr>
+<tr><td>12 мес.</td><td class="coef">0.875</td><td class="result"></td></tr>
+</table>
+</div>
+<div class="calculator">
+<div class="title">КАЛЬКУЛЯТОР РАССРОЧКИ</div>
+<div class="subtitle">ЭКСИМБАНК</div>
+<input type="number" class="sum">
+<button class="btn btn-calc">РАССЧИТАТЬ</button>
+<table>
+<tr><td>3 мес.</td><td class="coef">0.955</td><td class="result"></td></tr>
+<tr><td>6 мес.</td><td class="coef">0.93</td><td class="result"></td></tr>
+<tr><td>9 мес.</td><td class="coef">0.90</td><td class="result"></td></tr>
+<tr><td>12 мес.</td><td class="coef">0.886</td><td class="result"></td></tr>
+</table>
+</div>
+<div class="calculator">
+<div class="title">КАЛЬКУЛЯТОР РАССРОЧКИ</div>
+<div class="subtitle">СБЕРБАНК</div>
+<input type="number" class="sum">
+<button class="btn btn-calc">РАССЧИТАТЬ</button>
+<table>
+<tr><td>3 мес.</td><td class="coef">0.96</td><td class="result"></td></tr>
+<tr><td>6 мес.</td><td class="coef">0.93</td><td class="result"></td></tr>
+<tr><td>9 мес.</td><td class="coef">0.90</td><td class="result"></td></tr>
+<tr><td>12 мес.</td><td class="coef">0.88</td><td class="result"></td></tr>
+</table>
+</div>
+</div>
+
+<script>
+const users={cashier:{name:"Кассир",pass:"2012"},evgeniy:{name:"Евгений",pass:"0186"},vadim:{name:"Вадим",pass:"2385"}};
+const loginScreen=document.getElementById("loginScreen");
+const userSelect=document.getElementById("userSelect");
+const passwordInput=document.getElementById("passwordInput");
+const loginBtn=document.getElementById("loginBtn");
+const errorMsg=document.getElementById("errorMsg");
+const currentUserDisplay=document.getElementById("currentUser");
+const menuToggle=document.getElementById("menuToggle");
+const sideMenu=document.getElementById("sideMenu");
+const overlay=document.getElementById("overlay");
+const wrapper=document.getElementById("wrapper");
+
+// Проверка сессии
+const session=JSON.parse(localStorage.getItem("session"));
+if(session&&session.expire>Date.now()){
+  loginScreen.style.display="none";
+  menuToggle.style.display="flex";
+  sideMenu.style.display="block";
+  overlay.style.display="block";
+  wrapper.style.display="grid";
+  document.querySelector(".login-box").classList.add("show");
+  currentUserDisplay.textContent="👤 "+session.name;
+}else{
+  document.querySelector(".login-box").classList.add("show");
+}
+
+// Функция логина
+function login(){
+  const u=userSelect.value;
+  if(passwordInput.value===users[u].pass){
+    const expire=Date.now()+24*60*60*1000;
+    localStorage.setItem("session",JSON.stringify({name:users[u].name,expire}));
+    loginScreen.style.display="none";
+    menuToggle.style.display="flex";
+    sideMenu.style.display="block";
+    overlay.style.display="block";
+    wrapper.style.display="grid";
+    currentUserDisplay.textContent="👤 "+users[u].name;
+    errorMsg.textContent="";
+  }else errorMsg.textContent="Неверный пароль";
+}
+loginBtn.onclick=login;
+passwordInput.addEventListener("keyup",e=>{if(e.key==="Enter") login();});
+function logout(){localStorage.removeItem("session");location.reload();}
+
+// MENU
+function openMenu(){sideMenu.classList.add("active");overlay.classList.add("active");}
+function closeMenu(){sideMenu.classList.remove("active");overlay.classList.remove("active");}
+overlay.onclick=closeMenu;
+
+// SWIPE
+let startX=0;
+document.addEventListener("touchstart",e=>{startX=e.touches[0].clientX;});
+document.addEventListener("touchend",e=>{
+  let endX=e.changedTouches[0].clientX;
+  if(startX<40&&endX>120) openMenu();
+  if(startX>150&&endX<80) closeMenu();
+});
+
+// CALCULATORS
+document.querySelectorAll(".calculator").forEach(calc=>{
+  calc.querySelector(".btn-calc").onclick=function(){
+    const sum=parseFloat(calc.querySelector(".sum").value);
+    if(isNaN(sum)) return;
+    calc.querySelectorAll(".coef").forEach((c,i)=>{
+      calc.querySelectorAll(".result")[i].textContent=(sum/parseFloat(c.textContent)).toLocaleString("ru-RU",{minimumFractionDigits:2});
+    });
+  };
+});
+</script>
+
+</body>
+</html>
