@@ -2,31 +2,53 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<title>Счет-фактура</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Счет</title>
 
 <style>
 
 body{
-font-family:Arial;
-margin:20px;
+font-family: Arial, sans-serif;
+background:#f2f4f8;
+padding:20px;
+margin:0;
+}
+
+.back-button{
+position:fixed;
+top:15px;
+left:15px;
+z-index:9999;
+background:#000;
+color:#fff;
+border:none;
+padding:8px 14px;
+border-radius:6px;
+cursor:pointer;
+font-size:13px;
 }
 
 .container{
 max-width:900px;
+width:100%;
 margin:auto;
+background:white;
+padding:40px;
+box-shadow:0 4px 20px rgba(0,0,0,.1);
+box-sizing:border-box;
+margin-bottom:40px;
 }
 
 .header{
-display:flex;
-justify-content:space-between;
-align-items:center;
+text-align:center;
+margin-bottom:25px;
 }
 
 table{
 width:100%;
 border-collapse:collapse;
 margin-top:10px;
-table-layout:fixed;
+table-layout:fixed; /* фиксированные колонки */
 page-break-inside:auto;
 }
 
@@ -35,33 +57,62 @@ page-break-inside:avoid;
 page-break-after:auto;
 }
 
-td,th{
-border:1px solid #000;
-padding:5px;
+th,td{
+border:1px solid #ccc;
+padding:8px;
+font-size:14px;
 vertical-align:top;
 word-wrap:break-word;
 white-space:normal;
+}
+
+th{
+background:#1976d2;
+color:white;
 }
 
 input{
 width:100%;
 border:none;
 outline:none;
-}
-
-button{
-margin-top:10px;
-padding:8px 15px;
+font-size:14px;
+background:transparent;
 }
 
 .total{
 text-align:right;
 font-weight:bold;
+font-size:16px;
+}
+
+.buttons{
+margin-top:20px;
+}
+
+.buttons button{
+width:100%;
+padding:12px;
+margin-bottom:10px;
+border:none;
+border-radius:6px;
+background:#2e7d32;
+color:white;
+font-size:16px;
+cursor:pointer;
+}
+
+.delete-btn{
+background:#d32f2f;
+color:white;
+border:none;
+padding:6px 10px;
+border-radius:4px;
+cursor:pointer;
 }
 
 .invoice-page{
 page-break-before:always;
-margin-top:40px;
+break-before:page;
 }
 
 .signatures{
@@ -70,58 +121,87 @@ display:flex;
 justify-content:space-between;
 }
 
+.sign{
+width:40%;
+text-align:center;
+}
+
+.sum-text{
+margin-top:15px;
+font-weight:bold;
+line-height:1.6;
+}
+
 .doc-fields{
-margin-top:10px;
+margin-top:15px;
+}
+
+@media print{
+
+.buttons,
+.back-button,
+.delete-btn{
+display:none;
+}
+
+.container{
+box-shadow:none;
+padding:0;
+margin:0;
+}
+
 }
 
 </style>
 </head>
-
 <body>
+
+<button class="back-button" onclick="history.back()">← Назад</button>
+
+<!-- СЧЕТ -->
 
 <div class="container">
 
 <div class="header">
-<h2>СЧЕТ-ФАКТУРА</h2>
-<div>
-№ <span id="invoice-number"></span><br>
-Дата: <span id="date"></span>
-</div>
+<h2>СЧЕТ ФАКТУРА № <span id="invoice-number"></span></h2>
+<div>Дата: <span id="date"></span></div>
 </div>
 
 <div>
-<b>Поставщик:</b> ИП Дворян Вадим Витальевич
+<b>Плательщик:</b>
+<input id="payer" placeholder="Введите организацию">
 </div>
 
 <br>
 
-<div>
-<b>Получатель:</b>
-<input id="payer" placeholder="Введите организацию">
-</div>
+<table>
+<tr><td>Поставщик</td><td>ИП Дворян Вадим Витальевич</td></tr>
+<tr><td>Патент</td><td>УСН № 1440001838</td></tr>
+<tr><td>Расчетный счет</td><td>2214050000024165</td></tr>
+<tr><td>Банк получателя</td><td>ЗАО "Агропромбанк"</td></tr>
+</table>
 
-<div class="doc-fields">
-Доверенность № ____________ от ____________ <br><br>
-Через кого отпущено ____________________________________
-</div>
+<br>
 
 <table>
 
 <colgroup>
 <col style="width:5%">
-<col style="width:60%">
+<col style="width:55%">
 <col style="width:10%">
-<col style="width:12%">
-<col style="width:13%">
+<col style="width:15%">
+<col style="width:15%">
+<col>
 </colgroup>
 
 <thead>
 <tr>
-<th>№</th>
+<th>Код</th>
 <th>Наименование</th>
 <th>Кол-во</th>
 <th>Цена</th>
 <th>Сумма</th>
+<th></th>
 </tr>
 </thead>
 
@@ -131,41 +211,41 @@ margin-top:10px;
 <tr>
 <td colspan="4" class="total">Итого:</td>
 <td id="total">0</td>
+<td></td>
 </tr>
 </tfoot>
 
 </table>
 
-<div id="sum-words"></div>
+<div class="sum-text" id="sum-text"></div>
 
 <div class="signatures">
-
-<div>
-Поставщик _____________ <br>
+<div class="sign">
+Поставщик __________________<br>
 М.П.
 </div>
 
-<div>
-_____________ <br>
+<div class="sign">
+__________________<br>
 М.П.
 </div>
-
 </div>
 
+<div class="buttons">
 <button onclick="addRow()">Добавить строку</button>
 <button onclick="printPDF()">Скачать PDF</button>
+</div>
 
 </div>
 
 
+<!-- НАКЛАДНАЯ -->
 
 <div class="container invoice-page">
 
 <div class="header">
-<h2>ТОВАРНАЯ НАКЛАДНАЯ</h2>
-<div>
-Дата: <span id="date2"></span>
-</div>
+<h2>ТОВАРНАЯ НАКЛАДНАЯ № <span id="invoice-number2"></span></h2>
+<div>Дата: <span id="date2"></span></div>
 </div>
 
 <div>
@@ -184,14 +264,16 @@ _____________ <br>
 Через кого отпущено ____________________________________
 </div>
 
+<br>
+
 <table>
 
 <colgroup>
 <col style="width:5%">
-<col style="width:60%">
+<col style="width:55%">
 <col style="width:10%">
-<col style="width:12%">
-<col style="width:13%">
+<col style="width:15%">
+<col style="width:15%">
 </colgroup>
 
 <thead>
@@ -208,153 +290,173 @@ _____________ <br>
 
 <tfoot>
 <tr>
-<td colspan="4" class="total">Итого:</td>
+<td colspan="3"></td>
+<td class="total">Итого:</td>
 <td id="nakladnaya-total">0</td>
 </tr>
 </tfoot>
 
 </table>
 
-<div id="sum-words2"></div>
+<div class="sum-text" id="sum-text2"></div>
 
 <div class="signatures">
-
-<div>
-Поставщик _____________ <br>
+<div class="sign">
+Поставщик __________________<br>
 М.П.
 </div>
 
-<div>
-_____________ <br>
+<div class="sign">
+__________________<br>
 М.П.
 </div>
-
 </div>
 
 </div>
-
 
 
 <script>
 
-document.getElementById("date").innerText=new Date().toLocaleDateString("ru-RU");
-document.getElementById("date2").innerText=new Date().toLocaleDateString("ru-RU");
+let today = new Date().toLocaleDateString("ru-RU");
+document.getElementById("date").innerText=today;
+document.getElementById("date2").innerText=today;
 
-document.getElementById("invoice-number").innerText=Math.floor(Math.random()*10000);
+let number=Math.floor(Math.random()*1000);
 
+document.getElementById("invoice-number").innerText=number;
+document.getElementById("invoice-number2").innerText=number;
+
+
+/* число прописью */
+function numToText(n){
+let a=["","один","два","три","четыре","пять","шесть","семь","восемь","девять"];
+let b=["","десять","двадцать","тридцать","сорок","пятьдесят","шестьдесят","семьдесят","восемьдесят","девяносто"];
+let c=["","сто","двести","триста","четыреста","пятьсот","шестьсот","семьсот","восемьсот","девятьсот"];
+
+n=Math.floor(n);
+
+let s="";
+
+if(n>=100){
+s+=c[Math.floor(n/100)]+" ";
+n%=100;
+}
+
+if(n>=10){
+s+=b[Math.floor(n/10)]+" ";
+n%=10;
+}
+
+if(n>0){
+s+=a[n];
+}
+
+return s.trim();
+}
+
+
+/* добавить строку */
 function addRow(){
-
-let tbody=document.getElementById("tbody");
 
 let row=document.createElement("tr");
 
 row.innerHTML=`
-<td>${tbody.children.length+1}</td>
 <td><input></td>
-<td><input class="qty" type="number"></td>
-<td><input class="price" type="number"></td>
+<td><input class="name"></td>
+<td><input type="number" class="qty" value="0"></td>
+<td><input type="number" class="price" value="0"></td>
 <td class="sum">0</td>
+<td><button class="delete-btn">✕</button></td>
 `;
 
-tbody.appendChild(row);
+document.getElementById("tbody").appendChild(row);
 
-row.querySelector(".qty").addEventListener("input",calc);
-row.querySelector(".price").addEventListener("input",calc);
+row.querySelector(".delete-btn").onclick = ()=>{
+row.remove();
+calc();
+fillNakladnaya();
+};
+
+row.querySelectorAll("input").forEach(input=>{
+input.addEventListener("input", ()=>{
+calc();
+fillNakladnaya();
+});
+});
 
 }
 
+
+/* расчет */
 function calc(){
 
 let total=0;
 
 document.querySelectorAll("#tbody tr").forEach(row=>{
-
-let q=row.querySelector(".qty").value;
-let p=row.querySelector(".price").value;
-
+let q = Number(row.querySelector(".qty")?.value || 0);
+let p = Number(row.querySelector(".price")?.value || 0);
 let sum=q*p;
-
-row.querySelector(".sum").innerText=sum||0;
-
-total+=sum||0;
-
+row.querySelector(".sum").innerText=sum;
+total+=sum;
 });
 
 document.getElementById("total").innerText=total;
-
-document.getElementById("sum-words").innerText="Сумма прописью: "+numberToWords(total);
+document.getElementById("sum-text").innerText="Сумма прописью: "+numToText(total);
 
 }
 
+
+/* накладная */
 function fillNakladnaya(){
 
 let body=document.getElementById("nakladnaya-body");
-
 body.innerHTML="";
-
 let total=0;
-
-let index=1;
+let i=1;
 
 document.querySelectorAll("#tbody tr").forEach(row=>{
+let name=row.querySelector(".name").value;
+let q=Number(row.querySelector(".qty").value || 0);
+let p=Number(row.querySelector(".price").value || 0);
 
-let name=row.children[1].querySelector("input").value;
-let q=row.querySelector(".qty").value;
-let p=row.querySelector(".price").value;
-
-if(name){
-
+if(name && q>0){
 let sum=q*p;
-
 total+=sum;
 
 let tr=document.createElement("tr");
-
 tr.innerHTML=`
-<td>${index++}</td>
+<td>${i++}</td>
 <td>${name}</td>
 <td>${q}</td>
 <td>${p}</td>
 <td>${sum}</td>
 `;
-
 body.appendChild(tr);
-
 }
-
 });
 
 document.getElementById("nakladnaya-total").innerText=total;
-
-document.getElementById("sum-words2").innerText="Сумма прописью: "+numberToWords(total);
-
-}
-
-function printPDF(){
-
-calc();
-fillNakladnaya();
-window.print();
+document.getElementById("sum-text2").innerText="Сумма прописью: "+numToText(total);
 
 }
 
-function numberToWords(num){
 
-if(num==0)return "ноль";
-
-return num+" руб.";
-
-}
-
-addRow();
-
-
+/* автозаполнение получателя */
 let payer=document.getElementById("payer");
 let receiver=document.getElementById("receiver");
-
 payer.addEventListener("input",()=>{
 receiver.value=payer.value;
 });
+
+
+/* печать */
+function printPDF(){
+calc();
+fillNakladnaya();
+window.print();
+}
+
+addRow();
 
 </script>
 
