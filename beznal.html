@@ -2,106 +2,66 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Счет</title>
+<title>Счет-фактура</title>
 
 <style>
 
 body{
-font-family: Arial, sans-serif;
-background:#f2f4f8;
-padding:20px;
-margin:0;
-}
-
-.back-button{
-position:fixed;
-top:15px;
-left:15px;
-z-index:9999;
-background:#000;
-color:#fff;
-border:none;
-padding:8px 14px;
-border-radius:6px;
-cursor:pointer;
-font-size:13px;
+font-family:Arial;
+margin:20px;
 }
 
 .container{
 max-width:900px;
-width:100%;
 margin:auto;
-background:white;
-padding:40px;
-box-shadow:0 4px 20px rgba(0,0,0,.1);
-box-sizing:border-box;
-margin-bottom:40px;
 }
 
 .header{
-text-align:center;
-margin-bottom:25px;
+display:flex;
+justify-content:space-between;
+align-items:center;
 }
 
 table{
 width:100%;
 border-collapse:collapse;
 margin-top:10px;
+table-layout:fixed;
+page-break-inside:auto;
 }
 
-th,td{
-border:1px solid #ccc;
-padding:8px;
-font-size:14px;
+tr{
+page-break-inside:avoid;
+page-break-after:auto;
 }
 
-th{
-background:#1976d2;
-color:white;
+td,th{
+border:1px solid #000;
+padding:5px;
+vertical-align:top;
+word-wrap:break-word;
+white-space:normal;
 }
 
 input{
 width:100%;
 border:none;
 outline:none;
-font-size:14px;
-background:transparent;
+}
+
+button{
+margin-top:10px;
+padding:8px 15px;
 }
 
 .total{
 text-align:right;
 font-weight:bold;
-font-size:16px;
-}
-
-.buttons{
-margin-top:20px;
-}
-
-.buttons button{
-width:100%;
-padding:12px;
-margin-bottom:10px;
-border:none;
-border-radius:6px;
-background:#2e7d32;
-color:white;
-font-size:16px;
-cursor:pointer;
-}
-
-.delete-btn{
-background:#d32f2f;
-color:white;
-border:none;
-padding:6px 10px;
-border-radius:4px;
-cursor:pointer;
 }
 
 .invoice-page{
 page-break-before:always;
+margin-top:40px;
 }
 
 .signatures{
@@ -110,78 +70,58 @@ display:flex;
 justify-content:space-between;
 }
 
-.sign{
-width:40%;
-text-align:center;
-}
-
-.sum-text{
-margin-top:15px;
-font-weight:bold;
-line-height:1.6;
-}
-
 .doc-fields{
-margin-top:15px;
-}
-
-@media print{
-
-.buttons,
-.back-button,
-.delete-btn{
-display:none;
-}
-
-.container{
-box-shadow:none;
-padding:0;
-margin:0;
-}
-
+margin-top:10px;
 }
 
 </style>
 </head>
+
 <body>
-
-<button class="back-button" onclick="history.back()">← Назад</button>
-
-<!-- СЧЕТ ФАКТУРА -->
 
 <div class="container">
 
 <div class="header">
-<h2>СЧЕТ ФАКТУРА № <span id="invoice-number"></span></h2>
-<div>Дата: <span id="date"></span></div>
+<h2>СЧЕТ-ФАКТУРА</h2>
+<div>
+№ <span id="invoice-number"></span><br>
+Дата: <span id="date"></span>
+</div>
 </div>
 
 <div>
-<b>Плательщик:</b>
-<input id="payer" placeholder="Введите организацию">
+<b>Поставщик:</b> ИП Дворян Вадим Витальевич
 </div>
 
 <br>
 
-<table>
-<tr><td>Поставщик</td><td>ИП Дворян Вадим Витальевич</td></tr>
-<tr><td>Патент</td><td>УСН № 1440001838</td></tr>
-<tr><td>Расчетный счет</td><td>2214050000024165</td></tr>
-<tr><td>Банк получателя</td><td>ЗАО "Агропромбанк"</td></tr>
-</table>
+<div>
+<b>Получатель:</b>
+<input id="payer" placeholder="Введите организацию">
+</div>
 
-<br>
+<div class="doc-fields">
+Доверенность № ____________ от ____________ <br><br>
+Через кого отпущено ____________________________________
+</div>
 
 <table>
+
+<colgroup>
+<col style="width:5%">
+<col style="width:60%">
+<col style="width:10%">
+<col style="width:12%">
+<col style="width:13%">
+</colgroup>
 
 <thead>
 <tr>
-<th>Код</th>
+<th>№</th>
 <th>Наименование</th>
 <th>Кол-во</th>
 <th>Цена</th>
 <th>Сумма</th>
-<th></th>
 </tr>
 </thead>
 
@@ -191,41 +131,41 @@ margin:0;
 <tr>
 <td colspan="4" class="total">Итого:</td>
 <td id="total">0</td>
-<td></td>
 </tr>
 </tfoot>
 
 </table>
 
-<div class="sum-text" id="sum-text"></div>
+<div id="sum-words"></div>
 
 <div class="signatures">
-<div class="sign">
-Поставщик __________________<br>
+
+<div>
+Поставщик _____________ <br>
 М.П.
 </div>
 
-<div class="sign">
-__________________<br>
+<div>
+_____________ <br>
 М.П.
 </div>
+
 </div>
 
-<div class="buttons">
 <button onclick="addRow()">Добавить строку</button>
 <button onclick="printPDF()">Скачать PDF</button>
-</div>
 
 </div>
 
 
-<!-- НАКЛАДНАЯ -->
 
 <div class="container invoice-page">
 
 <div class="header">
-<h2>ТОВАРНАЯ НАКЛАДНАЯ № <span id="invoice-number2"></span></h2>
-<div>Дата: <span id="date2"></span></div>
+<h2>ТОВАРНАЯ НАКЛАДНАЯ</h2>
+<div>
+Дата: <span id="date2"></span>
+</div>
 </div>
 
 <div>
@@ -244,9 +184,15 @@ __________________<br>
 Через кого отпущено ____________________________________
 </div>
 
-<br>
-
 <table>
+
+<colgroup>
+<col style="width:5%">
+<col style="width:60%">
+<col style="width:10%">
+<col style="width:12%">
+<col style="width:13%">
+</colgroup>
 
 <thead>
 <tr>
@@ -262,125 +208,60 @@ __________________<br>
 
 <tfoot>
 <tr>
-<td colspan="3"></td>
-<td class="total">Итого:</td>
+<td colspan="4" class="total">Итого:</td>
 <td id="nakladnaya-total">0</td>
 </tr>
 </tfoot>
 
 </table>
 
-<div class="sum-text" id="sum-text2"></div>
+<div id="sum-words2"></div>
 
 <div class="signatures">
-<div class="sign">
-Поставщик __________________<br>
+
+<div>
+Поставщик _____________ <br>
 М.П.
 </div>
 
-<div class="sign">
-__________________<br>
+<div>
+_____________ <br>
 М.П.
-</div>
 </div>
 
 </div>
+
+</div>
+
 
 
 <script>
 
-let today = new Date().toLocaleDateString("ru-RU");
-document.getElementById("date").innerText=today;
-document.getElementById("date2").innerText=today;
+document.getElementById("date").innerText=new Date().toLocaleDateString("ru-RU");
+document.getElementById("date2").innerText=new Date().toLocaleDateString("ru-RU");
 
-let number=Math.floor(Math.random()*1000);
-
-document.getElementById("invoice-number").innerText=number;
-document.getElementById("invoice-number2").innerText=number;
-
-
-/* число прописью */
-
-function numberToWords(n){
-
-let units=["","один","два","три","четыре","пять","шесть","семь","восемь","девять"];
-let teens=["десять","одиннадцать","двенадцать","тринадцать","четырнадцать","пятнадцать","шестнадцать","семнадцать","восемнадцать","девятнадцать"];
-let tens=["","","двадцать","тридцать","сорок","пятьдесят","шестьдесят","семьдесят","восемьдесят","девяносто"];
-let hundreds=["","сто","двести","триста","четыреста","пятьсот","шестьсот","семьсот","восемьсот","девятьсот"];
-
-let words="";
-
-if(n>=100){
-words+=hundreds[Math.floor(n/100)]+" ";
-n%=100;
-}
-
-if(n>=10 && n<20){
-words+=teens[n-10]+" ";
-}else{
-
-if(n>=20){
-words+=tens[Math.floor(n/10)]+" ";
-n%=10;
-}
-
-if(n>0){
-words+=units[n]+" ";
-}
-
-}
-
-return words.trim();
-
-}
-
-function formatMoney(total){
-
-let rub=Math.floor(total);
-let kop=0;
-
-let words=numberToWords(rub);
-if(!words) words="ноль";
-
-return `Итого к оплате: ${rub} руб.<br>Сумма прописью: ${words} рублей 00 копеек`;
-
-}
-
-
-/* добавить строку */
+document.getElementById("invoice-number").innerText=Math.floor(Math.random()*10000);
 
 function addRow(){
+
+let tbody=document.getElementById("tbody");
 
 let row=document.createElement("tr");
 
 row.innerHTML=`
+<td>${tbody.children.length+1}</td>
 <td><input></td>
-<td><input class="name"></td>
-<td><input type="number" class="qty" value="0"></td>
-<td><input type="number" class="price" value="0"></td>
+<td><input class="qty" type="number"></td>
+<td><input class="price" type="number"></td>
 <td class="sum">0</td>
-<td><button class="delete-btn">✕</button></td>
 `;
 
-document.getElementById("tbody").appendChild(row);
+tbody.appendChild(row);
 
-row.querySelector(".delete-btn").onclick=()=>{
-row.remove();
-calc();
-fillNakladnaya();
-};
-
-row.querySelectorAll("input").forEach(i=>{
-i.addEventListener("input",()=>{
-calc();
-fillNakladnaya();
-});
-});
+row.querySelector(".qty").addEventListener("input",calc);
+row.querySelector(".price").addEventListener("input",calc);
 
 }
-
-
-/* расчет */
 
 function calc(){
 
@@ -388,49 +269,49 @@ let total=0;
 
 document.querySelectorAll("#tbody tr").forEach(row=>{
 
-let q=Number(row.querySelector(".qty").value);
-let p=Number(row.querySelector(".price").value);
+let q=row.querySelector(".qty").value;
+let p=row.querySelector(".price").value;
 
 let sum=q*p;
 
-row.querySelector(".sum").innerText=sum;
+row.querySelector(".sum").innerText=sum||0;
 
-total+=sum;
+total+=sum||0;
 
 });
 
 document.getElementById("total").innerText=total;
 
-document.getElementById("sum-text").innerHTML=formatMoney(total);
+document.getElementById("sum-words").innerText="Сумма прописью: "+numberToWords(total);
 
 }
-
-
-/* накладная */
 
 function fillNakladnaya(){
 
 let body=document.getElementById("nakladnaya-body");
+
 body.innerHTML="";
 
 let total=0;
-let i=1;
+
+let index=1;
 
 document.querySelectorAll("#tbody tr").forEach(row=>{
 
-let name=row.querySelector(".name").value;
-let q=Number(row.querySelector(".qty").value);
-let p=Number(row.querySelector(".price").value);
+let name=row.children[1].querySelector("input").value;
+let q=row.querySelector(".qty").value;
+let p=row.querySelector(".price").value;
 
-if(name && q>0){
+if(name){
 
 let sum=q*p;
+
 total+=sum;
 
 let tr=document.createElement("tr");
 
 tr.innerHTML=`
-<td>${i++}</td>
+<td>${index++}</td>
 <td>${name}</td>
 <td>${q}</td>
 <td>${p}</td>
@@ -445,12 +326,28 @@ body.appendChild(tr);
 
 document.getElementById("nakladnaya-total").innerText=total;
 
-document.getElementById("sum-text2").innerHTML=formatMoney(total);
+document.getElementById("sum-words2").innerText="Сумма прописью: "+numberToWords(total);
 
 }
 
+function printPDF(){
 
-/* автозаполнение получателя */
+calc();
+fillNakladnaya();
+window.print();
+
+}
+
+function numberToWords(num){
+
+if(num==0)return "ноль";
+
+return num+" руб.";
+
+}
+
+addRow();
+
 
 let payer=document.getElementById("payer");
 let receiver=document.getElementById("receiver");
@@ -458,20 +355,6 @@ let receiver=document.getElementById("receiver");
 payer.addEventListener("input",()=>{
 receiver.value=payer.value;
 });
-
-
-/* печать */
-
-function printPDF(){
-
-calc();
-fillNakladnaya();
-
-setTimeout(()=>window.print(),200);
-
-}
-
-addRow();
 
 </script>
 
