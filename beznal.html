@@ -102,7 +102,6 @@ cursor:pointer;
 
 .invoice-page{
 page-break-before:always;
-break-before:page;
 }
 
 .signatures{
@@ -119,6 +118,11 @@ text-align:center;
 .sum-text{
 margin-top:15px;
 font-weight:bold;
+line-height:1.6;
+}
+
+.doc-fields{
+margin-top:20px;
 }
 
 @media print{
@@ -253,7 +257,8 @@ __________________<br>
 
 <tfoot>
 <tr>
-<td colspan="4" class="total">Итого:</td>
+<td colspan="3"></td>
+<td class="total">Итого:</td>
 <td id="nakladnaya-total">0</td>
 </tr>
 </tfoot>
@@ -261,6 +266,11 @@ __________________<br>
 </table>
 
 <div class="sum-text" id="sum-text2"></div>
+
+<div class="doc-fields">
+Доверенность № ____________ от ____________ <br><br>
+Через кого отпущено ____________________________________
+</div>
 
 <div class="signatures">
 <div class="sign">
@@ -291,31 +301,54 @@ document.getElementById("invoice-number2").innerText=number;
 
 /* число прописью */
 
-function numToText(n){
+function numberToWords(n){
 
-let a=["","один","два","три","четыре","пять","шесть","семь","восемь","девять"];
-let b=["","десять","двадцать","тридцать","сорок","пятьдесят","шестьдесят","семьдесят","восемьдесят","девяносто"];
-let c=["","сто","двести","триста","четыреста","пятьсот","шестьсот","семьсот","восемьсот","девятьсот"];
+let units=["","один","два","три","четыре","пять","шесть","семь","восемь","девять"];
+let teens=["десять","одиннадцать","двенадцать","тринадцать","четырнадцать","пятнадцать","шестнадцать","семнадцать","восемнадцать","девятнадцать"];
+let tens=["","","двадцать","тридцать","сорок","пятьдесят","шестьдесят","семьдесят","восемьдесят","девяносто"];
+let hundreds=["","сто","двести","триста","четыреста","пятьсот","шестьсот","семьсот","восемьсот","девятьсот"];
 
-n=Math.floor(n);
-
-let s="";
+let words="";
 
 if(n>=100){
-s+=c[Math.floor(n/100)]+" ";
+words+=hundreds[Math.floor(n/100)]+" ";
 n%=100;
 }
 
-if(n>=10){
-s+=b[Math.floor(n/10)]+" ";
+if(n>=10 && n<20){
+words+=teens[n-10]+" ";
+}else{
+
+if(n>=20){
+words+=tens[Math.floor(n/10)]+" ";
 n%=10;
 }
 
 if(n>0){
-s+=a[n];
+words+=units[n]+" ";
 }
 
-return s.trim();
+}
+
+return words.trim();
+
+}
+
+
+/* формат суммы */
+
+function formatMoney(total){
+
+let rub=Math.floor(total);
+let kop=Math.round((total-rub)*100);
+
+let words=numberToWords(rub);
+
+if(!words) words="ноль";
+
+kop=kop.toString().padStart(2,'0');
+
+return `Итого к оплате: ${rub} руб.<br>Сумма прописью: ${words} рублей ${kop} копеек`;
 
 }
 
@@ -374,8 +407,7 @@ total+=sum;
 
 document.getElementById("total").innerText=total;
 
-document.getElementById("sum-text").innerText=
-"Сумма прописью: "+numToText(total);
+document.getElementById("sum-text").innerHTML=formatMoney(total);
 
 }
 
@@ -385,7 +417,6 @@ document.getElementById("sum-text").innerText=
 function fillNakladnaya(){
 
 let body=document.getElementById("nakladnaya-body");
-
 body.innerHTML="";
 
 let total=0;
@@ -400,7 +431,6 @@ let p=Number(row.querySelector(".price").value);
 if(name && q>0){
 
 let sum=q*p;
-
 total+=sum;
 
 let tr=document.createElement("tr");
@@ -421,8 +451,7 @@ body.appendChild(tr);
 
 document.getElementById("nakladnaya-total").innerText=total;
 
-document.getElementById("sum-text2").innerText=
-"Сумма прописью: "+numToText(total);
+document.getElementById("sum-text2").innerHTML=formatMoney(total);
 
 }
 
@@ -438,11 +467,9 @@ setTimeout(()=>window.print(),200);
 
 }
 
-
 addRow();
 
 </script>
 
 </body>
 </html>
-
