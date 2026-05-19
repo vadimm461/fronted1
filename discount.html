@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -20,44 +19,30 @@
     box-sizing:border-box;
 }
 
-:root{
-    --bg:#f3f6fb;
-    --card:#ffffff;
-    --text:#111827;
-    --muted:#6b7280;
-}
-
 body{
     font-family:'Inter',sans-serif;
-    background:var(--bg);
-    color:var(--text);
-    min-height:100vh;
+    background:#f3f6fb;
+    color:#111827;
     padding:20px;
 }
 
-/* ================= CONTAINER ================= */
-
 .container{
-    width:100%;
     max-width:1000px;
     margin:0 auto;
 }
-
-/* ================= TOPBAR ================= */
 
 .topbar{
     display:flex;
     justify-content:space-between;
     align-items:center;
-    gap:16px;
     margin-bottom:24px;
+    gap:16px;
     flex-wrap:wrap;
 }
 
 .title{
     font-size:34px;
     font-weight:800;
-    letter-spacing:-1px;
 }
 
 .back-btn{
@@ -66,16 +51,14 @@ body{
     color:white;
     padding:14px 18px;
     border-radius:16px;
-    font-weight:700;
     cursor:pointer;
+    font-weight:700;
     transition:0.2s;
 }
 
 .back-btn:hover{
     transform:translateY(-2px);
 }
-
-/* ================= CARD ================= */
 
 .card{
     background:white;
@@ -84,8 +67,6 @@ body{
     border:1px solid #eef2f7;
     box-shadow:0 10px 30px rgba(0,0,0,0.04);
 }
-
-/* ================= CONDITIONS ================= */
 
 .conditions{
     display:flex;
@@ -97,11 +78,10 @@ body{
 .condition-box{
     display:flex;
     gap:18px;
-    align-items:flex-start;
     padding:18px;
-    border:1px solid #edf2f7;
     border-radius:20px;
     background:#f9fafb;
+    border:1px solid #edf2f7;
 }
 
 .condition-number{
@@ -113,26 +93,26 @@ body{
     display:flex;
     align-items:center;
     justify-content:center;
-    font-size:14px;
     font-weight:800;
 }
 
 .condition-text{
-    font-size:15px;
     line-height:1.7;
     color:#374151;
+    font-size:15px;
 }
-
-/* ================= BUTTONS ================= */
 
 .btn{
     border:none;
     border-radius:16px;
     padding:16px 20px;
-    font-size:14px;
     font-weight:700;
     cursor:pointer;
     transition:0.2s;
+}
+
+.btn:hover{
+    transform:translateY(-2px);
 }
 
 .connect-btn{
@@ -145,17 +125,6 @@ body{
     background:#111827;
     color:white;
 }
-
-.print-btn{
-    background:#e5e7eb;
-    color:#111827;
-}
-
-.btn:hover{
-    transform:translateY(-2px);
-}
-
-/* ================= FORM ================= */
 
 .form-wrapper{
     display:none;
@@ -182,12 +151,11 @@ body{
 
 .field label{
     font-size:13px;
-    color:#6b7280;
     font-weight:700;
+    color:#6b7280;
 }
 
 .field input{
-    width:100%;
     border:1px solid #e5e7eb;
     background:#f9fafb;
     border-radius:16px;
@@ -203,22 +171,12 @@ body{
 
 .actions{
     margin-top:26px;
-    display:flex;
-    gap:14px;
-    flex-wrap:wrap;
 }
-
-/* ================= MOBILE ================= */
 
 @media(max-width:768px){
 
     body{
         padding:14px;
-    }
-
-    .card{
-        padding:22px;
-        border-radius:22px;
     }
 
     .grid{
@@ -229,16 +187,8 @@ body{
         font-size:26px;
     }
 
-    .actions{
-        flex-direction:column;
-    }
-
-    .btn{
-        width:100%;
-    }
-
-    .back-btn{
-        width:100%;
+    .card{
+        padding:22px;
     }
 
     .condition-box{
@@ -280,7 +230,6 @@ body{
     .doc-top{
         display:flex;
         justify-content:space-between;
-        align-items:flex-start;
         margin-bottom:32px;
     }
 
@@ -304,15 +253,15 @@ body{
 
     .row{
         display:grid;
-        grid-template-columns:230px 1fr;
-        border-bottom:1px solid #edf2f7;
+        grid-template-columns:220px 1fr;
         padding:12px 0;
+        border-bottom:1px solid #edf2f7;
     }
 
     .row-label{
         font-size:12px;
         color:#6b7280;
-        font-weight:600;
+        font-weight:700;
     }
 
     .row-value{
@@ -325,6 +274,21 @@ body{
         font-size:13px;
         line-height:1.8;
         color:#374151;
+    }
+
+    .signature{
+        margin-top:70px;
+    }
+
+    .line{
+        border-bottom:1px solid #111827;
+        height:32px;
+    }
+
+    .sign-text{
+        margin-top:8px;
+        font-size:11px;
+        color:#6b7280;
     }
 
     .condition{
@@ -353,52 +317,6 @@ body{
         color:#374151;
     }
 
-    .warning{
-        margin-top:26px;
-        padding:18px;
-        border:1px solid #e5e7eb;
-        border-radius:18px;
-        background:#f9fafb;
-    }
-
-    .warning-title{
-        font-size:11px;
-        font-weight:800;
-        text-transform:uppercase;
-        margin-bottom:8px;
-    }
-
-    .warning-text{
-        font-size:12px;
-        line-height:1.7;
-        color:#4b5563;
-    }
-
-    .signature{
-        margin-top:70px;
-    }
-
-    .line{
-        border-bottom:1px solid #111827;
-        height:32px;
-    }
-
-    .sign-text{
-        font-size:11px;
-        color:#6b7280;
-        margin-top:8px;
-    }
-
-    .footer{
-        margin-top:50px;
-        display:flex;
-        justify-content:space-between;
-        font-size:10px;
-        color:#9ca3af;
-        border-top:1px solid #f1f5f9;
-        padding-top:12px;
-    }
-
 }
 
 </style>
@@ -422,21 +340,19 @@ body{
 
     <div class="card">
 
-        <!-- УСЛОВИЯ -->
-
         <div class="conditions">
 
             <div class="condition-box">
                 <div class="condition-number">01</div>
                 <div class="condition-text">
-                    При регистрации анкеты в магазине, покупатель дает согласие на обработку персональных данных, оформление занимает до 3 рабочих дней
+                    При регистрации анкеты покупатель дает согласие на обработку персональных данных. Оформление занимает до 3 рабочих дней.
                 </div>
             </div>
 
             <div class="condition-box">
                 <div class="condition-number">02</div>
                 <div class="condition-text">
-                    Для подключения к бонусному проекту клиент должен совершить покупку на сумму минимум 1000р
+                    Для подключения к бонусному проекту клиент должен совершить покупку минимум на 1000р.
                 </div>
             </div>
 
@@ -444,33 +360,25 @@ body{
                 <div class="condition-number">03</div>
                 <div class="condition-text">
                     Стартовая скидка до 5%<br>
-                    До 7% — от 1500р<br>
-                    До 10% — от 3000р<br>
-                    До 15% — от 5000р<br>
-                    До 20% — от 10000р
+                    До 7% — при сумме покупок от 1500р<br>
+                    До 10% — при сумме покупок от 3000р<br>
+                    До 15% — при сумме покупок от 5000р<br>
+                    До 20% — при сумме покупок от 10000р
                 </div>
             </div>
 
             <div class="condition-box">
                 <div class="condition-number">04</div>
                 <div class="condition-text">
-                    При каждой покупке клиент должен назвать ФИО или номер телефона
+                    При каждой покупке клиент должен назвать ФИО либо номер телефона.
                 </div>
             </div>
 
         </div>
 
-        <!-- BUTTON -->
-
-        <button
-            class="btn connect-btn"
-            onclick="openForm()">
-
+        <button class="btn connect-btn" onclick="openForm()">
             Подключить к бонусному проекту
-
         </button>
-
-        <!-- FORM -->
 
         <div class="form-wrapper" id="formWrapper">
 
@@ -489,23 +397,23 @@ body{
                     </div>
 
                     <div class="field">
-                        <label>Контактный телефон</label>
+                        <label>Телефон</label>
                         <input id="phone" type="tel">
                     </div>
 
                     <div class="field full">
-                        <label>Электронная почта</label>
+                        <label>Email</label>
                         <input id="email" type="email">
                     </div>
 
                     <div class="field">
                         <label>Марка автомобиля</label>
-                        <input id="avtomobil1" type="text">
+                        <input id="car_brand" type="text">
                     </div>
 
                     <div class="field">
                         <label>Модель авто и год</label>
-                        <input id="model1" type="text">
+                        <input id="car_model" type="text">
                     </div>
 
                 </div>
@@ -558,35 +466,28 @@ body{
     </div>
 
     <div class="row">
-        <div class="row-label">Контактный телефон</div>
+        <div class="row-label">Телефон</div>
         <div class="row-value" id="p_phone"></div>
     </div>
 
     <div class="row">
-        <div class="row-label">Электронная почта</div>
+        <div class="row-label">Email</div>
         <div class="row-value" id="p_email"></div>
     </div>
 
     <div class="row">
         <div class="row-label">Марка автомобиля</div>
-        <div class="row-value" id="p_avtomobil1"></div>
+        <div class="row-value" id="print_car_brand"></div>
     </div>
 
     <div class="row">
         <div class="row-label">Модель и год</div>
-        <div class="row-value" id="p_model1"></div>
+        <div class="row-value" id="print_car_model"></div>
     </div>
 
     <div class="text">
-
-        Настоящая анкета предоставляется клиентом
-        для подключения к бонусному проекту AUTO-STYLE.
-
-        <br><br>
-
-        Подписывая данный документ, клиент подтверждает
-        согласие на обработку персональных данных.
-
+        Подписывая данный документ, клиент подтверждает согласие
+        на обработку персональных данных.
     </div>
 
     <div class="signature">
@@ -594,23 +495,17 @@ body{
         <div style="display:flex; gap:40px;">
 
             <div style="flex:1;">
-
                 <div class="line"></div>
-
                 <div class="sign-text">
                     Подпись клиента
                 </div>
-
             </div>
 
             <div style="flex:1;">
-
                 <div class="line"></div>
-
                 <div class="sign-text">
                     Расшифровка подписи
                 </div>
-
             </div>
 
         </div>
@@ -630,40 +525,33 @@ body{
     <div class="condition">
         <div class="condition-number-print">01</div>
         <div class="condition-text-print">
-            Активация анкеты занимает до 3 рабочих дней
+            Стартовая скидка до 5%
         </div>
     </div>
 
     <div class="condition">
         <div class="condition-number-print">02</div>
         <div class="condition-text-print">
-            Стартовая скидка до 5%
+            Скидка до 7% при сумме покупок выше 1500р
         </div>
     </div>
 
     <div class="condition">
         <div class="condition-number-print">03</div>
         <div class="condition-text-print">
-            Скидка до 7% при сумме покупок выше 1500р
+            Скидка до 10% при сумме покупок выше 3000р
         </div>
     </div>
 
     <div class="condition">
         <div class="condition-number-print">04</div>
         <div class="condition-text-print">
-            Скидка до 10% при сумме покупок выше 3000р
-        </div>
-    </div>
-
-    <div class="condition">
-        <div class="condition-number-print">05</div>
-        <div class="condition-text-print">
             Скидка до 15% при сумме покупок выше 5000р
         </div>
     </div>
 
     <div class="condition">
-        <div class="condition-number-print">06</div>
+        <div class="condition-number-print">05</div>
         <div class="condition-text-print">
             Скидка до 20% при сумме покупок выше 10000р
         </div>
@@ -685,7 +573,7 @@ function openForm(){
 
 const form = document.getElementById("discountForm");
 
-form.addEventListener("submit", e => {
+form.addEventListener("submit", function(e){
 
     e.preventDefault();
 
@@ -701,15 +589,15 @@ form.addEventListener("submit", e => {
     document.getElementById("p_email").innerText =
         document.getElementById("email").value;
 
-    document.getElementById("p_avtomobil1").innerText =
-        document.getElementById("avtomobil1").value;
+    document.getElementById("print_car_brand").innerText =
+        document.getElementById("car_brand").value;
 
-    document.getElementById("p_model1").innerText =
-        document.getElementById("model1").value;
+    document.getElementById("print_car_model").innerText =
+        document.getElementById("car_model").value;
 
-    setTimeout(() => {
+    setTimeout(function(){
         window.print();
-    }, 200);
+    },200);
 
 });
 
