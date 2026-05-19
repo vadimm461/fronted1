@@ -3,421 +3,568 @@
 <head>
 
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 
 <title>AUTO-STYLE</title>
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<!-- APP ICON -->
 
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="icon"
+type="image/png"
+href="favicon.png">
+
+<link rel="apple-touch-icon"
+href="icon-512.png">
+
+<meta
+name="theme-color"
+content="#2e7d32">
+
+<meta
+name="apple-mobile-web-app-capable"
+content="yes">
+
+<meta
+name="mobile-web-app-capable"
+content="yes">
+
+<link rel="preconnect"
+href="https://fonts.googleapis.com">
+
+<link rel="preconnect"
+href="https://fonts.gstatic.com"
+crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+rel="stylesheet">
 
 <style>
 
 *,
 *::before,
 *::after{
-    box-sizing:border-box;
-    margin:0;
-    padding:0;
+box-sizing:border-box;
+margin:0;
+padding:0;
 }
 
 :root{
-    --green:#2e7d32;
-    --green-dark:#1b5e20;
-    --blue:#1976d2;
-    --bg:#f3f6fb;
-    --card:#ffffff;
-    --text:#111827;
-    --muted:#6b7280;
-    --line:#e5e7eb;
+
+--green:#2e7d32;
+
+--green-dark:#1b5e20;
+
+--blue:#1976d2;
+
+--bg:#f3f6fb;
+
+--card:#ffffff;
+
+--text:#111827;
+
+--muted:#6b7280;
+
+--line:#e5e7eb;
+
 }
 
 body{
-    font-family:'Inter',sans-serif;
-    background:var(--bg);
-    color:var(--text);
-    min-height:100vh;
-    overflow-x:hidden;
+
+font-family:'Inter',sans-serif;
+
+background:var(--bg);
+
+color:var(--text);
+
+min-height:100vh;
+
+overflow-x:hidden;
+
 }
 
-/* ================= LOGIN ================= */
+/* LOGIN */
 
 .login-screen{
-    position:fixed;
-    inset:0;
-    z-index:9999;
 
-    display:flex;
-    justify-content:center;
-    align-items:center;
+position:fixed;
 
-    background:
-        linear-gradient(135deg,#0f172a,#111827,#1b5e20);
+inset:0;
 
-    padding:20px;
+z-index:9999;
+
+display:flex;
+
+justify-content:center;
+
+align-items:center;
+
+background:
+linear-gradient(
+135deg,
+#0f172a,
+#111827,
+#1b5e20
+);
+
+padding:20px;
+
 }
 
 .login-box{
-    width:100%;
-    max-width:420px;
 
-    background:white;
+width:100%;
 
-    padding:38px 30px;
+max-width:420px;
 
-    border-radius:28px;
+background:white;
 
-    box-shadow:
-        0 25px 60px rgba(0,0,0,.35);
+padding:38px 30px;
 
-    animation:show .4s ease;
-}
+border-radius:28px;
 
-@keyframes show{
-    from{
-        opacity:0;
-        transform:translateY(20px);
-    }
-    to{
-        opacity:1;
-        transform:translateY(0);
-    }
+box-shadow:
+0 25px 60px rgba(0,0,0,.35);
+
 }
 
 .login-title{
-    font-size:34px;
-    font-weight:800;
-    margin-bottom:24px;
-    text-align:center;
-    letter-spacing:-1px;
+
+font-size:34px;
+
+font-weight:800;
+
+margin-bottom:24px;
+
+text-align:center;
+
 }
 
 .login-title span{
-    color:var(--green);
+
+color:var(--green);
+
 }
 
 select,
 input{
-    width:100%;
-    border:none;
-    background:#f8fafc;
-    border:1px solid #e5e7eb;
 
-    border-radius:18px;
+width:100%;
 
-    padding:16px;
+padding:16px;
 
-    margin-bottom:16px;
+margin-bottom:16px;
 
-    font-size:15px;
-    outline:none;
+border-radius:18px;
 
-    transition:.2s;
-}
+border:1px solid #e5e7eb;
 
-select:focus,
-input:focus{
-    border-color:var(--green);
-    background:white;
+background:#f8fafc;
+
 }
 
 .login-btn{
-    width:100%;
-    border:none;
 
-    background:
-        linear-gradient(135deg,var(--green),var(--green-dark));
+width:100%;
 
-    color:white;
+padding:16px;
 
-    padding:16px;
+border:none;
 
-    border-radius:18px;
+border-radius:18px;
 
-    font-size:15px;
-    font-weight:700;
+cursor:pointer;
 
-    cursor:pointer;
+color:white;
 
-    transition:.2s;
+font-weight:700;
+
+background:
+linear-gradient(
+135deg,
+var(--green),
+var(--green-dark)
+);
+
 }
-
-.login-btn:hover{
-    transform:translateY(-2px);
-}
-
-#errorMsg{
-    margin-top:12px;
-    color:#dc2626;
-    text-align:center;
-    font-size:14px;
-}
-
-/* ================= APP ================= */
 
 .app{
-    display:none;
+
+display:none;
+
 }
 
-/* ================= HEADER ================= */
-
 .header{
-    position:sticky;
-    top:0;
-    z-index:100;
 
-    background:rgba(255,255,255,.9);
+position:sticky;
 
-    backdrop-filter:blur(16px);
+top:0;
 
-    border-bottom:1px solid #eef2f7;
+background:
+rgba(255,255,255,.92);
 
-    padding:18px 20px;
+backdrop-filter:blur(16px);
+
+border-bottom:1px solid #eef2f7;
+
+padding:18px;
+
 }
 
 .header-inner{
-    max-width:1400px;
-    margin:auto;
 
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    gap:20px;
+max-width:1400px;
+
+margin:auto;
+
+display:flex;
+
+justify-content:space-between;
+
+align-items:center;
+
 }
 
 .logo{
-    font-size:32px;
-    font-weight:800;
-    letter-spacing:-1px;
+
+font-size:32px;
+
+font-weight:800;
+
 }
 
-.logo .green{
-    color:var(--green);
+.green{
+
+color:var(--green);
+
 }
 
 .user-box{
-    background:#f3f4f6;
-    padding:12px 16px;
-    border-radius:16px;
-    font-size:14px;
-    font-weight:600;
-}
 
-/* ================= MAIN ================= */
+background:#f3f4f6;
+
+padding:12px 16px;
+
+border-radius:16px;
+
+}
 
 .main{
-    max-width:1400px;
-    margin:auto;
-    padding:30px 20px 60px;
+
+max-width:1400px;
+
+margin:auto;
+
+padding:30px 20px 60px;
+
 }
 
-/* ================= SECTION TITLE ================= */
+/* BONUS BANNER */
+
+.news-banner{
+
+display:flex;
+
+justify-content:space-between;
+
+align-items:center;
+
+gap:18px;
+
+margin-bottom:24px;
+
+padding:18px 22px;
+
+border-radius:22px;
+
+background:
+linear-gradient(
+135deg,
+#1b5e20,
+#2e7d32
+);
+
+color:white;
+
+box-shadow:
+0 14px 30px
+rgba(0,0,0,.14);
+
+}
+
+.news-left{
+
+flex:1;
+
+}
+
+.news-badge{
+
+display:inline-block;
+
+padding:6px 10px;
+
+background:
+rgba(255,255,255,.16);
+
+border-radius:999px;
+
+font-size:10px;
+
+font-weight:800;
+
+margin-bottom:10px;
+
+}
+
+.news-title{
+
+font-size:22px;
+
+font-weight:800;
+
+margin-bottom:8px;
+
+}
+
+.news-text{
+
+font-size:13px;
+
+line-height:1.6;
+
+}
+
+.news-timer{
+
+min-width:180px;
+
+background:
+rgba(255,255,255,.12);
+
+padding:16px;
+
+border-radius:18px;
+
+text-align:center;
+
+}
+
+.days{
+
+font-size:44px;
+
+font-weight:800;
+
+}
 
 .section-title{
-    font-size:28px;
-    font-weight:800;
-    margin-bottom:24px;
-    letter-spacing:-1px;
+
+font-size:28px;
+
+font-weight:800;
+
+margin-bottom:24px;
+
 }
 
-/* ================= CALCULATORS ================= */
-
 .calculators{
-    display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(320px,1fr));
-    gap:22px;
+
+display:grid;
+
+grid-template-columns:
+repeat(
+auto-fit,
+minmax(
+320px,
+1fr
+));
+
+gap:22px;
+
 }
 
 .calculator{
-    background:var(--card);
 
-    border-radius:28px;
+background:white;
 
-    padding:24px;
+padding:24px;
 
-    border:1px solid #eef2f7;
+border-radius:28px;
 
-    box-shadow:
-        0 10px 30px rgba(0,0,0,.04);
-
-    transition:.25s;
 }
-
-.calculator:hover{
-    transform:translateY(-4px);
-}
-
 .calc-title{
-    font-size:18px;
-    font-weight:800;
-    margin-bottom:4px;
+
+font-size:18px;
+
+font-weight:800;
+
+margin-bottom:4px;
+
 }
 
 .calc-subtitle{
-    color:#dc2626;
-    font-size:14px;
-    font-weight:700;
-    margin-bottom:18px;
+
+color:#dc2626;
+
+font-size:14px;
+
+font-weight:700;
+
+margin-bottom:18px;
+
 }
 
 .sum{
-    margin-bottom:14px;
+
+margin-bottom:14px;
+
 }
 
 .btn{
-    width:100%;
 
-    border:none;
+width:100%;
 
-    padding:15px;
+border:none;
 
-    border-radius:18px;
+padding:15px;
 
-    background:
-        linear-gradient(135deg,var(--blue),#0f4fa8);
+border-radius:18px;
 
-    color:white;
+background:
+linear-gradient(
+135deg,
+var(--blue),
+#0f4fa8
+);
 
-    font-size:14px;
-    font-weight:700;
+color:white;
 
-    cursor:pointer;
+font-weight:700;
 
-    transition:.2s;
-}
+cursor:pointer;
 
-.btn:hover{
-    transform:translateY(-2px);
 }
 
 table{
-    width:100%;
-    border-collapse:collapse;
-    margin-top:18px;
+
+width:100%;
+
+border-collapse:collapse;
+
+margin-top:18px;
+
 }
 
 td{
-    padding:12px 0;
-    border-bottom:1px solid #f1f5f9;
-    font-size:14px;
+
+padding:12px 0;
+
+border-bottom:
+1px solid #f1f5f9;
+
 }
 
 .result{
-    text-align:right;
-    font-weight:700;
+
+text-align:right;
+
+font-weight:700;
+
 }
 
-/* ================= NAVIGATION BLOCKS ================= */
-
 .navigation{
-    margin-top:50px;
+
+margin-top:50px;
+
 }
 
 .menu-grid{
-    display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
-    gap:20px;
+
+display:grid;
+
+grid-template-columns:
+repeat(
+auto-fit,
+minmax(
+240px,
+1fr
+));
+
+gap:20px;
+
 }
 
 .menu-card{
-    background:white;
 
-    border-radius:28px;
+background:white;
 
-    padding:24px;
+padding:24px;
 
-    border:1px solid #eef2f7;
+border-radius:28px;
 
-    box-shadow:
-        0 10px 30px rgba(0,0,0,.04);
+text-decoration:none;
 
-    text-decoration:none;
+color:var(--text);
 
-    color:var(--text);
-
-    transition:.25s;
-}
-
-.menu-card:hover{
-    transform:translateY(-5px);
 }
 
 .menu-icon{
-    width:58px;
-    height:58px;
 
-    border-radius:18px;
+width:58px;
 
-    display:flex;
-    align-items:center;
-    justify-content:center;
+height:58px;
 
-    font-size:28px;
+display:flex;
 
-    margin-bottom:18px;
+align-items:center;
 
-    background:
-        linear-gradient(135deg,var(--green),var(--green-dark));
+justify-content:center;
 
-    color:white;
+border-radius:18px;
+
+font-size:28px;
+
+margin-bottom:18px;
+
+background:
+linear-gradient(
+135deg,
+var(--green),
+var(--green-dark)
+);
+
+color:white;
+
 }
-
-.menu-title{
-    font-size:18px;
-    font-weight:800;
-    margin-bottom:8px;
-}
-
-.menu-desc{
-    font-size:14px;
-    color:var(--muted);
-    line-height:1.6;
-}
-
-/* ================= FOOTER ================= */
 
 .footer{
-    margin-top:60px;
-    text-align:center;
-    color:#94a3b8;
-    font-size:13px;
-}
 
-/* ================= MOBILE ================= */
+margin-top:60px;
+
+text-align:center;
+
+color:#94a3b8;
+
+}
 
 @media(max-width:768px){
 
-    .header{
-        padding:14px;
-    }
+.news-banner{
 
-    .header-inner{
-        flex-direction:column;
-        align-items:flex-start;
-    }
+flex-direction:column;
 
-    .logo{
-        font-size:28px;
-    }
+align-items:flex-start;
 
-    .main{
-        padding:20px 14px 50px;
-    }
+padding:16px;
 
-    .section-title{
-        font-size:24px;
-    }
+}
 
-    .calculator{
-        padding:20px;
-        border-radius:24px;
-    }
+.news-timer{
 
-    .menu-card{
-        padding:20px;
-        border-radius:24px;
-    }
+width:100%;
+
+}
 
 }
 
@@ -426,488 +573,436 @@ td{
 
 <body>
 
-<!-- ================= LOGIN ================= -->
+<div
+class="login-screen"
+id="loginScreen">
 
-<div class="login-screen" id="loginScreen">
+<div class="login-box">
 
-    <div class="login-box">
+<div class="login-title">
 
-        <div class="login-title">
-            <span>A</span>uto-<span>S</span>tyle
-        </div>
-
-        <select id="userSelect">
-
-            <option value="cashier">
-                Кассир
-            </option>
-
-            <option value="evgeniy">
-                Евгений
-            </option>
-
-            <option value="vadim">
-                Вадим
-            </option>
-
-        </select>
-
-        <input
-            type="password"
-            id="passwordInput"
-            placeholder="Введите пароль">
-
-        <button class="login-btn" id="loginBtn">
-            ВОЙТИ
-        </button>
-
-        <div id="errorMsg"></div>
-
-    </div>
+<span>A</span>uto-
+<span>S</span>tyle
 
 </div>
 
-<!-- ================= APP ================= -->
+<select id="userSelect">
 
-<div class="app" id="app">
+<option value="cashier">
+Кассир
+</option>
 
-    <!-- HEADER -->
+<option value="evgeniy">
+Евгений
+</option>
 
-    <header class="header">
+<option value="vadim">
+Вадим
+</option>
 
-        <div class="header-inner">
+</select>
 
-            <div class="logo">
+<input
+type="password"
+id="passwordInput"
+placeholder="Введите пароль">
 
-                <span class="green">A</span>uto-
-                <span class="green">S</span>tyle
+<button
+class="login-btn"
+id="loginBtn">
 
-            </div>
+ВОЙТИ
 
-            <div class="user-box" id="currentUser">
-                👤 Пользователь
-            </div>
+</button>
 
-        </div>
+<div id="errorMsg"></div>
 
-    </header>
+</div>
 
-    <!-- MAIN -->
+</div>
 
-    <main class="main">
+<div
+class="app"
+id="app">
 
-        <!-- CALCULATORS -->
+<header class="header">
 
-        <div class="section-title">
-            Калькуляторы рассрочки
-        </div>
+<div class="header-inner">
 
-        <div class="calculators">
+<div class="logo">
 
-            <!-- AGRO -->
+<span class="green">
+A
+</span>
 
-            <div class="calculator">
+uto-
 
-                <div class="calc-title">
-                    КАЛЬКУЛЯТОР РАССРОЧКИ
-                </div>
+<span class="green">
+S
+</span>
 
-                <div class="calc-subtitle">
-                    АГРОПРОМБАНК
-                </div>
+tyle
 
-                <input type="number" class="sum">
+</div>
 
-                <button class="btn btn-calc">
-                    РАССЧИТАТЬ
-                </button>
+<div
+class="user-box"
+id="currentUser">
 
-                <table>
+👤 Пользователь
 
-                    <tr>
-                        <td>3 мес.</td>
-                        <td class="coef">0.955</td>
-                        <td class="result"></td>
-                    </tr>
+</div>
 
-                    <tr>
-                        <td>6 мес.</td>
-                        <td class="coef">0.93</td>
-                        <td class="result"></td>
-                    </tr>
+</div>
 
-                    <tr>
-                        <td>9 мес.</td>
-                        <td class="coef">0.90</td>
-                        <td class="result"></td>
-                    </tr>
+</header>
 
-                    <tr>
-                        <td>12 мес.</td>
-                        <td class="coef">0.875</td>
-                        <td class="result"></td>
-                    </tr>
+<main class="main">
 
-                </table>
+<!-- BONUS -->
 
-            </div>
+<div class="news-banner">
 
-            <!-- EXIM -->
+<div class="news-left">
 
-            <div class="calculator">
+<div class="news-badge">
 
-                <div class="calc-title">
-                    КАЛЬКУЛЯТОР РАССРОЧКИ
-                </div>
+НОВОСТЬ ДЛЯ КОМАНДЫ
 
-                <div class="calc-subtitle">
-                    ЭКСИМБАНК
-                </div>
+</div>
 
-                <input type="number" class="sum">
+<div class="news-title">
 
-                <button class="btn btn-calc">
-                    РАССЧИТАТЬ
-                </button>
+🚀 Команда,
+для вас хорошие новости
 
-                <table>
+</div>
 
-                    <tr>
-                        <td>3 мес.</td>
-                        <td class="coef">0.955</td>
-                        <td class="result"></td>
-                    </tr>
+<div class="news-text">
 
-                    <tr>
-                        <td>6 мес.</td>
-                        <td class="coef">0.93</td>
-                        <td class="result"></td>
-                    </tr>
+Запускаем
+<b>
+Бонусный проект
+</b>
 
-                    <tr>
-                        <td>9 мес.</td>
-                        <td class="coef">0.90</td>
-                        <td class="result"></td>
-                    </tr>
+—
 
-                    <tr>
-                        <td>12 мес.</td>
-                        <td class="coef">0.886</td>
-                        <td class="result"></td>
-                    </tr>
+систему
+накопительных скидок
+без привязки
+к скидочным картам.
 
-                </table>
+<br><br>
 
-            </div>
+Привязка клиента:
 
-            <!-- SBER -->
+<br>
 
-            <div class="calculator">
+• по ФИО
 
-                <div class="calc-title">
-                    КАЛЬКУЛЯТОР РАССРОЧКИ
-                </div>
+<br>
 
-                <div class="calc-subtitle">
-                    СБЕРБАНК
-                </div>
+• по номеру телефона
 
-                <input type="number" class="sum">
+<br><br>
 
-                <button class="btn btn-calc">
-                    РАССЧИТАТЬ
-                </button>
+Все покупки
+сохраняются автоматически.
 
-                <table>
+</div>
 
-                    <tr>
-                        <td>3 мес.</td>
-                        <td class="coef">0.96</td>
-                        <td class="result"></td>
-                    </tr>
+</div>
 
-                    <tr>
-                        <td>6 мес.</td>
-                        <td class="coef">0.93</td>
-                        <td class="result"></td>
-                    </tr>
+<div class="news-timer">
 
-                    <tr>
-                        <td>9 мес.</td>
-                        <td class="coef">0.90</td>
-                        <td class="result"></td>
-                    </tr>
+<div>
 
-                    <tr>
-                        <td>12 мес.</td>
-                        <td class="coef">0.88</td>
-                        <td class="result"></td>
-                    </tr>
+СТАРТ ЧЕРЕЗ
 
-                </table>
+</div>
 
-            </div>
+<div
+class="days"
+id="days">
 
-        </div>
+31
 
-        <!-- NAVIGATION -->
+</div>
 
-        <div class="navigation">
+<div>
 
-            <div class="section-title">
-                Инструменты AUTO-STYLE
-            </div>
+день
 
-            <div class="menu-grid">
+</div>
 
-                <a href="beznal.html" class="menu-card">
+</div>
 
-                    <div class="menu-icon">💳</div>
+</div>
 
-                    <div class="menu-title">
-                        Безнал
-                    </div>
+<div class="section-title">
 
-                    <div class="menu-desc">
-                        Оформление безналичной оплаты и документов.
-                    </div>
+Калькуляторы рассрочки
 
-                </a>
+</div>
 
-                <a href="smena.html" class="menu-card">
+<div class="calculators"><!-- AGRO -->
 
-                    <div class="menu-icon">📊</div>
+<div class="calculator">
 
-                    <div class="menu-title">
-                        Закрытие смены
-                    </div>
+<div class="calc-title">
+КАЛЬКУЛЯТОР РАССРОЧКИ
+</div>
 
-                    <div class="menu-desc">
-                        Быстрое оформление и завершение смены.
-                    </div>
+<div class="calc-subtitle">
+АГРОПРОМБАНК
+</div>
 
-                </a>
+<input
+type="number"
+class="sum">
 
-                <a href="discount.html" class="menu-card">
+<button
+class="btn btn-calc">
 
-                    <div class="menu-icon">🎫</div>
+РАССЧИТАТЬ
 
-                    <div class="menu-title">
-                        Скидочная карта
-                    </div>
+</button>
 
-                    <div class="menu-desc">
-                        Создание и печать анкеты клиента.
-                    </div>
+<table>
 
-                </a>
+<tr>
+<td>3 мес.</td>
+<td class="coef">0.955</td>
+<td class="result"></td>
+</tr>
 
-                <a href="baza.html" class="menu-card">
+<tr>
+<td>6 мес.</td>
+<td class="coef">0.93</td>
+<td class="result"></td>
+</tr>
 
-                    <div class="menu-icon">📚</div>
+<tr>
+<td>9 мес.</td>
+<td class="coef">0.90</td>
+<td class="result"></td>
+</tr>
 
-                    <div class="menu-title">
-                        База знаний
-                    </div>
+<tr>
+<td>12 мес.</td>
+<td class="coef">0.875</td>
+<td class="result"></td>
+</tr>
 
-                    <div class="menu-desc">
-                        Инструкции, масла и техническая информация.
-                    </div>
+</table>
 
-                </a>
+</div>
 
-                <a href="pass.html" class="menu-card">
+<!-- EXIM -->
 
-                    <div class="menu-icon">🔐</div>
+<div class="calculator">
 
-                    <div class="menu-title">
-                        Пароли
-                    </div>
+<div class="calc-title">
+КАЛЬКУЛЯТОР РАССРОЧКИ
+</div>
 
-                    <div class="menu-desc">
-                        Доступы и служебная информация.
-                    </div>
+<div class="calc-subtitle">
+ЭКСИМБАНК
+</div>
 
-                </a>
+<input
+type="number"
+class="sum">
 
-                <a href="#" class="menu-card" onclick="logout()">
+<button
+class="btn btn-calc">
+РАССЧИТАТЬ
+</button>
 
-                    <div class="menu-icon">🚪</div>
+</div>
 
-                    <div class="menu-title">
-                        Выход
-                    </div>
+<!-- SBER -->
 
-                    <div class="menu-desc">
-                        Завершить текущую сессию пользователя.
-                    </div>
+<div class="calculator">
 
-                </a>
+<div class="calc-title">
+КАЛЬКУЛЯТОР РАССРОЧКИ
+</div>
 
-            </div>
+<div class="calc-subtitle">
+СБЕРБАНК
+</div>
 
-        </div>
+<input
+type="number"
+class="sum">
 
-        <div class="footer">
-            AUTO-STYLE © 2026
-        </div>
+<button
+class="btn btn-calc">
+РАССЧИТАТЬ
+</button>
 
-    </main>
+</div>
+
+</div>
+
+<div class="navigation">
+
+<div class="section-title">
+
+Инструменты AUTO-STYLE
+
+</div>
+
+<div class="menu-grid">
+
+<a
+href="beznal.html"
+class="menu-card">
+
+<div class="menu-icon">
+💳
+</div>
+
+Безнал
+
+</a>
+
+<a
+href="smena.html"
+class="menu-card">
+
+<div class="menu-icon">
+📊
+</div>
+
+Закрытие смены
+
+</a>
+
+<a
+href="discount.html"
+class="menu-card">
+
+<div class="menu-icon">
+🎫
+</div>
+
+Скидочная карта
+
+</a>
+
+<a
+href="baza.html"
+class="menu-card">
+
+<div class="menu-icon">
+📚
+</div>
+
+База знаний
+
+</a>
+
+<a
+href="pass.html"
+class="menu-card">
+
+<div class="menu-icon">
+🔐
+</div>
+
+Пароли
+
+</a>
+
+<a
+href="#"
+onclick="logout()"
+class="menu-card">
+
+<div class="menu-icon">
+🚪
+</div>
+
+Выход
+
+</a>
+
+</div>
+
+</div>
+
+<div class="footer">
+
+AUTO-STYLE © 2026
+
+</div>
+
+</main>
 
 </div>
 
 <script>
 
-const users = {
+const endDate =
+Date.now()
++
+31
+*
+24
+*
+60
+*
+60
+*
+1000;
 
-    cashier:{
-        name:"Кассир",
-        pass:"2012"
-    },
+setInterval(
+()=>{
 
-    evgeniy:{
-        name:"Евгений",
-        pass:"0186"
-    },
+const days =
+Math.max(
+0,
 
-    vadim:{
-        name:"Вадим",
-        pass:"2385"
-    }
+Math.ceil(
 
-};
+(
+endDate
+-
+Date.now()
 
-const loginScreen =
-    document.getElementById("loginScreen");
+)
 
-const app =
-    document.getElementById("app");
+/
 
-const userSelect =
-    document.getElementById("userSelect");
+86400000
 
-const passwordInput =
-    document.getElementById("passwordInput");
+)
 
-const loginBtn =
-    document.getElementById("loginBtn");
+);
 
-const errorMsg =
-    document.getElementById("errorMsg");
+const el =
+document
+.getElementById(
+"days"
+);
 
-const currentUser =
-    document.getElementById("currentUser");
+if(el){
 
-/* ================= SESSION ================= */
-
-const session =
-    JSON.parse(localStorage.getItem("session"));
-
-if(session && session.expire > Date.now()){
-
-    openApp(session.name);
-
-}
-
-/* ================= LOGIN ================= */
-
-function login(){
-
-    const user = userSelect.value;
-
-    if(passwordInput.value === users[user].pass){
-
-        const expire =
-            Date.now() + 24 * 60 * 60 * 1000;
-
-        localStorage.setItem(
-            "session",
-            JSON.stringify({
-                name:users[user].name,
-                expire
-            })
-        );
-
-        openApp(users[user].name);
-
-    }else{
-
-        errorMsg.textContent =
-            "Неверный пароль";
-
-    }
+el.textContent =
+days;
 
 }
 
-function openApp(name){
+},
 
-    loginScreen.style.display = "none";
+1000
 
-    app.style.display = "block";
-
-    currentUser.innerHTML =
-        "👤 " + name;
-
-}
-
-function logout(){
-
-    localStorage.removeItem("session");
-
-    location.reload();
-
-}
-
-loginBtn.onclick = login;
-
-passwordInput.addEventListener("keyup", e => {
-
-    if(e.key === "Enter"){
-
-        login();
-
-    }
-
-});
-
-/* ================= CALCULATORS ================= */
-
-document.querySelectorAll(".calculator")
-.forEach(calc => {
-
-    calc.querySelector(".btn-calc")
-    .onclick = function(){
-
-        const sum =
-            parseFloat(
-                calc.querySelector(".sum").value
-            );
-
-        if(isNaN(sum)) return;
-
-        calc.querySelectorAll(".coef")
-        .forEach((coef,i) => {
-
-            const value =
-                sum / parseFloat(coef.textContent);
-
-            calc.querySelectorAll(".result")[i]
-            .textContent =
-                value.toLocaleString(
-                    "ru-RU",
-                    {
-                        minimumFractionDigits:2,
-                        maximumFractionDigits:2
-                    }
-                );
-
-        });
-
-    };
-
-});
+);
 
 </script>
 
 </body>
+
 </html>
