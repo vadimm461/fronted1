@@ -421,6 +421,64 @@ td{
 
 }
 
+.news-banner{
+    display:flex;
+    justify-content:space-between;
+    gap:20px;
+
+    margin-bottom:24px;
+    padding:20px;
+
+    border-radius:22px;
+
+    background:linear-gradient(135deg,#1b5e20,#2e7d32);
+    color:white;
+
+    box-shadow:0 14px 30px rgba(0,0,0,.15);
+}
+
+.news-left{ flex:1; }
+
+.news-badge{
+    display:inline-block;
+    padding:6px 10px;
+    background:rgba(255,255,255,.15);
+    border-radius:999px;
+    font-size:11px;
+    font-weight:800;
+    margin-bottom:10px;
+}
+
+.news-title{
+    font-size:20px;
+    font-weight:800;
+    margin-bottom:10px;
+}
+
+.news-text{
+    font-size:14px;
+    line-height:1.6;
+}
+
+.news-timer{
+    min-width:160px;
+    text-align:center;
+    background:rgba(255,255,255,.12);
+    padding:16px;
+    border-radius:18px;
+}
+
+.days{
+    font-size:42px;
+    font-weight:800;
+}
+
+@media(max-width:768px){
+    .news-banner{
+        flex-direction:column;
+    }
+}
+
 </style>
 </head>
 
@@ -501,7 +559,50 @@ td{
         <div class="section-title">
             Калькуляторы рассрочки
         </div>
+<!-- NEWS BANNER -->
 
+<div class="news-banner">
+
+    <div class="news-left">
+
+        <div class="news-badge">
+            НОВОСТЬ ДЛЯ КОМАНДЫ
+        </div>
+
+        <div class="news-title">
+            🚀 Команда, для вас хорошие новости
+        </div>
+
+        <div class="news-text">
+
+            Запускаем <b>Бонусный проект</b> — систему накопительных скидок без карт.
+
+            <br><br>
+
+            Привязка клиента:
+            <br>
+            • по ФИО<br>
+            • по номеру телефона
+
+            <br><br>
+
+            Все покупки сохраняются автоматически.
+
+        </div>
+
+    </div>
+
+    <div class="news-timer">
+
+        <div>СТАРТ ЧЕРЕЗ</div>
+
+        <div class="days" id="days">31</div>
+
+        <div>день</div>
+
+    </div>
+
+</div>
         <div class="calculators">
 
             <!-- AGRO -->
