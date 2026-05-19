@@ -499,15 +499,15 @@ body{
                     </div>
 
 
-                    <div class="field full">
+                    <div class="field">
                         <label>Марка автомобиля</label>
-                        <input id="automobil1" type="avtomobil">
+                        <input id="avtomobil1" type="avtomobil">
                     </div>
                     
 
-                    <div class="field full">
+                    <div class="field">
                         <label>Модель авто и год</label></label>
-                        <input id="model1" type="mode">
+                        <input id="model1" type="model">
                     </div>
                     
                 </div>
@@ -570,11 +570,11 @@ body{
     </div>
      <div class="row">
         <div class="row-label">Марка автомобиля</div>
-        <div class="row-value" id="p_automobil1"></div>
+        <div class="row-value" id="p_avtomobil1"></div>
     </div>
      <div class="row">
         <div class="row-label">Модель и год</div>
-        <div class="row-value" id="p_model"></div>
+        <div class="row-value" id="p_model1"></div>
     </div>
 
     <div class="text">
@@ -743,8 +743,8 @@ form.addEventListener("submit", e => {
     document.getElementById("p_email").innerText =
         document.getElementById("email").value;
     
-    document.getElementById("p_automobil1").innerText =
-        document.getElementById("automobil1").value;
+    document.getElementById("p_avtomobil1").innerText =
+        document.getElementById("avtomobil1").value;
 
     document.getElementById("p_model1").innerText =
         document.getElementById("model1").value;
