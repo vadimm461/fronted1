@@ -436,25 +436,25 @@ body{
             <div class="condition-box">
                 <div class="condition-number">02</div>
                 <div class="condition-text">
-                    Для подключения к "бонуснуму проекту" клиент должен совершить покупку на сумму минимум 1000р, это может быть как разовая покупка так и несколько покупок ( при предьявлении чека)
+                    Для подключения к бонусному проекту клиент должен совершить покупку на сумму минимум 1000р
                 </div>
             </div>
 
             <div class="condition-box">
                 <div class="condition-number">03</div>
                 <div class="condition-text">
-                    Стартовая скидка проекта до 5%
-                    Скидка до 7% при превышении порога покупок на сумму 1500р
-                    Скидка до 10% при превышении порога покупок на сумму 3000р
-                    Скидка до 15% при привешении порога покупок на сумму 5000р
-                    Скидка до 20% при привышении порога покупок на сумму 10000р
+                    Стартовая скидка до 5%<br>
+                    До 7% — от 1500р<br>
+                    До 10% — от 3000р<br>
+                    До 15% — от 5000р<br>
+                    До 20% — от 10000р
                 </div>
             </div>
 
             <div class="condition-box">
                 <div class="condition-number">04</div>
                 <div class="condition-text">
-                    При каждой последующей покупке клиент обязуется называть одно из условий его скидки (ФИО либо номер телефона) для сложения сумму скидки.
+                    При каждой покупке клиент должен назвать ФИО или номер телефона
                 </div>
             </div>
 
@@ -498,18 +498,16 @@ body{
                         <input id="email" type="email">
                     </div>
 
-
                     <div class="field">
                         <label>Марка автомобиля</label>
-                        <input id="avtomobil1" type="avtomobil">
+                        <input id="avtomobil1" type="text">
                     </div>
-                    
 
                     <div class="field">
-                        <label>Модель авто и год</label></label>
-                        <input id="model1" type="model">
+                        <label>Модель авто и год</label>
+                        <input id="model1" type="text">
                     </div>
-                    
+
                 </div>
 
                 <div class="actions">
@@ -568,11 +566,13 @@ body{
         <div class="row-label">Электронная почта</div>
         <div class="row-value" id="p_email"></div>
     </div>
-     <div class="row">
+
+    <div class="row">
         <div class="row-label">Марка автомобиля</div>
         <div class="row-value" id="p_avtomobil1"></div>
     </div>
-     <div class="row">
+
+    <div class="row">
         <div class="row-label">Модель и год</div>
         <div class="row-value" id="p_model1"></div>
     </div>
@@ -586,8 +586,7 @@ body{
 
         Подписывая данный документ, клиент подтверждает
         согласие на обработку персональных данных.
-        
-        Предоставленные персональные данные используются исключительно внутри магазина  Auto-Style и не передаются третьим лицам.
+
     </div>
 
     <div class="signature">
@@ -615,14 +614,6 @@ body{
             </div>
 
         </div>
-
-    </div>
-
-    <div class="footer">
-
-        
-
-        <span>01</span>
 
     </div>
 
@@ -660,55 +651,22 @@ body{
     <div class="condition">
         <div class="condition-number-print">04</div>
         <div class="condition-text-print">
-             Скидка до 10% при сумме покупок выше 3000р
+            Скидка до 10% при сумме покупок выше 3000р
         </div>
     </div>
 
-       <div class="condition">
+    <div class="condition">
         <div class="condition-number-print">05</div>
         <div class="condition-text-print">
-             Скидка до 15% при сумме покупок выше 5000р
+            Скидка до 15% при сумме покупок выше 5000р
         </div>
     </div>
 
-   <div class="condition">
+    <div class="condition">
         <div class="condition-number-print">06</div>
         <div class="condition-text-print">
-             Скидка до 20% при сумме покупок выше 10000р
+            Скидка до 20% при сумме покупок выше 10000р
         </div>
-    </div>
-    
-    <div class="warning">
-
-        <div class="warning-title">
-            ВАЖНО
-        </div>
-
-        <div class="warning-text">
-
-            Магазин AUTO-STYLE оставляет за собой право
-            изменять условия бонусного проекта без предварительного уведомления.
-
-        </div>
-
-    </div>
-
-    <div class="signature">
-
-        <div class="line"></div>
-
-        <div class="sign-text">
-            Подпись клиента / дата
-        </div>
-
-    </div>
-
-    <div class="footer">
-
-        <span>AUTO-STYLE</span>
-
-        <span>02</span>
-
     </div>
 
 </div>
@@ -742,12 +700,12 @@ form.addEventListener("submit", e => {
 
     document.getElementById("p_email").innerText =
         document.getElementById("email").value;
-    
+
     document.getElementById("p_avtomobil1").innerText =
         document.getElementById("avtomobil1").value;
 
-    document.getElementById("p_model").innerText =
-        document.getElementById("model").value;
+    document.getElementById("p_model1").innerText =
+        document.getElementById("model1").value;
 
     setTimeout(() => {
         window.print();
