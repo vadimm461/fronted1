@@ -1,358 +1,470 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Discount Form</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>discount.html</title>
 
-  <style>
-    *{
-      margin:0;
-      padding:0;
-      box-sizing:border-box;
-      font-family:Arial,sans-serif;
-    }
+<style>
 
-    body{
-      background:#111827;
-      color:white;
-      min-height:100vh;
-      padding:20px;
-    }
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial,sans-serif;
+}
 
-    .container{
-      max-width:900px;
-      margin:0 auto;
-    }
+body{
+    background:#111827;
+    color:white;
+    padding:20px;
+}
 
-    .topbar{
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      margin-bottom:25px;
+.container{
+    max-width:900px;
+    margin:0 auto;
+}
+
+.topbar{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:25px;
+}
+
+.title{
+    font-size:28px;
+    font-weight:bold;
+}
+
+.back-btn{
+    background:#374151;
+    border:none;
+    color:white;
+    padding:12px 18px;
+    border-radius:10px;
+    cursor:pointer;
+}
+
+.back-btn:hover{
+    background:#4b5563;
+}
+
+.card{
+    background:#1f2937;
+    padding:25px;
+    border-radius:18px;
+}
+
+.grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:20px;
+}
+
+.full{
+    grid-column:1/-1;
+}
+
+.field{
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+}
+
+.field label{
+    color:#d1d5db;
+    font-size:14px;
+}
+
+.field input{
+    background:#111827;
+    border:1px solid #374151;
+    color:white;
+    padding:12px;
+    border-radius:10px;
+    outline:none;
+    font-size:15px;
+}
+
+.field input:focus{
+    border-color:#2563eb;
+}
+
+.actions{
+    margin-top:25px;
+    display:flex;
+    gap:15px;
+}
+
+.btn{
+    border:none;
+    padding:14px 22px;
+    border-radius:12px;
+    cursor:pointer;
+    color:white;
+    font-size:15px;
+    font-weight:bold;
+}
+
+.save-btn{
+    background:#2563eb;
+}
+
+.print-btn{
+    background:#059669;
+}
+
+.history{
+    margin-top:35px;
+}
+
+.history-list{
+    display:flex;
+    flex-direction:column;
+    gap:15px;
+    margin-top:15px;
+}
+
+.history-item{
+    background:#1f2937;
+    border:1px solid #374151;
+    border-radius:12px;
+    padding:15px;
+}
+
+.print-document{
+    display:none;
+}
+
+.signature-zone{
+    margin-top:50px;
+}
+
+.signature-line{
+    border-bottom:1px solid black;
+    margin-top:35px;
+}
+
+.signature-text{
+    display:flex;
+    justify-content:space-between;
+    margin-top:8px;
+    font-size:14px;
+}
+
+@media(max-width:768px){
+
+    .grid{
+        grid-template-columns:1fr;
     }
 
     .title{
-      font-size:28px;
-      font-weight:bold;
-    }
-
-    .back-btn{
-      background:#374151;
-      border:none;
-      color:white;
-      padding:12px 18px;
-      border-radius:10px;
-      cursor:pointer;
-      font-size:15px;
-    }
-
-    .back-btn:hover{
-      background:#4b5563;
-    }
-
-    .card{
-      background:#1f2937;
-      padding:25px;
-      border-radius:18px;
-      box-shadow:0 0 20px rgba(0,0,0,.35);
-    }
-
-    .grid{
-      display:grid;
-      grid-template-columns:1fr 1fr;
-      gap:20px;
-    }
-
-    .full{
-      grid-column:1/-1;
-    }
-
-    .field{
-      display:flex;
-      flex-direction:column;
-      gap:8px;
-    }
-
-    .field label{
-      color:#d1d5db;
-      font-size:14px;
-    }
-
-    .field input,
-    .field textarea{
-      background:#111827;
-      border:1px solid #374151;
-      color:white;
-      padding:12px;
-      border-radius:10px;
-      outline:none;
-      font-size:15px;
-    }
-
-    .field input:focus,
-    .field textarea:focus{
-      border-color:#2563eb;
-    }
-
-    textarea{
-      resize:none;
-      min-height:100px;
-    }
-
-    .actions{
-      margin-top:25px;
-      display:flex;
-      gap:15px;
-      flex-wrap:wrap;
-    }
-
-    .btn{
-      border:none;
-      padding:14px 22px;
-      border-radius:12px;
-      cursor:pointer;
-      color:white;
-      font-size:15px;
-      font-weight:bold;
-    }
-
-    .save-btn{
-      background:#2563eb;
-    }
-
-    .save-btn:hover{
-      background:#1d4ed8;
-    }
-
-    .print-btn{
-      background:#059669;
-    }
-
-    .print-btn:hover{
-      background:#047857;
-    }
-
-    .history{
-      margin-top:35px;
-    }
-
-    .history h2{
-      margin-bottom:15px;
-    }
-
-    .history-list{
-      display:flex;
-      flex-direction:column;
-      gap:15px;
-    }
-
-    .history-item{
-      background:#1f2937;
-      border:1px solid #374151;
-      border-radius:12px;
-      padding:15px;
-    }
-
-    .history-item p{
-      margin-bottom:5px;
-    }
-
-    @media(max-width:768px){
-      .grid{
-        grid-template-columns:1fr;
-      }
-
-      .title{
         font-size:22px;
-      }
     }
 
-    @media print{
-      body{
+}
+
+@media print{
+
+    body{
         background:white;
         color:black;
-      }
+        padding:0;
+    }
 
-      .topbar,
-      .actions,
-      .history{
+    .container{
         display:none;
-      }
-
-      .card{
-        background:white;
-        box-shadow:none;
-        border:1px solid black;
-      }
-
-      .field input,
-      .field textarea{
-        color:black;
-        background:white;
-        border:1px solid black;
-      }
     }
 
-  </style>
+    .print-document{
+        display:block;
+        padding:40px;
+        color:black;
+    }
+
+    .print-title{
+        text-align:center;
+        font-size:24px;
+        font-weight:bold;
+        margin-bottom:25px;
+    }
+
+    .print-subtitle{
+        text-align:center;
+        margin-bottom:35px;
+        font-size:15px;
+    }
+
+    .print-row{
+        margin-bottom:18px;
+        font-size:17px;
+    }
+
+    .agreement{
+        margin-top:35px;
+        line-height:1.7;
+        font-size:15px;
+    }
+
+}
+
+</style>
 </head>
+
 <body>
 
 <div class="container">
 
-  <div class="topbar">
-    <button class="back-btn" onclick="goBack()">< Назад</button>
-    <div class="title">Анкета покупателя</div>
-  </div>
+    <div class="topbar">
+        <button class="back-btn" onclick="goBack()">← Назад</button>
+        <div class="title">Анкета покупателя</div>
+    </div>
 
-  <div class="card">
+    <div class="card">
 
-    <form id="discountForm">
+        <form id="discountForm">
 
-      <div class="grid">
+            <div class="grid">
 
-        <div class="field full">
-          <label>1. ФИО покупателя</label>
-          <input type="text" id="fullname" required>
+                <div class="field full">
+                    <label>1. ФИО покупателя</label>
+                    <input type="text" id="fullname" required>
+                </div>
+
+                <div class="field">
+                    <label>2. Дата рождения</label>
+                    <input type="date" id="birthdate" required>
+                </div>
+
+                <div class="field">
+                    <label>3. Марка автомобиля</label>
+                    <input type="text" id="brand" required>
+                </div>
+
+                <div class="field full">
+                    <label>4. Модель и год автомобиля</label>
+                    <input type="text" id="model" required>
+                </div>
+
+                <div class="field">
+                    <label>5. Контактный телефон</label>
+                    <input type="tel" id="phone" required>
+                </div>
+
+                <div class="field">
+                    <label>6. Электронная почта</label>
+                    <input type="email" id="email" required>
+                </div>
+
+            </div>
+
+            <div class="actions">
+                <button type="submit" class="btn save-btn">
+                    Готово
+                </button>
+
+                <button type="button"
+                        class="btn print-btn"
+                        onclick="window.print()">
+                    Печать
+                </button>
+            </div>
+
+        </form>
+
+    </div>
+
+    <div class="history">
+
+        <h2>История анкет</h2>
+
+        <div class="history-list" id="historyList"></div>
+
+    </div>
+
+</div>
+
+<!-- ДОКУМЕНТ ДЛЯ ПЕЧАТИ -->
+
+<div class="print-document" id="printDocument">
+
+    <div class="print-title">
+        АНКЕТА КЛИЕНТА НА ПРЕДОСТАВЛЕНИЕ СКИДКИ
+    </div>
+
+    <div class="print-subtitle">
+        Магазин AUTO-STYLE
+    </div>
+
+    <div class="print-row">
+        <strong>ФИО клиента:</strong>
+        <span id="p_fullname"></span>
+    </div>
+
+    <div class="print-row">
+        <strong>Дата рождения:</strong>
+        <span id="p_birthdate"></span>
+    </div>
+
+    <div class="print-row">
+        <strong>Марка автомобиля:</strong>
+        <span id="p_brand"></span>
+    </div>
+
+    <div class="print-row">
+        <strong>Модель и год автомобиля:</strong>
+        <span id="p_model"></span>
+    </div>
+
+    <div class="print-row">
+        <strong>Контактный телефон:</strong>
+        <span id="p_phone"></span>
+    </div>
+
+    <div class="print-row">
+        <strong>Электронная почта:</strong>
+        <span id="p_email"></span>
+    </div>
+
+    <div class="agreement">
+
+        Настоящая анкета предоставляется клиентом
+        для получения скидки в магазине
+        <strong>AUTO-STYLE</strong>.
+
+        <br><br>
+
+        Предоставленные персональные данные
+        используются исключительно внутри
+        магазина AUTO-STYLE и не передаются
+        третьим лицам.
+
+        <br><br>
+
+        Подписывая данный документ,
+        клиент подтверждает свое согласие
+        на обработку персональных данных
+        магазином AUTO-STYLE.
+
+    </div>
+
+    <div class="signature-zone">
+
+        <div class="signature-line"></div>
+
+        <div class="signature-text">
+            <span>Подпись клиента</span>
+            <span>Расшифровка подписи</span>
         </div>
 
-        <div class="field">
-          <label>2. Дата рождения</label>
-          <input type="date" id="birthdate" required>
-        </div>
-
-        <div class="field">
-          <label>3. Марка автомобиля</label>
-          <input type="text" id="brand" required>
-        </div>
-
-        <div class="field full">
-          <label>4. Модель и год автомобиля</label>
-          <input type="text" id="model" placeholder="Например: BMW X5 2020" required>
-        </div>
-
-        <div class="field">
-          <label>5. Контактный телефон</label>
-          <input type="tel" id="phone" required>
-        </div>
-
-        <div class="field">
-          <label>6. Электронная почта</label>
-          <input type="email" id="email" required>
-        </div>
-
-        <div class="field full">
-          <label>7. Подпись клиента</label>
-          <textarea id="signature" placeholder="Введите подпись клиента" required></textarea>
-        </div>
-
-      </div>
-
-      <div class="actions">
-        <button type="submit" class="btn save-btn">Готово</button>
-        <button type="button" class="btn print-btn" onclick="window.print()">Печать</button>
-      </div>
-
-    </form>
-
-  </div>
-
-  <div class="history">
-    <h2>История анкет</h2>
-
-    <div class="history-list" id="historyList"></div>
-  </div>
+    </div>
 
 </div>
 
 <script>
 
-  const form = document.getElementById('discountForm');
-  const historyList = document.getElementById('historyList');
+const form = document.getElementById('discountForm');
+const historyList = document.getElementById('historyList');
 
-  function goBack(){
+function goBack(){
     window.history.back();
-  }
+}
 
-  function loadHistory(){
+function loadHistory(){
 
     const history =
-      JSON.parse(localStorage.getItem('discountHistory')) || [];
+        JSON.parse(localStorage.getItem('discountHistory')) || [];
 
     historyList.innerHTML = '';
 
     history.slice().reverse().forEach(item => {
 
-      const div = document.createElement('div');
+        const div = document.createElement('div');
 
-      div.className = 'history-item';
+        div.className = 'history-item';
 
-      div.innerHTML = `
-        <p><strong>ФИО:</strong> ${item.fullname}</p>
-        <p><strong>Дата рождения:</strong> ${item.birthdate}</p>
-        <p><strong>Автомобиль:</strong> ${item.brand} ${item.model}</p>
-        <p><strong>Телефон:</strong> ${item.phone}</p>
-        <p><strong>Email:</strong> ${item.email}</p>
-        <p><strong>Дата:</strong> ${item.created}</p>
-      `;
+        div.innerHTML = `
+            <p><strong>ФИО:</strong> ${item.fullname}</p>
+            <p><strong>Автомобиль:</strong> ${item.brand} ${item.model}</p>
+            <p><strong>Телефон:</strong> ${item.phone}</p>
+            <p><strong>Дата:</strong> ${item.created}</p>
+        `;
 
-      historyList.appendChild(div);
+        historyList.appendChild(div);
 
     });
 
-  }
+}
 
-  form.addEventListener('submit', function(e){
+form.addEventListener('submit', function(e){
 
     e.preventDefault();
 
     const data = {
 
-      fullname:
-        document.getElementById('fullname').value,
+        fullname:
+            document.getElementById('fullname').value,
 
-      birthdate:
-        document.getElementById('birthdate').value,
+        birthdate:
+            document.getElementById('birthdate').value,
 
-      brand:
-        document.getElementById('brand').value,
+        brand:
+            document.getElementById('brand').value,
 
-      model:
-        document.getElementById('model').value,
+        model:
+            document.getElementById('model').value,
 
-      phone:
-        document.getElementById('phone').value,
+        phone:
+            document.getElementById('phone').value,
 
-      email:
-        document.getElementById('email').value,
+        email:
+            document.getElementById('email').value,
 
-      signature:
-        document.getElementById('signature').value,
-
-      created:
-        new Date().toLocaleString('ru-RU')
+        created:
+            new Date().toLocaleString('ru-RU')
 
     };
 
     const history =
-      JSON.parse(localStorage.getItem('discountHistory')) || [];
+        JSON.parse(localStorage.getItem('discountHistory')) || [];
 
     history.push(data);
 
     localStorage.setItem(
-      'discountHistory',
-      JSON.stringify(history)
+        'discountHistory',
+        JSON.stringify(history)
     );
 
     loadHistory();
 
+    // данные в печатный документ
+
+    document.getElementById('p_fullname').innerText =
+        data.fullname;
+
+    document.getElementById('p_birthdate').innerText =
+        data.birthdate;
+
+    document.getElementById('p_brand').innerText =
+        data.brand;
+
+    document.getElementById('p_model').innerText =
+        data.model;
+
+    document.getElementById('p_phone').innerText =
+        data.phone;
+
+    document.getElementById('p_email').innerText =
+        data.email;
+
     setTimeout(() => {
-      window.print();
+        window.print();
     }, 300);
 
-  });
+});
 
-  loadHistory();
+loadHistory();
 
 </script>
 
