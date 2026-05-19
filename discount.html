@@ -2,8 +2,10 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>discount.html</title>
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0">
+
+<title>Анкета клиента</title>
 
 <style>
 
@@ -11,18 +13,17 @@
     margin:0;
     padding:0;
     box-sizing:border-box;
-    font-family:Arial,sans-serif;
 }
 
 body{
     background:#f3f4f6;
+    font-family:Arial,sans-serif;
     color:#111827;
-    padding:15px;
+    padding:20px;
 }
 
 .container{
-    width:100%;
-    max-width:900px;
+    max-width:950px;
     margin:0 auto;
 }
 
@@ -31,36 +32,37 @@ body{
     justify-content:space-between;
     align-items:center;
     gap:15px;
-    margin-bottom:25px;
     flex-wrap:wrap;
+    margin-bottom:25px;
 }
 
 .title{
-    font-size:28px;
-    font-weight:bold;
+    font-size:30px;
+    font-weight:700;
     color:#111827;
 }
 
 .back-btn{
-    background:#2563eb;
-    border:none;
+    background:#1d4ed8;
     color:white;
-    padding:12px 18px;
-    border-radius:10px;
+    border:none;
+    border-radius:12px;
+    padding:12px 20px;
     cursor:pointer;
     font-size:15px;
+    font-weight:600;
     transition:.2s;
 }
 
 .back-btn:hover{
-    background:#1d4ed8;
+    background:#1e40af;
 }
 
 .card{
     background:white;
-    padding:25px;
-    border-radius:20px;
-    box-shadow:0 5px 25px rgba(0,0,0,.08);
+    border-radius:24px;
+    padding:30px;
+    box-shadow:0 10px 40px rgba(0,0,0,.08);
 }
 
 .grid{
@@ -80,18 +82,17 @@ body{
 }
 
 .field label{
-    color:#374151;
     font-size:14px;
+    color:#374151;
     font-weight:600;
 }
 
 .field input{
     width:100%;
-    background:#f9fafb;
     border:1px solid #d1d5db;
-    color:#111827;
-    padding:14px;
-    border-radius:12px;
+    background:#f9fafb;
+    padding:15px;
+    border-radius:14px;
     outline:none;
     font-size:15px;
     transition:.2s;
@@ -103,7 +104,7 @@ body{
 }
 
 .actions{
-    margin-top:25px;
+    margin-top:30px;
     display:flex;
     gap:15px;
     flex-wrap:wrap;
@@ -111,12 +112,12 @@ body{
 
 .btn{
     border:none;
-    padding:14px 22px;
-    border-radius:12px;
-    cursor:pointer;
+    border-radius:14px;
+    padding:15px 24px;
     color:white;
+    cursor:pointer;
     font-size:15px;
-    font-weight:bold;
+    font-weight:700;
     transition:.2s;
 }
 
@@ -140,47 +141,183 @@ body{
     display:none;
 }
 
-.signature-zone{
-    margin-top:60px;
-}
+/* ========================= */
+/* ======== PRINT ========== */
+/* ========================= */
 
-.signature-line{
-    border-bottom:1px solid black;
-    margin-top:40px;
-}
+@media print{
 
-.signature-text{
-    display:flex;
-    justify-content:space-between;
-    margin-top:8px;
-    font-size:14px;
-}
+    @page{
+        size:A4;
+        margin:22mm 18mm 22mm 18mm;
+    }
 
-@media(max-width:992px){
+    body{
+        background:white;
+        color:#000;
+        padding:0;
+        font-family:"Times New Roman", serif;
+        -webkit-print-color-adjust:exact;
+        print-color-adjust:exact;
+    }
 
     .container{
-        max-width:100%;
+        display:none;
+    }
+
+    .print-document{
+        display:block;
+        width:100%;
+        color:#000;
+    }
+
+    .second-page{
+        page-break-before:always;
+    }
+
+    /* ===== HEADER ===== */
+
+    .print-title{
+        text-align:center;
+        font-size:24px;
+        font-weight:700;
+        letter-spacing:1px;
+        text-transform:uppercase;
+        margin-bottom:10px;
+    }
+
+    .print-subtitle{
+        text-align:center;
+        font-size:14px;
+        color:#444;
+        margin-bottom:35px;
+        border-bottom:2px solid #000;
+        padding-bottom:12px;
+    }
+
+    /* ===== DOCUMENT INFO ===== */
+
+    .doc-info{
+        display:flex;
+        justify-content:space-between;
+        margin-bottom:35px;
+        font-size:13px;
+        color:#444;
+    }
+
+    /* ===== ROWS ===== */
+
+    .print-row{
+        display:flex;
+        align-items:flex-end;
+        margin-bottom:20px;
+        font-size:16px;
+        line-height:1.5;
+    }
+
+    .print-row strong{
+        min-width:240px;
+        font-weight:700;
+    }
+
+    .print-row span{
+        flex:1;
+        border-bottom:1px solid #444;
+        padding-left:10px;
+        padding-bottom:3px;
+        font-weight:600;
+    }
+
+    /* ===== AGREEMENT ===== */
+
+    .agreement{
+        margin-top:35px;
+        line-height:1.9;
+        font-size:15px;
+        text-align:justify;
+    }
+
+    .agreement strong{
+        font-weight:700;
+    }
+
+    /* ===== IMPORTANT BOX ===== */
+
+    .important-box{
+        border:2px solid #000;
+        background:#f3f4f6;
+        padding:20px;
+        margin:30px 0;
+    }
+
+    .important-title{
+        font-size:16px;
+        font-weight:700;
+        margin-bottom:12px;
+        text-transform:uppercase;
+    }
+
+    /* ===== CONDITIONS ===== */
+
+    .condition-item{
+        margin-bottom:22px;
+        line-height:1.9;
+        text-align:justify;
+    }
+
+    .condition-item strong{
+        font-size:16px;
+    }
+
+    /* ===== SIGN ===== */
+
+    .signature-zone{
+        margin-top:80px;
+    }
+
+    .signature-line{
+        border-bottom:1px solid #000;
+        height:40px;
+        margin-bottom:10px;
+    }
+
+    .signature-text{
+        display:flex;
+        justify-content:space-between;
+        font-size:13px;
+        color:#444;
+    }
+
+    /* ===== FOOTER ===== */
+
+    .doc-footer{
+        margin-top:60px;
+        border-top:1px solid #999;
+        padding-top:10px;
+        display:flex;
+        justify-content:space-between;
+        font-size:12px;
+        color:#666;
     }
 
 }
+
+/* ========================= */
+/* ======== MOBILE ========= */
+/* ========================= */
 
 @media(max-width:768px){
 
     body{
-        padding:12px;
+        padding:15px;
     }
 
     .grid{
         grid-template-columns:1fr;
-        gap:18px;
     }
 
     .card{
-        padding:20px;
-    }
-
-    .title{
-        font-size:24px;
+        padding:22px;
     }
 
     .actions{
@@ -196,11 +333,7 @@ body{
 @media(max-width:480px){
 
     .title{
-        font-size:20px;
-    }
-
-    .back-btn{
-        width:100%;
+        font-size:22px;
     }
 
     .topbar{
@@ -208,63 +341,8 @@ body{
         align-items:stretch;
     }
 
-    .card{
-        padding:16px;
-        border-radius:16px;
-    }
-
-    .field input{
-        font-size:14px;
-        padding:12px;
-    }
-
-}
-
-@media print{
-
-    body{
-        background:white;
-        color:black;
-        padding:0;
-    }
-
-    .container{
-        display:none;
-    }
-
-    .print-document{
-        display:block;
-        padding:40px;
-        color:black;
-    }
-
-    .second-page{
-        page-break-before:always;
-    }
-
-    .print-title{
-        text-align:center;
-        font-size:24px;
-        font-weight:bold;
-        margin-bottom:25px;
-    }
-
-    .print-subtitle{
-        text-align:center;
-        margin-bottom:35px;
-        font-size:15px;
-    }
-
-    .print-row{
-        margin-bottom:18px;
-        font-size:17px;
-        line-height:1.6;
-    }
-
-    .agreement{
-        margin-top:35px;
-        line-height:1.8;
-        font-size:15px;
+    .back-btn{
+        width:100%;
     }
 
 }
@@ -278,7 +356,8 @@ body{
 
     <div class="topbar">
 
-        <button class="back-btn" onclick="goBack()">
+        <button class="back-btn"
+                onclick="goBack()">
             ← Назад
         </button>
 
@@ -296,39 +375,52 @@ body{
 
                 <div class="field full">
                     <label>1. ФИО покупателя</label>
-                    <input type="text" id="fullname" required>
+                    <input type="text"
+                           id="fullname"
+                           required>
                 </div>
 
                 <div class="field">
                     <label>2. Дата рождения</label>
-                    <input type="date" id="birthdate" required>
+                    <input type="date"
+                           id="birthdate"
+                           required>
                 </div>
 
                 <div class="field">
                     <label>3. Марка автомобиля</label>
-                    <input type="text" id="brand" required>
+                    <input type="text"
+                           id="brand"
+                           required>
                 </div>
 
                 <div class="field full">
                     <label>4. Модель и год автомобиля</label>
-                    <input type="text" id="model" required>
+                    <input type="text"
+                           id="model"
+                           required>
                 </div>
 
                 <div class="field">
                     <label>5. Контактный телефон</label>
-                    <input type="tel" id="phone" required>
+                    <input type="tel"
+                           id="phone"
+                           required>
                 </div>
 
                 <div class="field">
                     <label>6. Электронная почта</label>
-                    <input type="email" id="email" required>
+                    <input type="email"
+                           id="email"
+                           required>
                 </div>
 
             </div>
 
             <div class="actions">
 
-                <button type="submit" class="btn save-btn">
+                <button type="submit"
+                        class="btn save-btn">
                     Готово
                 </button>
 
@@ -346,16 +438,23 @@ body{
 
 </div>
 
-<!-- ПЕРВАЯ СТРАНИЦА ПЕЧАТИ -->
+<!-- ================================= -->
+<!-- ========== PRINT PAGE 1 ========= -->
+<!-- ================================= -->
 
-<div class="print-document" id="printDocument">
+<div class="print-document">
 
     <div class="print-title">
-        АНКЕТА КЛИЕНТА НА ПРЕДОСТАВЛЕНИЕ СКИДКИ
+        АНКЕТА КЛИЕНТА
     </div>
 
     <div class="print-subtitle">
-        Магазин AUTO-STYLE
+        AUTO-STYLE • Официальная регистрационная форма клиента
+    </div>
+
+    <div class="doc-info">
+        <span>№ DOC-2026-001</span>
+        <span id="currentDate"></span>
     </div>
 
     <div class="print-row">
@@ -374,7 +473,7 @@ body{
     </div>
 
     <div class="print-row">
-        <strong>Модель и год автомобиля:</strong>
+        <strong>Модель автомобиля:</strong>
         <span id="p_model"></span>
     </div>
 
@@ -390,23 +489,22 @@ body{
 
     <div class="agreement">
 
-        Настоящая анкета предоставляется клиентом
-        для получения скидки в магазине
-        <strong>AUTO-STYLE</strong>.
+        Настоящая анкета оформляется клиентом
+        для участия в накопительной системе
+        скидок магазина <strong>AUTO-STYLE</strong>.
 
         <br><br>
 
         Предоставленные персональные данные
-        используются исключительно внутри
-        магазина AUTO-STYLE и не передаются
-        третьим лицам.
+        используются исключительно внутри компании
+        и не передаются третьим лицам.
 
         <br><br>
 
-        Подписывая данный документ,
-        клиент подтверждает свое согласие
-        на обработку персональных данных
-        магазином AUTO-STYLE.
+        Подписывая настоящий документ,
+        клиент подтверждает достоверность
+        предоставленных данных и дает согласие
+        на обработку персональной информации.
 
     </div>
 
@@ -421,9 +519,16 @@ body{
 
     </div>
 
+    <div class="doc-footer">
+        <span>AUTO-STYLE</span>
+        <span>Конфиденциальный документ</span>
+    </div>
+
 </div>
 
-<!-- ВТОРАЯ СТРАНИЦА ПЕЧАТИ -->
+<!-- ================================= -->
+<!-- ========== PRINT PAGE 2 ========= -->
+<!-- ================================= -->
 
 <div class="print-document second-page">
 
@@ -431,94 +536,80 @@ body{
         УСЛОВИЯ ПРЕДОСТАВЛЕНИЯ СКИДКИ
     </div>
 
+    <div class="print-subtitle">
+        Правила участия в накопительной программе AUTO-STYLE
+    </div>
+
+    <div class="important-box">
+
+        <div class="important-title">
+            Важная информация
+        </div>
+
+        Скидка активируется только после
+        полной обработки анкеты клиента.
+        Магазин оставляет за собой право
+        отказать в предоставлении скидки
+        при указании недостоверных данных.
+
+    </div>
+
     <div class="agreement">
 
-        <strong>1.</strong>
-        Предоставленные клиентом данные
-        обрабатываются магазином
-        <strong>AUTO-STYLE</strong>
-        в течение <strong>3 (трех) рабочих дней</strong>.
+        <div class="condition-item">
+            <strong>1.</strong>
+            Предоставленные клиентом данные
+            обрабатываются магазином
+            AUTO-STYLE в течение
+            3 (трех) рабочих дней.
+        </div>
 
-        <br><br>
+        <div class="condition-item">
+            <strong>2.</strong>
+            После успешной обработки анкеты
+            клиент автоматически подключается
+            к накопительной системе скидок.
+        </div>
 
-        <strong>2.</strong>
-        После обработки анкеты клиент
-        автоматически подключается
-        к накопительной системе скидок.
+        <div class="condition-item">
+            <strong>3.</strong>
+            Стартовая скидка клиента
+            составляет до 5%.
+        </div>
 
-        <br><br>
+        <div class="condition-item">
+            <strong>4.</strong>
+            При общей сумме покупок
+            свыше 1000 рублей
+            скидка увеличивается до 7%.
+        </div>
 
-        <strong>3.</strong>
-        Стартовая скидка клиента составляет
-        не более <strong>5%</strong>.
+        <div class="condition-item">
+            <strong>5.</strong>
+            При общей сумме покупок
+            свыше 2000 рублей
+            скидка увеличивается до 10%.
+        </div>
 
-        <br><br>
+        <div class="condition-item">
+            <strong>6.</strong>
+            Максимальная скидка магазина
+            предоставляется клиентам
+            с общей суммой покупок
+            более 5000 рублей.
+        </div>
 
-        <strong>4.</strong>
-        При общей сумме покупок
-        более <strong>1000 рублей</strong>
-        размер скидки увеличивается до
-        <strong>7%</strong>.
+        <div class="condition-item">
+            <strong>ВНИМАНИЕ:</strong><br>
+            Скидка не распространяется
+            на товары, участвующие в акциях.
+        </div>
 
-        <br><br>
-
-        <strong>5.</strong>
-        При общей сумме покупок
-        более <strong>2000 рублей</strong>
-        размер скидки увеличивается до
-        <strong>10%</strong>.
-
-        <br><br>
-
-        <strong>6.</strong>
-        При общей сумме покупок
-        более <strong>5000 рублей</strong>
-        клиент получает максимально
-        возможную скидку магазина.
-
-        <br><br>
-
-        <strong>ВНИМАНИЕ:</strong>
-
-        <br><br>
-
-        Скидка не распространяется
-        на товары, участвующие в акции.
-
-        <br><br>
-
-        Максимально возможная скидка
-        указывается непосредственно
-        на товаре.
-
-        <br><br>
-
-        Размер действующей скидки
-        можно посмотреть на ценнике
-        или карточке товара.
-
-        <br><br>
-
-        <strong>Как воспользоваться скидкой:</strong>
-
-        <br><br>
-
-        После внесения данных клиента
-        в базу магазина, для получения
-        скидки необходимо сообщить
-        один из следующих данных:
-
-        <br><br>
-
-        • контактный телефон
-
-        <br>
-
-        или
-
-        <br>
-
-        • ФИО клиента
+        <div class="condition-item">
+            <strong>Для получения скидки необходимо:</strong><br>
+            сообщить номер телефона
+            или ФИО клиента сотруднику магазина.
+        </div>
 
     </div>
 
@@ -528,9 +619,14 @@ body{
 
         <div class="signature-text">
             <span>Подпись клиента</span>
-            <span>Дата</span>
+            <span>Дата подписания</span>
         </div>
 
+    </div>
+
+    <div class="doc-footer">
+        <span>AUTO-STYLE</span>
+        <span>Страница 2</span>
     </div>
 
 </div>
@@ -541,7 +637,8 @@ function goBack(){
     window.history.back();
 }
 
-const form = document.getElementById('discountForm');
+const form =
+    document.getElementById('discountForm');
 
 form.addEventListener('submit', function(e){
 
@@ -592,6 +689,12 @@ form.addEventListener('submit', function(e){
     }, 300);
 
 });
+
+const today = new Date();
+
+document.getElementById('currentDate').innerText =
+    'Дата оформления: ' +
+    today.toLocaleDateString('ru-RU');
 
 </script>
 
