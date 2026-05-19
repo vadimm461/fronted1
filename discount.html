@@ -5,7 +5,17 @@
 <meta name="viewport"
       content="width=device-width, initial-scale=1.0">
 
-<title>Анкета клиента</title>
+<title>AUTO-STYLE</title>
+
+<link rel="preconnect"
+      href="https://fonts.googleapis.com">
+
+<link rel="preconnect"
+      href="https://fonts.gstatic.com"
+      crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet">
 
 <style>
 
@@ -15,334 +25,647 @@
     box-sizing:border-box;
 }
 
+:root{
+
+    --bg:#f5f7fb;
+
+    --card:#ffffff;
+
+    --text:#111827;
+
+    --muted:#6b7280;
+
+    --line:#e5e7eb;
+
+    --accent:#111827;
+
+}
+
 body{
-    background:#f3f4f6;
-    font-family:Arial,sans-serif;
-    color:#111827;
-    padding:20px;
+
+    font-family:'Inter',sans-serif;
+
+    background:var(--bg);
+
+    color:var(--text);
+
+    padding:24px;
+
 }
 
 .container{
-    max-width:950px;
+
+    width:100%;
+
+    max-width:980px;
+
     margin:0 auto;
+
 }
 
 .topbar{
+
     display:flex;
+
     justify-content:space-between;
+
     align-items:center;
-    gap:15px;
+
+    gap:16px;
+
+    margin-bottom:28px;
+
     flex-wrap:wrap;
-    margin-bottom:25px;
+
 }
 
 .title{
+
     font-size:30px;
-    font-weight:700;
-    color:#111827;
+
+    font-weight:800;
+
+    letter-spacing:-1px;
+
 }
 
 .back-btn{
-    background:#1d4ed8;
-    color:white;
+
     border:none;
-    border-radius:12px;
-    padding:12px 20px;
+
+    background:#111827;
+
+    color:white;
+
+    height:48px;
+
+    padding:0 18px;
+
+    border-radius:14px;
+
     cursor:pointer;
-    font-size:15px;
+
+    font-size:14px;
+
     font-weight:600;
+
     transition:.2s;
+
 }
 
 .back-btn:hover{
-    background:#1e40af;
+
+    opacity:.9;
+
 }
 
 .card{
-    background:white;
-    border-radius:24px;
-    padding:30px;
-    box-shadow:0 10px 40px rgba(0,0,0,.08);
+
+    background:var(--card);
+
+    border-radius:28px;
+
+    padding:34px;
+
+    border:1px solid #eef0f3;
+
+    box-shadow:
+        0 10px 30px rgba(0,0,0,.03);
+
 }
 
 .grid{
+
     display:grid;
+
     grid-template-columns:1fr 1fr;
-    gap:20px;
+
+    gap:22px;
+
 }
 
 .full{
+
     grid-column:1/-1;
+
 }
 
 .field{
+
     display:flex;
+
     flex-direction:column;
-    gap:8px;
+
+    gap:9px;
+
 }
 
 .field label{
-    font-size:14px;
-    color:#374151;
+
+    font-size:12px;
+
     font-weight:600;
+
+    color:var(--muted);
+
+    letter-spacing:.2px;
+
 }
 
 .field input{
+
     width:100%;
-    border:1px solid #d1d5db;
-    background:#f9fafb;
-    padding:15px;
-    border-radius:14px;
-    outline:none;
+
+    border:none;
+
+    border-radius:16px;
+
+    background:#f8fafc;
+
+    padding:16px 18px;
+
     font-size:15px;
+
+    color:var(--text);
+
+    outline:none;
+
     transition:.2s;
+
+    border:1px solid transparent;
+
 }
 
 .field input:focus{
-    border-color:#2563eb;
+
     background:white;
+
+    border-color:#dbe1ea;
+
 }
 
 .actions{
-    margin-top:30px;
+
+    margin-top:28px;
+
     display:flex;
-    gap:15px;
-    flex-wrap:wrap;
+
+    gap:14px;
+
 }
 
 .btn{
+
     border:none;
-    border-radius:14px;
-    padding:15px 24px;
-    color:white;
+
+    border-radius:16px;
+
+    padding:15px 22px;
+
     cursor:pointer;
-    font-size:15px;
+
+    font-size:14px;
+
     font-weight:700;
+
     transition:.2s;
+
 }
 
 .save-btn{
-    background:#2563eb;
-}
 
-.save-btn:hover{
-    background:#1d4ed8;
+    background:#111827;
+
+    color:white;
+
 }
 
 .print-btn{
-    background:#059669;
+
+    background:#eef2f7;
+
+    color:#111827;
+
+}
+
+.save-btn:hover{
+
+    transform:translateY(-1px);
+
 }
 
 .print-btn:hover{
-    background:#047857;
+
+    background:#e5e7eb;
+
 }
+
+/* =========================== */
+/* ========= PRINT =========== */
+/* =========================== */
 
 .print-document{
-    display:none;
-}
 
-/* ========================= */
-/* ======== PRINT ========== */
-/* ========================= */
+    display:none;
+
+}
 
 @media print{
 
     @page{
+
         size:A4;
-        margin:22mm 18mm 22mm 18mm;
+
+        margin:16mm;
+
     }
 
     body{
+
         background:white;
-        color:#000;
+
         padding:0;
-        font-family:"Times New Roman", serif;
+
+        color:#111827;
+
+        font-family:'Inter',sans-serif;
+
         -webkit-print-color-adjust:exact;
+
         print-color-adjust:exact;
+
     }
 
     .container{
+
         display:none;
+
     }
 
     .print-document{
+
         display:block;
+
         width:100%;
-        color:#000;
+
     }
 
     .second-page{
+
         page-break-before:always;
+
     }
 
     /* ===== HEADER ===== */
 
-    .print-title{
-        text-align:center;
-        font-size:24px;
-        font-weight:700;
-        letter-spacing:1px;
-        text-transform:uppercase;
-        margin-bottom:10px;
-    }
+    .doc-top{
 
-    .print-subtitle{
-        text-align:center;
-        font-size:14px;
-        color:#444;
-        margin-bottom:35px;
-        border-bottom:2px solid #000;
-        padding-bottom:12px;
-    }
-
-    /* ===== DOCUMENT INFO ===== */
-
-    .doc-info{
         display:flex;
+
         justify-content:space-between;
-        margin-bottom:35px;
-        font-size:13px;
-        color:#444;
+
+        align-items:flex-start;
+
+        margin-bottom:42px;
+
     }
 
-    /* ===== ROWS ===== */
+    .brand{
 
-    .print-row{
         display:flex;
-        align-items:flex-end;
-        margin-bottom:20px;
-        font-size:16px;
-        line-height:1.5;
+
+        flex-direction:column;
+
+        gap:3px;
+
     }
 
-    .print-row strong{
-        min-width:240px;
-        font-weight:700;
+    .brand-title{
+
+        font-size:28px;
+
+        font-weight:800;
+
+        letter-spacing:-1.5px;
+
     }
 
-    .print-row span{
-        flex:1;
-        border-bottom:1px solid #444;
-        padding-left:10px;
-        padding-bottom:3px;
-        font-weight:600;
+    .brand-sub{
+
+        font-size:11px;
+
+        color:#6b7280;
+
+        letter-spacing:.3px;
+
     }
 
-    /* ===== AGREEMENT ===== */
+    .doc-meta{
 
-    .agreement{
-        margin-top:35px;
-        line-height:1.9;
-        font-size:15px;
-        text-align:justify;
+        text-align:right;
+
+        display:flex;
+
+        flex-direction:column;
+
+        gap:6px;
+
     }
 
-    .agreement strong{
-        font-weight:700;
-    }
+    .meta-label{
 
-    /* ===== IMPORTANT BOX ===== */
+        font-size:10px;
 
-    .important-box{
-        border:2px solid #000;
-        background:#f3f4f6;
-        padding:20px;
-        margin:30px 0;
-    }
+        color:#9ca3af;
 
-    .important-title{
-        font-size:16px;
-        font-weight:700;
-        margin-bottom:12px;
         text-transform:uppercase;
+
+        letter-spacing:.6px;
+
+    }
+
+    .meta-value{
+
+        font-size:13px;
+
+        font-weight:600;
+
+    }
+
+    /* ===== TITLE ===== */
+
+    .doc-title{
+
+        font-size:18px;
+
+        font-weight:700;
+
+        letter-spacing:-.4px;
+
+        margin-bottom:28px;
+
+    }
+
+    /* ===== SECTION ===== */
+
+    .section{
+
+        border-top:1px solid #e5e7eb;
+
+        padding-top:20px;
+
+        margin-top:20px;
+
+    }
+
+    .section-title{
+
+        font-size:11px;
+
+        text-transform:uppercase;
+
+        letter-spacing:.8px;
+
+        color:#9ca3af;
+
+        margin-bottom:18px;
+
+        font-weight:700;
+
+    }
+
+    /* ===== ROW ===== */
+
+    .row{
+
+        display:grid;
+
+        grid-template-columns:220px 1fr;
+
+        align-items:center;
+
+        min-height:38px;
+
+        border-bottom:1px solid #f1f5f9;
+
+    }
+
+    .row-label{
+
+        font-size:12px;
+
+        color:#6b7280;
+
+        font-weight:500;
+
+    }
+
+    .row-value{
+
+        font-size:14px;
+
+        font-weight:600;
+
+        color:#111827;
+
+    }
+
+    /* ===== TEXT ===== */
+
+    .text{
+
+        margin-top:22px;
+
+        font-size:13px;
+
+        line-height:1.55;
+
+        color:#374151;
+
+    }
+
+    .text strong{
+
+        color:#111827;
+
+        font-weight:700;
+
     }
 
     /* ===== CONDITIONS ===== */
 
-    .condition-item{
-        margin-bottom:22px;
-        line-height:1.9;
-        text-align:justify;
+    .condition{
+
+        display:flex;
+
+        gap:14px;
+
+        padding:14px 0;
+
+        border-bottom:1px solid #f3f4f6;
+
     }
 
-    .condition-item strong{
-        font-size:16px;
+    .condition-number{
+
+        min-width:22px;
+
+        font-size:13px;
+
+        font-weight:700;
+
+        color:#111827;
+
+    }
+
+    .condition-text{
+
+        font-size:13px;
+
+        line-height:1.45;
+
+        color:#374151;
+
+    }
+
+    .condition-text strong{
+
+        color:#111827;
+
+    }
+
+    /* ===== WARNING ===== */
+
+    .warning{
+
+        margin-top:24px;
+
+        padding:18px;
+
+        border-radius:18px;
+
+        background:#f9fafb;
+
+        border:1px solid #eef2f7;
+
+    }
+
+    .warning-title{
+
+        font-size:11px;
+
+        font-weight:800;
+
+        letter-spacing:.8px;
+
+        text-transform:uppercase;
+
+        margin-bottom:8px;
+
+    }
+
+    .warning-text{
+
+        font-size:12px;
+
+        line-height:1.5;
+
+        color:#4b5563;
+
     }
 
     /* ===== SIGN ===== */
 
     .signature-zone{
-        margin-top:80px;
+
+        margin-top:65px;
+
+        display:flex;
+
+        justify-content:space-between;
+
+        gap:50px;
+
+    }
+
+    .signature{
+
+        flex:1;
+
     }
 
     .signature-line{
-        border-bottom:1px solid #000;
-        height:40px;
-        margin-bottom:10px;
+
+        border-bottom:1px solid #111827;
+
+        height:36px;
+
     }
 
-    .signature-text{
-        display:flex;
-        justify-content:space-between;
-        font-size:13px;
-        color:#444;
+    .signature-label{
+
+        margin-top:7px;
+
+        font-size:11px;
+
+        color:#9ca3af;
+
     }
 
     /* ===== FOOTER ===== */
 
-    .doc-footer{
-        margin-top:60px;
-        border-top:1px solid #999;
-        padding-top:10px;
+    .footer{
+
+        margin-top:55px;
+
         display:flex;
+
         justify-content:space-between;
-        font-size:12px;
-        color:#666;
+
+        align-items:center;
+
+        border-top:1px solid #f1f5f9;
+
+        padding-top:14px;
+
+    }
+
+    .footer span{
+
+        font-size:10px;
+
+        color:#9ca3af;
+
     }
 
 }
-
-/* ========================= */
-/* ======== MOBILE ========= */
-/* ========================= */
 
 @media(max-width:768px){
 
-    body{
-        padding:15px;
-    }
-
     .grid{
+
         grid-template-columns:1fr;
+
     }
 
     .card{
+
         padding:22px;
+
+        border-radius:22px;
+
     }
 
     .actions{
+
         flex-direction:column;
+
     }
 
     .btn{
+
         width:100%;
-    }
 
-}
-
-@media(max-width:480px){
-
-    .title{
-        font-size:22px;
-    }
-
-    .topbar{
-        flex-direction:column;
-        align-items:stretch;
-    }
-
-    .back-btn{
-        width:100%;
     }
 
 }
@@ -362,7 +685,7 @@ body{
         </button>
 
         <div class="title">
-            Анкета покупателя
+            Анкета клиента
         </div>
 
     </div>
@@ -374,42 +697,42 @@ body{
             <div class="grid">
 
                 <div class="field full">
-                    <label>1. ФИО покупателя</label>
+                    <label>ФИО клиента</label>
                     <input type="text"
                            id="fullname"
                            required>
                 </div>
 
                 <div class="field">
-                    <label>2. Дата рождения</label>
+                    <label>Дата рождения</label>
                     <input type="date"
                            id="birthdate"
                            required>
                 </div>
 
                 <div class="field">
-                    <label>3. Марка автомобиля</label>
+                    <label>Марка автомобиля</label>
                     <input type="text"
                            id="brand"
                            required>
                 </div>
 
                 <div class="field full">
-                    <label>4. Модель и год автомобиля</label>
+                    <label>Модель и год</label>
                     <input type="text"
                            id="model"
                            required>
                 </div>
 
                 <div class="field">
-                    <label>5. Контактный телефон</label>
+                    <label>Телефон</label>
                     <input type="tel"
                            id="phone"
                            required>
                 </div>
 
                 <div class="field">
-                    <label>6. Электронная почта</label>
+                    <label>Email</label>
                     <input type="email"
                            id="email"
                            required>
@@ -421,7 +744,7 @@ body{
 
                 <button type="submit"
                         class="btn save-btn">
-                    Готово
+                    Сохранить
                 </button>
 
                 <button type="button"
@@ -438,195 +761,344 @@ body{
 
 </div>
 
-<!-- ================================= -->
-<!-- ========== PRINT PAGE 1 ========= -->
-<!-- ================================= -->
+<!-- =================================== -->
+<!-- ============ PAGE 1 =============== -->
+<!-- =================================== -->
 
 <div class="print-document">
 
-    <div class="print-title">
-        АНКЕТА КЛИЕНТА
+    <div class="doc-top">
+
+        <div class="brand">
+
+            <div class="brand-title">
+                AUTO-STYLE
+            </div>
+
+            <div class="brand-sub">
+                CUSTOMER REGISTRATION FORM
+            </div>
+
+        </div>
+
+        <div class="doc-meta">
+
+            <div>
+                <div class="meta-label">
+                    document
+                </div>
+
+                <div class="meta-value">
+                    DOC-2026-001
+                </div>
+            </div>
+
+            <div>
+                <div class="meta-label">
+                    created
+                </div>
+
+                <div class="meta-value"
+                     id="currentDate">
+                </div>
+            </div>
+
+        </div>
+
     </div>
 
-    <div class="print-subtitle">
-        AUTO-STYLE • Официальная регистрационная форма клиента
+    <div class="doc-title">
+        Анкета клиента на подключение скидочной системы
     </div>
 
-    <div class="doc-info">
-        <span>№ DOC-2026-001</span>
-        <span id="currentDate"></span>
+    <div class="section">
+
+        <div class="section-title">
+            CLIENT INFORMATION
+        </div>
+
+        <div class="row">
+            <div class="row-label">
+                Полное имя
+            </div>
+
+            <div class="row-value"
+                 id="p_fullname">
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="row-label">
+                Дата рождения
+            </div>
+
+            <div class="row-value"
+                 id="p_birthdate">
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="row-label">
+                Марка автомобиля
+            </div>
+
+            <div class="row-value"
+                 id="p_brand">
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="row-label">
+                Модель / год
+            </div>
+
+            <div class="row-value"
+                 id="p_model">
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="row-label">
+                Телефон
+            </div>
+
+            <div class="row-value"
+                 id="p_phone">
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="row-label">
+                Email
+            </div>
+
+            <div class="row-value"
+                 id="p_email">
+            </div>
+        </div>
+
     </div>
 
-    <div class="print-row">
-        <strong>ФИО клиента:</strong>
-        <span id="p_fullname"></span>
-    </div>
+    <div class="text">
 
-    <div class="print-row">
-        <strong>Дата рождения:</strong>
-        <span id="p_birthdate"></span>
-    </div>
+        Предоставляя персональные данные,
+        клиент подтверждает согласие
+        на внутреннюю обработку информации
+        компанией <strong>AUTO-STYLE</strong>.
 
-    <div class="print-row">
-        <strong>Марка автомобиля:</strong>
-        <span id="p_brand"></span>
-    </div>
-
-    <div class="print-row">
-        <strong>Модель автомобиля:</strong>
-        <span id="p_model"></span>
-    </div>
-
-    <div class="print-row">
-        <strong>Контактный телефон:</strong>
-        <span id="p_phone"></span>
-    </div>
-
-    <div class="print-row">
-        <strong>Электронная почта:</strong>
-        <span id="p_email"></span>
-    </div>
-
-    <div class="agreement">
-
-        Настоящая анкета оформляется клиентом
-        для участия в накопительной системе
-        скидок магазина <strong>AUTO-STYLE</strong>.
-
-        <br><br>
-
-        Предоставленные персональные данные
-        используются исключительно внутри компании
-        и не передаются третьим лицам.
-
-        <br><br>
-
-        Подписывая настоящий документ,
-        клиент подтверждает достоверность
-        предоставленных данных и дает согласие
-        на обработку персональной информации.
+        Данные используются исключительно
+        для работы системы скидок
+        и клиентского обслуживания.
 
     </div>
 
     <div class="signature-zone">
 
-        <div class="signature-line"></div>
+        <div class="signature">
 
-        <div class="signature-text">
-            <span>Подпись клиента</span>
-            <span>Расшифровка подписи</span>
+            <div class="signature-line"></div>
+
+            <div class="signature-label">
+                Подпись клиента
+            </div>
+
+        </div>
+
+        <div class="signature">
+
+            <div class="signature-line"></div>
+
+            <div class="signature-label">
+                Подпись сотрудника
+            </div>
+
         </div>
 
     </div>
 
-    <div class="doc-footer">
-        <span>AUTO-STYLE</span>
-        <span>Конфиденциальный документ</span>
+    <div class="footer">
+
+        <span>
+            AUTO-STYLE INTERNAL DOCUMENT
+        </span>
+
+        <span>
+            PAGE 1 / 2
+        </span>
+
     </div>
 
 </div>
 
-<!-- ================================= -->
-<!-- ========== PRINT PAGE 2 ========= -->
-<!-- ================================= -->
+<!-- =================================== -->
+<!-- ============ PAGE 2 =============== -->
+<!-- =================================== -->
 
 <div class="print-document second-page">
 
-    <div class="print-title">
-        УСЛОВИЯ ПРЕДОСТАВЛЕНИЯ СКИДКИ
-    </div>
+    <div class="doc-top">
 
-    <div class="print-subtitle">
-        Правила участия в накопительной программе AUTO-STYLE
-    </div>
+        <div class="brand">
 
-    <div class="important-box">
+            <div class="brand-title">
+                AUTO-STYLE
+            </div>
 
-        <div class="important-title">
-            Важная информация
+            <div class="brand-sub">
+                DISCOUNT PROGRAM
+            </div>
+
         </div>
-
-        Скидка активируется только после
-        полной обработки анкеты клиента.
-        Магазин оставляет за собой право
-        отказать в предоставлении скидки
-        при указании недостоверных данных.
 
     </div>
 
-    <div class="agreement">
+    <div class="doc-title">
+        Условия предоставления скидки
+    </div>
 
-        <div class="condition-item">
-            <strong>1.</strong>
-            Предоставленные клиентом данные
-            обрабатываются магазином
-            AUTO-STYLE в течение
-            3 (трех) рабочих дней.
+    <div class="section">
+
+        <div class="section-title">
+            TERMS & CONDITIONS
         </div>
 
-        <div class="condition-item">
-            <strong>2.</strong>
-            После успешной обработки анкеты
-            клиент автоматически подключается
-            к накопительной системе скидок.
+        <div class="condition">
+
+            <div class="condition-number">
+                01
+            </div>
+
+            <div class="condition-text">
+
+                Обработка анкеты выполняется
+                в течение
+                <strong>3 рабочих дней</strong>.
+
+            </div>
+
         </div>
 
-        <div class="condition-item">
-            <strong>3.</strong>
-            Стартовая скидка клиента
-            составляет до 5%.
+        <div class="condition">
+
+            <div class="condition-number">
+                02
+            </div>
+
+            <div class="condition-text">
+
+                После подтверждения данных
+                клиент подключается
+                к накопительной системе скидок.
+
+            </div>
+
         </div>
 
-        <div class="condition-item">
-            <strong>4.</strong>
-            При общей сумме покупок
-            свыше 1000 рублей
-            скидка увеличивается до 7%.
+        <div class="condition">
+
+            <div class="condition-number">
+                03
+            </div>
+
+            <div class="condition-text">
+
+                Начальная скидка составляет
+                до <strong>5%</strong>.
+
+            </div>
+
         </div>
 
-        <div class="condition-item">
-            <strong>5.</strong>
-            При общей сумме покупок
-            свыше 2000 рублей
-            скидка увеличивается до 10%.
+        <div class="condition">
+
+            <div class="condition-number">
+                04
+            </div>
+
+            <div class="condition-text">
+
+                При сумме покупок свыше
+                <strong>1000 ₽</strong>
+                скидка увеличивается
+                до <strong>7%</strong>.
+
+            </div>
+
         </div>
 
-        <div class="condition-item">
-            <strong>6.</strong>
-            Максимальная скидка магазина
-            предоставляется клиентам
-            с общей суммой покупок
-            более 5000 рублей.
+        <div class="condition">
+
+            <div class="condition-number">
+                05
+            </div>
+
+            <div class="condition-text">
+
+                При сумме покупок свыше
+                <strong>2000 ₽</strong>
+                скидка увеличивается
+                до <strong>10%</strong>.
+
+            </div>
+
         </div>
 
-        <div class="condition-item">
-            <strong>ВНИМАНИЕ:</strong><br>
+    </div>
+
+    <div class="warning">
+
+        <div class="warning-title">
+            Important
+        </div>
+
+        <div class="warning-text">
+
             Скидка не распространяется
-            на товары, участвующие в акциях.
-        </div>
+            на акционные товары.
 
-        <div class="condition-item">
-            <strong>Для получения скидки необходимо:</strong><br>
-            сообщить номер телефона
-            или ФИО клиента сотруднику магазина.
+            Для получения скидки
+            необходимо сообщить
+            номер телефона
+            или ФИО клиента.
+
         </div>
 
     </div>
 
     <div class="signature-zone">
 
-        <div class="signature-line"></div>
+        <div class="signature">
 
-        <div class="signature-text">
-            <span>Подпись клиента</span>
-            <span>Дата подписания</span>
+            <div class="signature-line"></div>
+
+            <div class="signature-label">
+                Подпись клиента
+            </div>
+
+        </div>
+
+        <div class="signature">
+
+            <div class="signature-line"></div>
+
+            <div class="signature-label">
+                Дата подписания
+            </div>
+
         </div>
 
     </div>
 
-    <div class="doc-footer">
-        <span>AUTO-STYLE</span>
-        <span>Страница 2</span>
+    <div class="footer">
+
+        <span>
+            AUTO-STYLE INTERNAL DOCUMENT
+        </span>
+
+        <span>
+            PAGE 2 / 2
+        </span>
+
     </div>
 
 </div>
@@ -634,7 +1106,9 @@ body{
 <script>
 
 function goBack(){
+
     window.history.back();
+
 }
 
 const form =
@@ -644,57 +1118,35 @@ form.addEventListener('submit', function(e){
 
     e.preventDefault();
 
-    const data = {
-
-        fullname:
-            document.getElementById('fullname').value,
-
-        birthdate:
-            document.getElementById('birthdate').value,
-
-        brand:
-            document.getElementById('brand').value,
-
-        model:
-            document.getElementById('model').value,
-
-        phone:
-            document.getElementById('phone').value,
-
-        email:
-            document.getElementById('email').value
-
-    };
-
     document.getElementById('p_fullname').innerText =
-        data.fullname;
+        document.getElementById('fullname').value;
 
     document.getElementById('p_birthdate').innerText =
-        data.birthdate;
+        document.getElementById('birthdate').value;
 
     document.getElementById('p_brand').innerText =
-        data.brand;
+        document.getElementById('brand').value;
 
     document.getElementById('p_model').innerText =
-        data.model;
+        document.getElementById('model').value;
 
     document.getElementById('p_phone').innerText =
-        data.phone;
+        document.getElementById('phone').value;
 
     document.getElementById('p_email').innerText =
-        data.email;
+        document.getElementById('email').value;
 
     setTimeout(() => {
+
         window.print();
-    }, 300);
+
+    },200);
 
 });
 
-const today = new Date();
-
 document.getElementById('currentDate').innerText =
-    'Дата оформления: ' +
-    today.toLocaleDateString('ru-RU');
+
+    new Date().toLocaleDateString('ru-RU');
 
 </script>
 
