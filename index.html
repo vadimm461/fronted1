@@ -1,209 +1,424 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 
 <title>AUTO-STYLE</title>
 
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
 <style>
 
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
+*,
+*::before,
+*::after{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
 }
 
-html, body {
-  width: 100%;
-  overflow-x: hidden;
-  font-family: 'Inter', sans-serif;
-  background: #f3f6fb;
-  color: #111827;
+:root{
+    --green:#2e7d32;
+    --green-dark:#1b5e20;
+    --blue:#1976d2;
+    --bg:#f3f6fb;
+    --card:#ffffff;
+    --text:#111827;
+    --muted:#6b7280;
+    --line:#e5e7eb;
 }
 
-/* LOGIN */
-.login-screen {
-  position: fixed;
-  inset: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background: linear-gradient(135deg,#0f172a,#111827,#1b5e20);
-  padding: 20px;
-  z-index: 9999;
+body{
+    font-family:'Inter',sans-serif;
+    background:var(--bg);
+    color:var(--text);
+    min-height:100vh;
+    overflow-x:hidden;
 }
 
-.login-box {
-  width: 100%;
-  max-width: 420px;
-  background: white;
-  padding: 30px;
-  border-radius: 24px;
+/* ================= LOGIN ================= */
+
+.login-screen{
+    position:fixed;
+    inset:0;
+    z-index:9999;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    background:
+        linear-gradient(135deg,#0f172a,#111827,#1b5e20);
+
+    padding:20px;
 }
 
-.login-title {
-  font-size: 32px;
-  font-weight: 800;
-  text-align: center;
-  margin-bottom: 20px;
+.login-box{
+    width:100%;
+    max-width:420px;
+
+    background:white;
+
+    padding:38px 30px;
+
+    border-radius:28px;
+
+    box-shadow:
+        0 25px 60px rgba(0,0,0,.35);
+
+    animation:show .4s ease;
 }
 
-.login-title span { color: #2e7d32; }
-
-input, select {
-  width: 100%;
-  padding: 14px;
-  margin-bottom: 12px;
-  border-radius: 14px;
-  border: 1px solid #e5e7eb;
-  background: #f8fafc;
-  font-size: 16px;
+@keyframes show{
+    from{
+        opacity:0;
+        transform:translateY(20px);
+    }
+    to{
+        opacity:1;
+        transform:translateY(0);
+    }
 }
 
-button {
-  width: 100%;
-  padding: 14px;
-  border: none;
-  border-radius: 14px;
-  background: linear-gradient(135deg,#2e7d32,#1b5e20);
-  color: white;
-  font-weight: 700;
-  cursor: pointer;
-  font-size: 16px;
+.login-title{
+    font-size:34px;
+    font-weight:800;
+    margin-bottom:24px;
+    text-align:center;
+    letter-spacing:-1px;
 }
 
-.error {
-  margin-top: 10px;
-  color: red;
-  font-size: 14px;
-  text-align: center;
+.login-title span{
+    color:var(--green);
 }
 
-/* APP */
-.app { display: none; }
+select,
+input{
+    width:100%;
+    border:none;
+    background:#f8fafc;
+    border:1px solid #e5e7eb;
 
-.header {
-  position: sticky;
-  top: 0;
-  background: rgba(255,255,255,0.9);
-  backdrop-filter: blur(10px);
-  padding: 16px;
-  border-bottom: 1px solid #eee;
+    border-radius:18px;
+
+    padding:16px;
+
+    margin-bottom:16px;
+
+    font-size:15px;
+    outline:none;
+
+    transition:.2s;
 }
 
-.header-inner {
-  max-width: 1200px;
-  margin: auto;
-  display: flex;
-  justify-content: space-between;
+select:focus,
+input:focus{
+    border-color:var(--green);
+    background:white;
 }
 
-.logo {
-  font-size: 24px;
-  font-weight: 800;
+.login-btn{
+    width:100%;
+    border:none;
+
+    background:
+        linear-gradient(135deg,var(--green),var(--green-dark));
+
+    color:white;
+
+    padding:16px;
+
+    border-radius:18px;
+
+    font-size:15px;
+    font-weight:700;
+
+    cursor:pointer;
+
+    transition:.2s;
 }
 
-.green { color: #2e7d32; }
-
-.user-box {
-  background: #f3f4f6;
-  padding: 10px 14px;
-  border-radius: 12px;
+.login-btn:hover{
+    transform:translateY(-2px);
 }
 
-/* LAYOUT */
-.main {
-  max-width: 1200px;
-  margin: auto;
-  padding: 20px;
+#errorMsg{
+    margin-top:12px;
+    color:#dc2626;
+    text-align:center;
+    font-size:14px;
 }
 
-.section-title {
-  font-size: 22px;
-  font-weight: 800;
-  margin: 20px 0;
+/* ================= APP ================= */
+
+.app{
+    display:none;
 }
 
-/* BANNER */
-.news-banner {
-  background: linear-gradient(135deg,#1b5e20,#2e7d32);
-  color: white;
-  padding: 18px;
-  border-radius: 18px;
-  margin-bottom: 20px;
+/* ================= HEADER ================= */
+
+.header{
+    position:sticky;
+    top:0;
+    z-index:100;
+
+    background:rgba(255,255,255,.9);
+
+    backdrop-filter:blur(16px);
+
+    border-bottom:1px solid #eef2f7;
+
+    padding:18px 20px;
 }
 
-/* CALCULATORS */
-.calculators {
-  display: grid;
-  grid-template-columns: repeat(auto-fit,minmax(260px,1fr));
-  gap: 16px;
+.header-inner{
+    max-width:1400px;
+    margin:auto;
+
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:20px;
 }
 
-.calculator {
-  background: white;
-  padding: 16px;
-  border-radius: 18px;
+.logo{
+    font-size:32px;
+    font-weight:800;
+    letter-spacing:-1px;
 }
 
-.calc-title {
-  font-weight: 800;
+.logo .green{
+    color:var(--green);
 }
 
-.calc-subtitle {
-  color: #dc2626;
-  font-size: 13px;
-  margin-bottom: 10px;
+.user-box{
+    background:#f3f4f6;
+    padding:12px 16px;
+    border-radius:16px;
+    font-size:14px;
+    font-weight:600;
 }
 
-table {
-  width: 100%;
-  margin-top: 10px;
-  border-collapse: collapse;
+/* ================= MAIN ================= */
+
+.main{
+    max-width:1400px;
+    margin:auto;
+    padding:30px 20px 60px;
 }
 
-td {
-  padding: 8px 0;
-  border-bottom: 1px solid #eee;
+/* ================= SECTION TITLE ================= */
+
+.section-title{
+    font-size:28px;
+    font-weight:800;
+    margin-bottom:24px;
+    letter-spacing:-1px;
 }
 
-/* MENU */
-.menu-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit,minmax(150px,1fr));
-  gap: 12px;
+/* ================= CALCULATORS ================= */
+
+.calculators{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(320px,1fr));
+    gap:22px;
 }
 
-.menu-card {
-  background: white;
-  padding: 16px;
-  border-radius: 18px;
-  text-decoration: none;
-  color: inherit;
+.calculator{
+    background:var(--card);
+
+    border-radius:28px;
+
+    padding:24px;
+
+    border:1px solid #eef2f7;
+
+    box-shadow:
+        0 10px 30px rgba(0,0,0,.04);
+
+    transition:.25s;
 }
 
-.menu-icon {
-  width: 50px;
-  height: 50px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: linear-gradient(135deg,#2e7d32,#1b5e20);
-  color: white;
-  border-radius: 14px;
-  margin-bottom: 10px;
+.calculator:hover{
+    transform:translateY(-4px);
 }
 
-/* MOBILE FIX */
-@media (max-width: 768px) {
-  .header-inner {
-    flex-direction: column;
-    gap: 10px;
-    align-items: flex-start;
-  }
+.calc-title{
+    font-size:18px;
+    font-weight:800;
+    margin-bottom:4px;
+}
+
+.calc-subtitle{
+    color:#dc2626;
+    font-size:14px;
+    font-weight:700;
+    margin-bottom:18px;
+}
+
+.sum{
+    margin-bottom:14px;
+}
+
+.btn{
+    width:100%;
+
+    border:none;
+
+    padding:15px;
+
+    border-radius:18px;
+
+    background:
+        linear-gradient(135deg,var(--blue),#0f4fa8);
+
+    color:white;
+
+    font-size:14px;
+    font-weight:700;
+
+    cursor:pointer;
+
+    transition:.2s;
+}
+
+.btn:hover{
+    transform:translateY(-2px);
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+    margin-top:18px;
+}
+
+td{
+    padding:12px 0;
+    border-bottom:1px solid #f1f5f9;
+    font-size:14px;
+}
+
+.result{
+    text-align:right;
+    font-weight:700;
+}
+
+/* ================= NAVIGATION BLOCKS ================= */
+
+.navigation{
+    margin-top:50px;
+}
+
+.menu-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+    gap:20px;
+}
+
+.menu-card{
+    background:white;
+
+    border-radius:28px;
+
+    padding:24px;
+
+    border:1px solid #eef2f7;
+
+    box-shadow:
+        0 10px 30px rgba(0,0,0,.04);
+
+    text-decoration:none;
+
+    color:var(--text);
+
+    transition:.25s;
+}
+
+.menu-card:hover{
+    transform:translateY(-5px);
+}
+
+.menu-icon{
+    width:58px;
+    height:58px;
+
+    border-radius:18px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    font-size:28px;
+
+    margin-bottom:18px;
+
+    background:
+        linear-gradient(135deg,var(--green),var(--green-dark));
+
+    color:white;
+}
+
+.menu-title{
+    font-size:18px;
+    font-weight:800;
+    margin-bottom:8px;
+}
+
+.menu-desc{
+    font-size:14px;
+    color:var(--muted);
+    line-height:1.6;
+}
+
+/* ================= FOOTER ================= */
+
+.footer{
+    margin-top:60px;
+    text-align:center;
+    color:#94a3b8;
+    font-size:13px;
+}
+
+/* ================= MOBILE ================= */
+
+@media(max-width:768px){
+
+    .header{
+        padding:14px;
+    }
+
+    .header-inner{
+        flex-direction:column;
+        align-items:flex-start;
+    }
+
+    .logo{
+        font-size:28px;
+    }
+
+    .main{
+        padding:20px 14px 50px;
+    }
+
+    .section-title{
+        font-size:24px;
+    }
+
+    .calculator{
+        padding:20px;
+        border-radius:24px;
+    }
+
+    .menu-card{
+        padding:20px;
+        border-radius:24px;
+    }
+
 }
 
 </style>
@@ -211,105 +426,485 @@ td {
 
 <body>
 
-<!-- LOGIN -->
+<!-- ================= LOGIN ================= -->
+
 <div class="login-screen" id="loginScreen">
 
-  <div class="login-box">
+    <div class="login-box">
 
-    <div class="login-title">
-      <span>A</span>uto-<span>S</span>tyle
+        <div class="login-title">
+            <span>A</span>uto-<span>S</span>tyle
+        </div>
+
+        <select id="userSelect">
+
+            <option value="cashier">
+                Кассир
+            </option>
+
+            <option value="evgeniy">
+                Евгений
+            </option>
+
+            <option value="vadim">
+                Вадим
+            </option>
+
+        </select>
+
+        <input
+            type="password"
+            id="passwordInput"
+            placeholder="Введите пароль">
+
+        <button class="login-btn" id="loginBtn">
+            ВОЙТИ
+        </button>
+
+        <div id="errorMsg"></div>
+
     </div>
 
-    <select id="userSelect">
-      <option value="cashier">Кассир</option>
-      <option value="evgeniy">Евгений</option>
-      <option value="vadim">Вадим</option>
-    </select>
-
-    <input type="password" id="passwordInput" placeholder="Введите пароль">
-
-    <button id="loginBtn">ВОЙТИ</button>
-
-    <div class="error" id="errorMsg"></div>
-
-  </div>
 </div>
 
-<!-- APP -->
+<!-- ================= APP ================= -->
+
 <div class="app" id="app">
 
-  <div class="header">
-    <div class="header-inner">
-      <div class="logo"><span class="green">A</span>uto-<span class="green">S</span>tyle</div>
-      <div class="user-box" id="currentUser">👤 Пользователь</div>
-    </div>
-  </div>
+    <!-- HEADER -->
 
-  <div class="main">
+    <header class="header">
 
-    <div class="news-banner">
-      🚀 Бонусный проект запущен — накопительная система скидок
-    </div>
+        <div class="header-inner">
 
-    <div class="section-title">Калькуляторы</div>
+            <div class="logo">
 
-    <div class="calculators">
+                <span class="green">A</span>uto-
+                <span class="green">S</span>tyle
 
-      <div class="calculator">
-        <div class="calc-title">Агропромбанк</div>
-        <div class="calc-subtitle">Рассрочка</div>
+            </div>
 
-        <input type="number" placeholder="Сумма">
+            <div class="user-box" id="currentUser">
+                👤 Пользователь
+            </div>
 
-        <table>
-          <tr><td>3 мес</td><td>0.955</td></tr>
-          <tr><td>6 мес</td><td>0.93</td></tr>
-          <tr><td>12 мес</td><td>0.875</td></tr>
-        </table>
-      </div>
+        </div>
 
-    </div>
+    </header>
 
-    <div class="section-title">Меню</div>
+    <!-- MAIN -->
 
-    <div class="menu-grid">
-      <a class="menu-card" href="#">💳 Безнал</a>
-      <a class="menu-card" href="#">📊 Смена</a>
-      <a class="menu-card" href="#">🎫 Скидки</a>
-      <a class="menu-card" href="#">📚 База</a>
-    </div>
+    <main class="main">
 
-  </div>
+        <!-- CALCULATORS -->
+
+        <div class="section-title">
+            Калькуляторы рассрочки
+        </div>
+
+        <div class="calculators">
+
+            <!-- AGRO -->
+
+            <div class="calculator">
+
+                <div class="calc-title">
+                    КАЛЬКУЛЯТОР РАССРОЧКИ
+                </div>
+
+                <div class="calc-subtitle">
+                    АГРОПРОМБАНК
+                </div>
+
+                <input type="number" class="sum">
+
+                <button class="btn btn-calc">
+                    РАССЧИТАТЬ
+                </button>
+
+                <table>
+
+                    <tr>
+                        <td>3 мес.</td>
+                        <td class="coef">0.955</td>
+                        <td class="result"></td>
+                    </tr>
+
+                    <tr>
+                        <td>6 мес.</td>
+                        <td class="coef">0.93</td>
+                        <td class="result"></td>
+                    </tr>
+
+                    <tr>
+                        <td>9 мес.</td>
+                        <td class="coef">0.90</td>
+                        <td class="result"></td>
+                    </tr>
+
+                    <tr>
+                        <td>12 мес.</td>
+                        <td class="coef">0.875</td>
+                        <td class="result"></td>
+                    </tr>
+
+                </table>
+
+            </div>
+
+            <!-- EXIM -->
+
+            <div class="calculator">
+
+                <div class="calc-title">
+                    КАЛЬКУЛЯТОР РАССРОЧКИ
+                </div>
+
+                <div class="calc-subtitle">
+                    ЭКСИМБАНК
+                </div>
+
+                <input type="number" class="sum">
+
+                <button class="btn btn-calc">
+                    РАССЧИТАТЬ
+                </button>
+
+                <table>
+
+                    <tr>
+                        <td>3 мес.</td>
+                        <td class="coef">0.955</td>
+                        <td class="result"></td>
+                    </tr>
+
+                    <tr>
+                        <td>6 мес.</td>
+                        <td class="coef">0.93</td>
+                        <td class="result"></td>
+                    </tr>
+
+                    <tr>
+                        <td>9 мес.</td>
+                        <td class="coef">0.90</td>
+                        <td class="result"></td>
+                    </tr>
+
+                    <tr>
+                        <td>12 мес.</td>
+                        <td class="coef">0.886</td>
+                        <td class="result"></td>
+                    </tr>
+
+                </table>
+
+            </div>
+
+            <!-- SBER -->
+
+            <div class="calculator">
+
+                <div class="calc-title">
+                    КАЛЬКУЛЯТОР РАССРОЧКИ
+                </div>
+
+                <div class="calc-subtitle">
+                    СБЕРБАНК
+                </div>
+
+                <input type="number" class="sum">
+
+                <button class="btn btn-calc">
+                    РАССЧИТАТЬ
+                </button>
+
+                <table>
+
+                    <tr>
+                        <td>3 мес.</td>
+                        <td class="coef">0.96</td>
+                        <td class="result"></td>
+                    </tr>
+
+                    <tr>
+                        <td>6 мес.</td>
+                        <td class="coef">0.93</td>
+                        <td class="result"></td>
+                    </tr>
+
+                    <tr>
+                        <td>9 мес.</td>
+                        <td class="coef">0.90</td>
+                        <td class="result"></td>
+                    </tr>
+
+                    <tr>
+                        <td>12 мес.</td>
+                        <td class="coef">0.88</td>
+                        <td class="result"></td>
+                    </tr>
+
+                </table>
+
+            </div>
+
+        </div>
+
+        <!-- NAVIGATION -->
+
+        <div class="navigation">
+
+            <div class="section-title">
+                Инструменты AUTO-STYLE
+            </div>
+
+            <div class="menu-grid">
+
+                <a href="beznal.html" class="menu-card">
+
+                    <div class="menu-icon">💳</div>
+
+                    <div class="menu-title">
+                        Безнал
+                    </div>
+
+                    <div class="menu-desc">
+                        Оформление безналичной оплаты и документов.
+                    </div>
+
+                </a>
+
+                <a href="smena.html" class="menu-card">
+
+                    <div class="menu-icon">📊</div>
+
+                    <div class="menu-title">
+                        Закрытие смены
+                    </div>
+
+                    <div class="menu-desc">
+                        Быстрое оформление и завершение смены.
+                    </div>
+
+                </a>
+
+                <a href="discount.html" class="menu-card">
+
+                    <div class="menu-icon">🎫</div>
+
+                    <div class="menu-title">
+                        Скидочная карта
+                    </div>
+
+                    <div class="menu-desc">
+                        Создание и печать анкеты клиента.
+                    </div>
+
+                </a>
+
+                <a href="baza.html" class="menu-card">
+
+                    <div class="menu-icon">📚</div>
+
+                    <div class="menu-title">
+                        База знаний
+                    </div>
+
+                    <div class="menu-desc">
+                        Инструкции, масла и техническая информация.
+                    </div>
+
+                </a>
+
+                <a href="pass.html" class="menu-card">
+
+                    <div class="menu-icon">🔐</div>
+
+                    <div class="menu-title">
+                        Пароли
+                    </div>
+
+                    <div class="menu-desc">
+                        Доступы и служебная информация.
+                    </div>
+
+                </a>
+
+                <a href="#" class="menu-card" onclick="logout()">
+
+                    <div class="menu-icon">🚪</div>
+
+                    <div class="menu-title">
+                        Выход
+                    </div>
+
+                    <div class="menu-desc">
+                        Завершить текущую сессию пользователя.
+                    </div>
+
+                </a>
+
+            </div>
+
+        </div>
+
+        <div class="footer">
+            AUTO-STYLE © 2026
+        </div>
+
+    </main>
+
 </div>
 
 <script>
 
-const loginScreen = document.getElementById("loginScreen");
-const app = document.getElementById("app");
-const loginBtn = document.getElementById("loginBtn");
-const passwordInput = document.getElementById("passwordInput");
-const userSelect = document.getElementById("userSelect");
-const errorMsg = document.getElementById("errorMsg");
-const currentUser = document.getElementById("currentUser");
+const users = {
 
-const PASSWORD = "1234";
+    cashier:{
+        name:"Кассир",
+        pass:"2012"
+    },
 
-function login() {
-  const pass = passwordInput.value;
+    evgeniy:{
+        name:"Евгений",
+        pass:"0186"
+    },
 
-  if (pass === PASSWORD) {
-    loginScreen.style.display = "none";
-    app.style.display = "block";
-    currentUser.textContent = "👤 " + userSelect.value;
-  } else {
-    errorMsg.textContent = "Неверный пароль";
-  }
+    vadim:{
+        name:"Вадим",
+        pass:"2385"
+    }
+
+};
+
+const loginScreen =
+    document.getElementById("loginScreen");
+
+const app =
+    document.getElementById("app");
+
+const userSelect =
+    document.getElementById("userSelect");
+
+const passwordInput =
+    document.getElementById("passwordInput");
+
+const loginBtn =
+    document.getElementById("loginBtn");
+
+const errorMsg =
+    document.getElementById("errorMsg");
+
+const currentUser =
+    document.getElementById("currentUser");
+
+/* ================= SESSION ================= */
+
+const session =
+    JSON.parse(localStorage.getItem("session"));
+
+if(session && session.expire > Date.now()){
+
+    openApp(session.name);
+
 }
 
-loginBtn.addEventListener("click", login);
+/* ================= LOGIN ================= */
 
-passwordInput.addEventListener("keydown", (e) => {
-  if (e.key === "Enter") login();
+function login(){
+
+    const user = userSelect.value;
+
+    if(passwordInput.value === users[user].pass){
+
+        const expire =
+            Date.now() + 24 * 60 * 60 * 1000;
+
+        localStorage.setItem(
+            "session",
+            JSON.stringify({
+                name:users[user].name,
+                expire
+            })
+        );
+
+        openApp(users[user].name);
+
+    }else{
+
+        errorMsg.textContent =
+            "Неверный пароль";
+
+    }
+
+}
+
+function openApp(name){
+
+    loginScreen.style.display = "none";
+
+    app.style.display = "block";
+
+    currentUser.innerHTML =
+        "👤 " + name;
+
+}
+
+function logout(){
+
+    localStorage.removeItem("session");
+
+    location.reload();
+
+}
+
+loginBtn.onclick = login;
+
+passwordInput.addEventListener("keyup", e => {
+
+    if(e.key === "Enter"){
+
+        login();
+
+    }
+
+});
+
+/* ================= CALCULATORS ================= */
+
+document.querySelectorAll(".calculator")
+.forEach(calc => {
+
+    calc.querySelector(".btn-calc")
+    .onclick = function(){
+
+        const sum =
+            parseFloat(
+                calc.querySelector(".sum").value
+            );
+
+        if(isNaN(sum)) return;
+
+        calc.querySelectorAll(".coef")
+        .forEach((coef,i) => {
+
+            const value =
+                sum / parseFloat(coef.textContent);
+
+            calc.querySelectorAll(".result")[i]
+            .textContent =
+                value.toLocaleString(
+                    "ru-RU",
+                    {
+                        minimumFractionDigits:2,
+                        maximumFractionDigits:2
+                    }
+                );
+
+        });
+
+    };
+
 });
 
 </script>
