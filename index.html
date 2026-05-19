@@ -972,7 +972,45 @@ passwordInput.addEventListener("keyup", e => {
         login();
 
     }
+  
     
+/* ================= CALCULATORS ================= */
+
+document.querySelectorAll(".calculator")
+.forEach(calc => {
+
+    calc.querySelector(".btn-calc")
+    .onclick = function(){
+
+        const sum =
+            parseFloat(
+                calc.querySelector(".sum").value
+            );
+
+        if(isNaN(sum)) return;
+
+        calc.querySelectorAll(".coef")
+        .forEach((coef,i) => {
+
+            const value =
+                sum / parseFloat(coef.textContent);
+
+            calc.querySelectorAll(".result")[i]
+            .textContent =
+                value.toLocaleString(
+                    "ru-RU",
+                    {
+                        minimumFractionDigits:2,
+                        maximumFractionDigits:2
+                    }
+                );
+
+        });
+
+    };
+
+});
+  
 const endDate = new Date("2026-06-20T00:00:00").getTime();
 
 function updateTimer(){
@@ -1021,44 +1059,6 @@ updateTimer();
 
 setInterval(updateTimer, 1000);
 updateTimer();
-    
-/* ================= CALCULATORS ================= */
-
-document.querySelectorAll(".calculator")
-.forEach(calc => {
-
-    calc.querySelector(".btn-calc")
-    .onclick = function(){
-
-        const sum =
-            parseFloat(
-                calc.querySelector(".sum").value
-            );
-
-        if(isNaN(sum)) return;
-
-        calc.querySelectorAll(".coef")
-        .forEach((coef,i) => {
-
-            const value =
-                sum / parseFloat(coef.textContent);
-
-            calc.querySelectorAll(".result")[i]
-            .textContent =
-                value.toLocaleString(
-                    "ru-RU",
-                    {
-                        minimumFractionDigits:2,
-                        maximumFractionDigits:2
-                    }
-                );
-
-        });
-
-    };
-
-});
-
 </script>
 
 </body>
