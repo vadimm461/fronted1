@@ -972,6 +972,36 @@ passwordInput.addEventListener("keyup", e => {
 
 });
 
+    const endDate = new Date("2026-06-20T00:00:00").getTime();
+
+function updateTimer() {
+    const now = Date.now();
+    const diff = endDate - now;
+
+    if (diff <= 0) {
+        document.getElementById("days").textContent = "0";
+        return;
+    }
+
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+    const minutes = Math.floor((diff / (1000 * 60)) % 60);
+    const seconds = Math.floor((diff / 1000) % 60);
+
+    const el = document.getElementById("days");
+
+    if (el) {
+        el.innerHTML =
+            days + "д " +
+            hours + "ч " +
+            minutes + "м " +
+            seconds + "с";
+    }
+}
+
+setInterval(updateTimer, 1000);
+updateTimer();
+    
 /* ================= CALCULATORS ================= */
 
 document.querySelectorAll(".calculator")
