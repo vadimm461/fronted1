@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -23,26 +24,33 @@ body{
     font-family:'Inter',sans-serif;
     background:#f3f6fb;
     color:#111827;
+    min-height:100vh;
     padding:20px;
 }
 
+/* ================= CONTAINER ================= */
+
 .container{
+    width:100%;
     max-width:1000px;
     margin:0 auto;
 }
+
+/* ================= TOPBAR ================= */
 
 .topbar{
     display:flex;
     justify-content:space-between;
     align-items:center;
-    margin-bottom:24px;
     gap:16px;
+    margin-bottom:24px;
     flex-wrap:wrap;
 }
 
 .title{
     font-size:34px;
     font-weight:800;
+    letter-spacing:-1px;
 }
 
 .back-btn{
@@ -51,14 +59,16 @@ body{
     color:white;
     padding:14px 18px;
     border-radius:16px;
-    cursor:pointer;
     font-weight:700;
+    cursor:pointer;
     transition:0.2s;
 }
 
 .back-btn:hover{
     transform:translateY(-2px);
 }
+
+/* ================= CARD ================= */
 
 .card{
     background:white;
@@ -67,6 +77,8 @@ body{
     border:1px solid #eef2f7;
     box-shadow:0 10px 30px rgba(0,0,0,0.04);
 }
+
+/* ================= CONDITIONS ================= */
 
 .conditions{
     display:flex;
@@ -78,10 +90,11 @@ body{
 .condition-box{
     display:flex;
     gap:18px;
+    align-items:flex-start;
     padding:18px;
+    border:1px solid #edf2f7;
     border-radius:20px;
     background:#f9fafb;
-    border:1px solid #edf2f7;
 }
 
 .condition-number{
@@ -93,26 +106,26 @@ body{
     display:flex;
     align-items:center;
     justify-content:center;
+    font-size:14px;
     font-weight:800;
 }
 
 .condition-text{
+    font-size:15px;
     line-height:1.7;
     color:#374151;
-    font-size:15px;
 }
+
+/* ================= BUTTONS ================= */
 
 .btn{
     border:none;
     border-radius:16px;
     padding:16px 20px;
+    font-size:14px;
     font-weight:700;
     cursor:pointer;
     transition:0.2s;
-}
-
-.btn:hover{
-    transform:translateY(-2px);
 }
 
 .connect-btn{
@@ -125,6 +138,12 @@ body{
     background:#111827;
     color:white;
 }
+
+.btn:hover{
+    transform:translateY(-2px);
+}
+
+/* ================= FORM ================= */
 
 .form-wrapper{
     display:none;
@@ -151,11 +170,12 @@ body{
 
 .field label{
     font-size:13px;
-    font-weight:700;
     color:#6b7280;
+    font-weight:700;
 }
 
 .field input{
+    width:100%;
     border:1px solid #e5e7eb;
     background:#f9fafb;
     border-radius:16px;
@@ -171,12 +191,22 @@ body{
 
 .actions{
     margin-top:26px;
+    display:flex;
+    gap:14px;
+    flex-wrap:wrap;
 }
+
+/* ================= MOBILE ================= */
 
 @media(max-width:768px){
 
     body{
         padding:14px;
+    }
+
+    .card{
+        padding:22px;
+        border-radius:22px;
     }
 
     .grid{
@@ -187,8 +217,16 @@ body{
         font-size:26px;
     }
 
-    .card{
-        padding:22px;
+    .actions{
+        flex-direction:column;
+    }
+
+    .btn{
+        width:100%;
+    }
+
+    .back-btn{
+        width:100%;
     }
 
     .condition-box{
@@ -230,6 +268,7 @@ body{
     .doc-top{
         display:flex;
         justify-content:space-between;
+        align-items:flex-start;
         margin-bottom:32px;
     }
 
@@ -253,15 +292,15 @@ body{
 
     .row{
         display:grid;
-        grid-template-columns:220px 1fr;
-        padding:12px 0;
+        grid-template-columns:230px 1fr;
         border-bottom:1px solid #edf2f7;
+        padding:12px 0;
     }
 
     .row-label{
         font-size:12px;
         color:#6b7280;
-        font-weight:700;
+        font-weight:600;
     }
 
     .row-value{
@@ -274,21 +313,6 @@ body{
         font-size:13px;
         line-height:1.8;
         color:#374151;
-    }
-
-    .signature{
-        margin-top:70px;
-    }
-
-    .line{
-        border-bottom:1px solid #111827;
-        height:32px;
-    }
-
-    .sign-text{
-        margin-top:8px;
-        font-size:11px;
-        color:#6b7280;
     }
 
     .condition{
@@ -317,6 +341,52 @@ body{
         color:#374151;
     }
 
+    .warning{
+        margin-top:26px;
+        padding:18px;
+        border:1px solid #e5e7eb;
+        border-radius:18px;
+        background:#f9fafb;
+    }
+
+    .warning-title{
+        font-size:11px;
+        font-weight:800;
+        text-transform:uppercase;
+        margin-bottom:8px;
+    }
+
+    .warning-text{
+        font-size:12px;
+        line-height:1.7;
+        color:#4b5563;
+    }
+
+    .signature{
+        margin-top:70px;
+    }
+
+    .line{
+        border-bottom:1px solid #111827;
+        height:32px;
+    }
+
+    .sign-text{
+        font-size:11px;
+        color:#6b7280;
+        margin-top:8px;
+    }
+
+    .footer{
+        margin-top:50px;
+        display:flex;
+        justify-content:space-between;
+        font-size:10px;
+        color:#9ca3af;
+        border-top:1px solid #f1f5f9;
+        padding-top:12px;
+    }
+
 }
 
 </style>
@@ -339,6 +409,8 @@ body{
     </div>
 
     <div class="card">
+
+        <!-- УСЛОВИЯ -->
 
         <div class="conditions">
 
@@ -376,9 +448,17 @@ body{
 
         </div>
 
-        <button class="btn connect-btn" onclick="openForm()">
+        <!-- BUTTON -->
+
+        <button
+            class="btn connect-btn"
+            onclick="openForm()">
+
             Подключить к бонусному проекту
+
         </button>
+
+        <!-- FORM -->
 
         <div class="form-wrapper" id="formWrapper">
 
@@ -397,14 +477,16 @@ body{
                     </div>
 
                     <div class="field">
-                        <label>Телефон</label>
+                        <label>Контактный телефон</label>
                         <input id="phone" type="tel">
                     </div>
 
                     <div class="field full">
-                        <label>Email</label>
+                        <label>Электронная почта</label>
                         <input id="email" type="email">
                     </div>
+
+                    <!-- АВТО -->
 
                     <div class="field">
                         <label>Марка автомобиля</label>
@@ -466,14 +548,16 @@ body{
     </div>
 
     <div class="row">
-        <div class="row-label">Телефон</div>
+        <div class="row-label">Контактный телефон</div>
         <div class="row-value" id="p_phone"></div>
     </div>
 
     <div class="row">
-        <div class="row-label">Email</div>
+        <div class="row-label">Электронная почта</div>
         <div class="row-value" id="p_email"></div>
     </div>
+
+    <!-- АВТО -->
 
     <div class="row">
         <div class="row-label">Марка автомобиля</div>
@@ -486,8 +570,15 @@ body{
     </div>
 
     <div class="text">
-        Подписывая данный документ, клиент подтверждает согласие
-        на обработку персональных данных.
+
+        Настоящая анкета предоставляется клиентом
+        для подключения к бонусному проекту AUTO-STYLE.
+
+        <br><br>
+
+        Подписывая данный документ, клиент подтверждает
+        согласие на обработку персональных данных.
+
     </div>
 
     <div class="signature">
@@ -495,20 +586,34 @@ body{
         <div style="display:flex; gap:40px;">
 
             <div style="flex:1;">
+
                 <div class="line"></div>
+
                 <div class="sign-text">
                     Подпись клиента
                 </div>
+
             </div>
 
             <div style="flex:1;">
+
                 <div class="line"></div>
+
                 <div class="sign-text">
                     Расшифровка подписи
                 </div>
+
             </div>
 
         </div>
+
+    </div>
+
+    <div class="footer">
+
+        <span>AUTO-STYLE</span>
+
+        <span>01</span>
 
     </div>
 
@@ -557,6 +662,39 @@ body{
         </div>
     </div>
 
+    <div class="warning">
+
+        <div class="warning-title">
+            ВАЖНО
+        </div>
+
+        <div class="warning-text">
+
+            Магазин AUTO-STYLE оставляет за собой право
+            изменять условия бонусного проекта без предварительного уведомления.
+
+        </div>
+
+    </div>
+
+    <div class="signature">
+
+        <div class="line"></div>
+
+        <div class="sign-text">
+            Подпись клиента / дата
+        </div>
+
+    </div>
+
+    <div class="footer">
+
+        <span>AUTO-STYLE</span>
+
+        <span>02</span>
+
+    </div>
+
 </div>
 
 <script>
@@ -588,6 +726,8 @@ form.addEventListener("submit", function(e){
 
     document.getElementById("p_email").innerText =
         document.getElementById("email").value;
+
+    /* АВТО */
 
     document.getElementById("print_car_brand").innerText =
         document.getElementById("car_brand").value;
