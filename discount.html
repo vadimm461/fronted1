@@ -15,12 +15,13 @@
 }
 
 body{
-    background:#111827;
-    color:white;
-    padding:20px;
+    background:#f3f4f6;
+    color:#111827;
+    padding:15px;
 }
 
 .container{
+    width:100%;
     max-width:900px;
     margin:0 auto;
 }
@@ -29,31 +30,37 @@ body{
     display:flex;
     justify-content:space-between;
     align-items:center;
+    gap:15px;
     margin-bottom:25px;
+    flex-wrap:wrap;
 }
 
 .title{
     font-size:28px;
     font-weight:bold;
+    color:#111827;
 }
 
 .back-btn{
-    background:#374151;
+    background:#2563eb;
     border:none;
     color:white;
     padding:12px 18px;
     border-radius:10px;
     cursor:pointer;
+    font-size:15px;
+    transition:.2s;
 }
 
 .back-btn:hover{
-    background:#4b5563;
+    background:#1d4ed8;
 }
 
 .card{
-    background:#1f2937;
+    background:white;
     padding:25px;
-    border-radius:18px;
+    border-radius:20px;
+    box-shadow:0 5px 25px rgba(0,0,0,.08);
 }
 
 .grid{
@@ -73,28 +80,33 @@ body{
 }
 
 .field label{
-    color:#d1d5db;
+    color:#374151;
     font-size:14px;
+    font-weight:600;
 }
 
 .field input{
-    background:#111827;
-    border:1px solid #374151;
-    color:white;
-    padding:12px;
-    border-radius:10px;
+    width:100%;
+    background:#f9fafb;
+    border:1px solid #d1d5db;
+    color:#111827;
+    padding:14px;
+    border-radius:12px;
     outline:none;
     font-size:15px;
+    transition:.2s;
 }
 
 .field input:focus{
     border-color:#2563eb;
+    background:white;
 }
 
 .actions{
     margin-top:25px;
     display:flex;
     gap:15px;
+    flex-wrap:wrap;
 }
 
 .btn{
@@ -105,32 +117,23 @@ body{
     color:white;
     font-size:15px;
     font-weight:bold;
+    transition:.2s;
 }
 
 .save-btn{
     background:#2563eb;
 }
 
+.save-btn:hover{
+    background:#1d4ed8;
+}
+
 .print-btn{
     background:#059669;
 }
 
-.history{
-    margin-top:35px;
-}
-
-.history-list{
-    display:flex;
-    flex-direction:column;
-    gap:15px;
-    margin-top:15px;
-}
-
-.history-item{
-    background:#1f2937;
-    border:1px solid #374151;
-    border-radius:12px;
-    padding:15px;
+.print-btn:hover{
+    background:#047857;
 }
 
 .print-document{
@@ -138,12 +141,12 @@ body{
 }
 
 .signature-zone{
-    margin-top:50px;
+    margin-top:60px;
 }
 
 .signature-line{
     border-bottom:1px solid black;
-    margin-top:35px;
+    margin-top:40px;
 }
 
 .signature-text{
@@ -153,14 +156,66 @@ body{
     font-size:14px;
 }
 
+@media(max-width:992px){
+
+    .container{
+        max-width:100%;
+    }
+
+}
+
 @media(max-width:768px){
+
+    body{
+        padding:12px;
+    }
 
     .grid{
         grid-template-columns:1fr;
+        gap:18px;
+    }
+
+    .card{
+        padding:20px;
     }
 
     .title{
-        font-size:22px;
+        font-size:24px;
+    }
+
+    .actions{
+        flex-direction:column;
+    }
+
+    .btn{
+        width:100%;
+    }
+
+}
+
+@media(max-width:480px){
+
+    .title{
+        font-size:20px;
+    }
+
+    .back-btn{
+        width:100%;
+    }
+
+    .topbar{
+        flex-direction:column;
+        align-items:stretch;
+    }
+
+    .card{
+        padding:16px;
+        border-radius:16px;
+    }
+
+    .field input{
+        font-size:14px;
+        padding:12px;
     }
 
 }
@@ -199,11 +254,12 @@ body{
     .print-row{
         margin-bottom:18px;
         font-size:17px;
+        line-height:1.6;
     }
 
     .agreement{
         margin-top:35px;
-        line-height:1.7;
+        line-height:1.8;
         font-size:15px;
     }
 
@@ -217,8 +273,15 @@ body{
 <div class="container">
 
     <div class="topbar">
-        <button class="back-btn" onclick="goBack()">← Назад</button>
-        <div class="title">Анкета покупателя</div>
+
+        <button class="back-btn" onclick="goBack()">
+            ← Назад
+        </button>
+
+        <div class="title">
+            Анкета покупателя
+        </div>
+
     </div>
 
     <div class="card">
@@ -260,6 +323,7 @@ body{
             </div>
 
             <div class="actions">
+
                 <button type="submit" class="btn save-btn">
                     Готово
                 </button>
@@ -269,17 +333,10 @@ body{
                         onclick="window.print()">
                     Печать
                 </button>
+
             </div>
 
         </form>
-
-    </div>
-
-    <div class="history">
-
-        <h2>История анкет</h2>
-
-        <div class="history-list" id="historyList"></div>
 
     </div>
 
@@ -364,38 +421,11 @@ body{
 
 <script>
 
-const form = document.getElementById('discountForm');
-const historyList = document.getElementById('historyList');
-
 function goBack(){
     window.history.back();
 }
 
-function loadHistory(){
-
-    const history =
-        JSON.parse(localStorage.getItem('discountHistory')) || [];
-
-    historyList.innerHTML = '';
-
-    history.slice().reverse().forEach(item => {
-
-        const div = document.createElement('div');
-
-        div.className = 'history-item';
-
-        div.innerHTML = `
-            <p><strong>ФИО:</strong> ${item.fullname}</p>
-            <p><strong>Автомобиль:</strong> ${item.brand} ${item.model}</p>
-            <p><strong>Телефон:</strong> ${item.phone}</p>
-            <p><strong>Дата:</strong> ${item.created}</p>
-        `;
-
-        historyList.appendChild(div);
-
-    });
-
-}
+const form = document.getElementById('discountForm');
 
 form.addEventListener('submit', function(e){
 
@@ -419,26 +449,9 @@ form.addEventListener('submit', function(e){
             document.getElementById('phone').value,
 
         email:
-            document.getElementById('email').value,
-
-        created:
-            new Date().toLocaleString('ru-RU')
+            document.getElementById('email').value
 
     };
-
-    const history =
-        JSON.parse(localStorage.getItem('discountHistory')) || [];
-
-    history.push(data);
-
-    localStorage.setItem(
-        'discountHistory',
-        JSON.stringify(history)
-    );
-
-    loadHistory();
-
-    // данные в печатный документ
 
     document.getElementById('p_fullname').innerText =
         data.fullname;
@@ -463,8 +476,6 @@ form.addEventListener('submit', function(e){
     }, 300);
 
 });
-
-loadHistory();
 
 </script>
 
