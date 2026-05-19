@@ -417,32 +417,32 @@ body{
             <div class="condition-box">
                 <div class="condition-number">01</div>
                 <div class="condition-text">
-                    При регистрации анкеты покупатель дает согласие на обработку персональных данных. Оформление занимает до 3 рабочих дней.
+                    При регистрации анкеты в магазине, покупатель дает согласие на обработку персональных данных, оформление занимает до 3 рабочих дней
                 </div>
             </div>
 
             <div class="condition-box">
                 <div class="condition-number">02</div>
                 <div class="condition-text">
-                    Для подключения к бонусному проекту клиент должен совершить покупку минимум на 1000р.
+                    Для подключения к бонусному проекту клиент должен совершить покупку на сумму минимум 1000р, это может быть как разовая покупка так и несколько покупок (при предъявлении чека)
                 </div>
             </div>
 
             <div class="condition-box">
                 <div class="condition-number">03</div>
                 <div class="condition-text">
-                    Стартовая скидка до 5%<br>
-                    До 7% — при сумме покупок от 1500р<br>
-                    До 10% — при сумме покупок от 3000р<br>
-                    До 15% — при сумме покупок от 5000р<br>
-                    До 20% — при сумме покупок от 10000р
+                    Стартовая скидка проекта до 5%<br>
+                    Скидка до 7% при превышении порога покупок на сумму 1500р<br>
+                    Скидка до 10% при превышении порога покупок на сумму 3000р<br>
+                    Скидка до 15% при превышении порога покупок на сумму 5000р<br>
+                    Скидка до 20% при превышении порога покупок на сумму 10000р
                 </div>
             </div>
 
             <div class="condition-box">
                 <div class="condition-number">04</div>
                 <div class="condition-text">
-                    При каждой покупке клиент должен назвать ФИО либо номер телефона.
+                    При каждой последующей покупке клиент обязуется называть одно из условий его скидки (ФИО либо номер телефона) для сложения суммы скидки.
                 </div>
             </div>
 
@@ -485,8 +485,6 @@ body{
                         <label>Электронная почта</label>
                         <input id="email" type="email">
                     </div>
-
-                    <!-- АВТО -->
 
                     <div class="field">
                         <label>Марка автомобиля</label>
@@ -539,25 +537,23 @@ body{
 
     <div class="row">
         <div class="row-label">ФИО клиента</div>
-        <div class="row-value" id="p_fullname"></div>
+        <div class="row-value" id="print_fullname"></div>
     </div>
 
     <div class="row">
         <div class="row-label">Дата рождения</div>
-        <div class="row-value" id="p_birthdate"></div>
+        <div class="row-value" id="print_birthdate"></div>
     </div>
 
     <div class="row">
         <div class="row-label">Контактный телефон</div>
-        <div class="row-value" id="p_phone"></div>
+        <div class="row-value" id="print_phone"></div>
     </div>
 
     <div class="row">
         <div class="row-label">Электронная почта</div>
-        <div class="row-value" id="p_email"></div>
+        <div class="row-value" id="print_email"></div>
     </div>
-
-    <!-- АВТО -->
 
     <div class="row">
         <div class="row-label">Марка автомобиля</div>
@@ -578,6 +574,10 @@ body{
 
         Подписывая данный документ, клиент подтверждает
         согласие на обработку персональных данных.
+
+        <br><br>
+
+        Предоставленные персональные данные используются исключительно внутри магазина AUTO-STYLE и не передаются третьим лицам.
 
     </div>
 
@@ -630,33 +630,40 @@ body{
     <div class="condition">
         <div class="condition-number-print">01</div>
         <div class="condition-text-print">
-            Стартовая скидка до 5%
+            Активация анкеты занимает до 3 рабочих дней
         </div>
     </div>
 
     <div class="condition">
         <div class="condition-number-print">02</div>
         <div class="condition-text-print">
-            Скидка до 7% при сумме покупок выше 1500р
+            Стартовая скидка до 5%
         </div>
     </div>
 
     <div class="condition">
         <div class="condition-number-print">03</div>
         <div class="condition-text-print">
-            Скидка до 10% при сумме покупок выше 3000р
+            Скидка до 7% при сумме покупок выше 1500р
         </div>
     </div>
 
     <div class="condition">
         <div class="condition-number-print">04</div>
         <div class="condition-text-print">
-            Скидка до 15% при сумме покупок выше 5000р
+            Скидка до 10% при сумме покупок выше 3000р
         </div>
     </div>
 
     <div class="condition">
         <div class="condition-number-print">05</div>
+        <div class="condition-text-print">
+            Скидка до 15% при сумме покупок выше 5000р
+        </div>
+    </div>
+
+    <div class="condition">
+        <div class="condition-number-print">06</div>
         <div class="condition-text-print">
             Скидка до 20% при сумме покупок выше 10000р
         </div>
@@ -709,25 +716,21 @@ function openForm(){
 
 }
 
-const form = document.getElementById("discountForm");
-
-form.addEventListener("submit", function(e){
+document.getElementById("discountForm").addEventListener("submit", function(e){
 
     e.preventDefault();
 
-    document.getElementById("p_fullname").innerText =
+    document.getElementById("print_fullname").innerText =
         document.getElementById("fullname").value;
 
-    document.getElementById("p_birthdate").innerText =
+    document.getElementById("print_birthdate").innerText =
         document.getElementById("birthdate").value;
 
-    document.getElementById("p_phone").innerText =
+    document.getElementById("print_phone").innerText =
         document.getElementById("phone").value;
 
-    document.getElementById("p_email").innerText =
+    document.getElementById("print_email").innerText =
         document.getElementById("email").value;
-
-    /* АВТО */
 
     document.getElementById("print_car_brand").innerText =
         document.getElementById("car_brand").value;
@@ -736,7 +739,9 @@ form.addEventListener("submit", function(e){
         document.getElementById("car_model").value;
 
     setTimeout(function(){
+
         window.print();
+
     },200);
 
 });
