@@ -126,6 +126,24 @@ margin-bottom:12px;
 color:#111827;
 }
 
+.cashier{
+margin-bottom:14px;
+padding:10px 14px;
+
+background:
+linear-gradient(
+135deg,
+#eff6ff,
+#dbeafe
+);
+
+border-radius:14px;
+
+color:#1d4ed8;
+font-weight:700;
+font-size:15px;
+}
+
 .info{
 display:flex;
 flex-direction:column;
@@ -196,6 +214,11 @@ grid-template-columns:1fr;
 
 <input
 type="text"
+id="cashier"
+placeholder="Имя кассира">
+
+<input
+type="text"
 id="name"
 placeholder="Название товара">
 
@@ -250,6 +273,9 @@ renderProducts();
 
 function saveProduct(){
 
+const cashier =
+document.getElementById('cashier').value;
+
 const name =
 document.getElementById('name').value;
 
@@ -263,6 +289,7 @@ const bonus =
 Number(document.getElementById('bonus').value);
 
 if(
+!cashier ||
 !name ||
 !plan ||
 !sold ||
@@ -274,6 +301,7 @@ return;
 
 const product = {
 
+cashier,
 name,
 plan,
 sold,
@@ -318,6 +346,9 @@ function editProduct(index){
 
 const product = products[index];
 
+document.getElementById('cashier').value =
+product.cashier;
+
 document.getElementById('name').value =
 product.name;
 
@@ -343,6 +374,7 @@ behavior:'smooth'
 
 function clearForm(){
 
+document.getElementById('cashier').value = '';
 document.getElementById('name').value = '';
 document.getElementById('plan').value = '';
 document.getElementById('sold').value = '';
@@ -368,6 +400,10 @@ product.bonus;
 list.innerHTML += `
 
 <div class="card">
+
+<div class="cashier">
+Кассир: ${product.cashier}
+</div>
 
 <h2>${product.name}</h2>
 
