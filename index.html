@@ -927,6 +927,9 @@ td{
 .green{
     color:#2e7d32;
 }
+    .manager-only{
+    display:none;
+}
 </style>
 </head>
 
@@ -1285,7 +1288,37 @@ td{
                 </a>
 
                 <a href="pass.html" class="menu-card">
+<!-- ТОЛЬКО ЖЕНЯ И ВАДИМ -->
 
+<a href="close-shift.html"
+class="menu-card manager-only">
+
+    <div class="menu-icon">🧾</div>
+
+    <div class="menu-title">
+        Закрытие смен
+    </div>
+
+    <div class="menu-desc">
+        Дополнительное закрытие смены.
+    </div>
+
+</a>
+
+<a href="cash-diff.html"
+class="menu-card manager-only">
+
+    <div class="menu-icon">💰</div>
+
+    <div class="menu-title">
+        Расхождение по кассе
+    </div>
+
+    <div class="menu-desc">
+        Контроль расхождения наличности.
+    </div>
+
+</a>
                     <div class="menu-icon">🔐</div>
 
                     <div class="menu-title">
@@ -1415,6 +1448,20 @@ function openApp(name){
 
     currentUser.innerHTML =
         "👤 " + name;
+
+    document
+        .querySelectorAll(".manager-only")
+        .forEach(btn=>{
+
+            btn.style.display =
+                (
+                    name === "Евгений" ||
+                    name === "Вадим"
+                )
+                ? "block"
+                : "none";
+
+        });
 
 }
 
