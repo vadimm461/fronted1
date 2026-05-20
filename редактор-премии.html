@@ -211,13 +211,8 @@ placeholder="Количество продаж">
 
 <input
 type="number"
-id="quantity"
-placeholder="Штук в товаре">
-
-<input
-type="number"
 id="bonus"
-placeholder="Бонус за 1 штуку">
+placeholder="Бонус за 1 продажу">
 
 <button
 class="add"
@@ -264,9 +259,6 @@ Number(document.getElementById('plan').value);
 const sold =
 Number(document.getElementById('sold').value);
 
-const quantity =
-Number(document.getElementById('quantity').value);
-
 const bonus =
 Number(document.getElementById('bonus').value);
 
@@ -274,7 +266,6 @@ if(
 !name ||
 !plan ||
 !sold ||
-!quantity ||
 !bonus
 ){
 alert('Заполните все поля');
@@ -286,7 +277,6 @@ const product = {
 name,
 plan,
 sold,
-quantity,
 bonus
 
 };
@@ -337,9 +327,6 @@ product.plan;
 document.getElementById('sold').value =
 product.sold;
 
-document.getElementById('quantity').value =
-product.quantity;
-
 document.getElementById('bonus').value =
 product.bonus;
 
@@ -359,7 +346,6 @@ function clearForm(){
 document.getElementById('name').value = '';
 document.getElementById('plan').value = '';
 document.getElementById('sold').value = '';
-document.getElementById('quantity').value = '';
 document.getElementById('bonus').value = '';
 
 }
@@ -377,7 +363,6 @@ products.forEach((product,index)=>{
 
 const totalBonus =
 product.sold *
-product.quantity *
 product.bonus;
 
 list.innerHTML += `
@@ -399,12 +384,7 @@ list.innerHTML += `
 </div>
 
 <div>
-Штук в товаре:
-<b>${product.quantity}</b>
-</div>
-
-<div>
-Бонус за 1 штуку:
+Бонус за 1 продажу:
 <b>${product.bonus} ₽</b>
 </div>
 
