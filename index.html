@@ -888,7 +888,45 @@ td{
     }
 
 }
+/* ===== LOGO ===== */
 
+.logo{
+    display:flex;
+    align-items:center;
+    gap:12px;
+}
+
+.logo-icon{
+    width:44px;
+    height:44px;
+    object-fit:contain;
+    border-radius:10px;
+    box-shadow:0 4px 12px rgba(0,0,0,.25);
+}
+
+.logo-text{
+    display:flex;
+    flex-direction:column;
+    line-height:1;
+}
+
+.logo-title{
+    font-size:24px;
+    font-weight:800;
+}
+
+.logo-subtitle{
+    margin-top:5px;
+    font-size:11px;
+    letter-spacing:2px;
+    color:#8d939e;
+    font-weight:700;
+    text-transform:uppercase;
+}
+
+.green{
+    color:#2e7d32;
+}
 </style>
 </head>
 
@@ -945,12 +983,27 @@ td{
 
         <div class="header-inner">
 
-            <div class="logo">
+           <div class="logo">
 
-                <span class="green">A</span>uto-
-                <span class="green">S</span>tyle
+    <img
+        src="favicon.png"
+        alt="AUTO-STYLE"
+        class="logo-icon">
 
-            </div>
+    <div class="logo-text">
+
+        <div class="logo-title">
+            <span class="green">A</span>uto-
+            <span class="green">S</span>tyle
+        </div>
+
+        <div class="logo-subtitle">
+            ПАНЕЛЬ МЕНЕДЖЕРА
+        </div>
+
+    </div>
+
+</div>
 
             <div class="user-box" id="currentUser">
                 👤 Пользователь
