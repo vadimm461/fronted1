@@ -709,9 +709,13 @@ td{
     display:grid;
 
     grid-template-columns:
-        repeat(auto-fit,minmax(240px,1fr));
+        repeat(auto-fill,minmax(240px,240px));
+
+    justify-content:start;
 
     gap:22px;
+
+    align-items:start;
 
 }
 
