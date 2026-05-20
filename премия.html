@@ -1,0 +1,376 @@
+# премия.html
+
+```html
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Премия — AUTO-STYLE</title>
+<style>
+
+*{
+box-sizing:border-box;
+margin:0;
+padding:0;
+}
+
+body{
+font-family:Inter,sans-serif;
+background:#f4f7fb;
+overflow:auto;
+}
+
+.header{
+height:82px;
+background:rgba(255,255,255,.88);
+backdrop-filter:blur(14px);
+border-bottom:1px solid #e5e7eb;
+display:flex;
+align-items:center;
+justify-content:space-between;
+padding:0 20px;
+}
+
+.left{
+display:flex;
+align-items:center;
+gap:16px;
+}
+
+.logo{
+display:flex;
+align-items:center;
+gap:12px;
+text-decoration:none;
+color:#111827;
+}
+
+.logo img{
+width:44px;
+height:44px;
+border-radius:10px;
+}
+
+.logo-title{
+font-size:28px;
+font-weight:900;
+}
+
+.green{
+color:#2e7d32;
+}
+
+.subtitle{
+font-size:11px;
+letter-spacing:2px;
+color:#94a3b8;
+}
+
+.back{
+border:none;
+background:linear-gradient(135deg,#34c759,#1f8f3d);
+color:white;
+padding:12px 20px;
+border-radius:16px;
+cursor:pointer;
+font-weight:800;
+}
+
+.back:hover{
+opacity:.95;
+}
+
+.content{
+padding:20px;
+height:calc(100vh - 82px);
+overflow:auto;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: #f5f5f5;
+    padding: 20px;
+}
+
+h1 {
+    text-align: center;
+}
+
+.card {
+    background: white;
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.progress {
+    width: 100%;
+    height: 25px;
+    background: #ddd;
+    border-radius: 20px;
+    overflow: hidden;
+    margin-top: 10px;
+}
+
+.progress-bar {
+    height: 100%;
+    background: #4caf50;
+    text-align: center;
+    color: white;
+    line-height: 25px;
+}
+
+.money {
+    font-size: 20px;
+    color: green;
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+.total {
+    background: #222;
+    color: white;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    font-size: 24px;
+}
+</style>
+</head>
+<body>
+
+<header class="header">
+
+<div class="left">
+
+<a href="index.html" class="logo">
+
+<img src="favicon.png">
+
+<div>
+
+<div class="logo-title">
+<span class="green">A</span>uto-
+<span class="green">S</span>tyle
+</div>
+
+<div class="subtitle">
+ПАНЕЛЬ МЕНЕДЖЕРА
+</div>
+
+</div>
+
+</a>
+
+</div>
+
+<button class="back" onclick="history.back()">
+← Назад
+</button>
+
+</header>
+
+<div class="content">
+
+<h1>Товары месяца</h1>
+
+<div id="products"></div>
+
+<div class="total" id="totalBonus">
+Общая премия: 0 ₽
+</div>
+
+<script>
+const products = JSON.parse(localStorage.getItem('products')) || [];
+
+const container = document.getElementById('products');
+const totalBonus = document.getElementById('totalBonus');
+
+let total = 0;
+
+products.forEach(product => {
+    const percent = Math.min((product.sold / product.plan) * 100, 100);
+    const bonus = product.sold * product.bonus;
+
+    total += bonus;
+
+    container.innerHTML += `
+        <div class="card">
+            <h2>${product.name}</h2>
+            <p>Продано: ${product.sold} / ${product.plan}</p>
+
+            <div class="progress">
+                <div class="progress-bar" style="width:${percent}%">
+                    ${Math.round(percent)}%
+                </div>
+            </div>
+
+            <div class="money">
+                Бонус: ${bonus} ₽
+            </div>
+        </div>
+    `;
+});
+
+totalBonus.innerText = `Общий бонус: ${total} ₽`;
+</script>
+
+</div>
+
+</body>
+</html>
+```
+
+---
+
+# редактор-премии.html
+
+```html
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Редактор премии — AUTO-STYLE</title>
+<style>
+body {
+    font-family: Arial, sans-serif;
+    background: #f5f5f5;
+    padding: 20px;
+}
+
+h1 {
+    text-align: center;
+}
+
+.form {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    margin-bottom: 20px;
+}
+
+input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+button {
+    width: 100%;
+    padding: 12px;
+    border: none;
+    background: #4caf50;
+    color: white;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #45a049;
+}
+
+.card {
+    background: white;
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.delete {
+    background: red;
+    width: auto;
+    padding: 8px 15px;
+}
+</style>
+</head>
+<body>
+
+<h1>Админ панель</h1>
+
+<div class="form">
+    <input type="text" id="name" placeholder="Название товара">
+    <input type="number" id="plan" placeholder="План продаж">
+    <input type="number" id="sold" placeholder="Продано">
+    <input type="number" id="bonus" placeholder="Бонус за 1 продажу (₽)">
+
+    <button onclick="addProduct()">Добавить товар</button>
+</div>
+
+<div id="list"></div>
+
+<script>
+let products = JSON.parse(localStorage.getItem('products')) || [];
+
+function saveProducts() {
+    localStorage.setItem('products', JSON.stringify(products));
+    renderProducts();
+}
+
+function addProduct() {
+    const name = document.getElementById('name').value;
+    const plan = document.getElementById('plan').value;
+    const sold = document.getElementById('sold').value;
+    const bonus = document.getElementById('bonus').value;
+
+    if (!name || !plan || !sold || !bonus) {
+        alert('Заполните все поля');
+        return;
+    }
+
+    products.push({
+        name,
+        plan: Number(plan),
+        sold: Number(sold),
+        bonus: Number(bonus)
+    });
+
+    saveProducts();
+
+    document.getElementById('name').value = '';
+    document.getElementById('plan').value = '';
+    document.getElementById('sold').value = '';
+    document.getElementById('bonus').value = '';
+}
+
+function deleteProduct(index) {
+    products.splice(index, 1);
+    saveProducts();
+}
+
+function renderProducts() {
+    const list = document.getElementById('list');
+
+    list.innerHTML = '';
+
+    products.forEach((product, index) => {
+        list.innerHTML += `
+            <div class="card">
+                <div>
+                    <strong>${product.name}</strong><br>
+                    Продано: ${product.sold}/${product.plan}<br>
+                    Бонус: ${product.bonus} ₽
+                </div>
+
+                <button class="delete" onclick="deleteProduct(${index})">
+                    Удалить
+                </button>
+            </div>
+        `;
+    });
+}
+
+renderProducts();
+</script>
+
+</body>
+</html>
