@@ -82,6 +82,12 @@ color:white;
 padding:10px 16px;
 }
 
+.clear{
+background:#111827;
+color:white;
+margin-bottom:25px;
+}
+
 .group-title{
 font-size:28px;
 font-weight:900;
@@ -224,6 +230,20 @@ onclick="saveProduct()">
 let products =
 JSON.parse(localStorage.getItem('products')) || [];
 
+/* ВОССТАНАВЛИВАЕМ СТАРЫЕ ТОВАРЫ */
+
+products = products.map(product => {
+
+if(!product.group){
+
+product.group = 'Неликвид';
+
+}
+
+return product;
+
+});
+
 let editIndex = null;
 
 const groups = [
@@ -321,6 +341,20 @@ saveProducts();
 
 }
 
+function clearHistory(){
+
+if(confirm('Удалить ВСЕ товары?')){
+
+products = [];
+
+localStorage.removeItem('products');
+
+renderProducts();
+
+}
+
+}
+
 function editProduct(index){
 
 const product = products[index];
@@ -366,7 +400,17 @@ function renderProducts(){
 const list =
 document.getElementById('list');
 
-list.innerHTML = '';
+list.innerHTML = `
+
+<button
+class="clear"
+onclick="clearHistory()">
+
+Очистить историю
+
+</button>
+
+`;
 
 groups.forEach(group => {
 
