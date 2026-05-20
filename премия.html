@@ -9,7 +9,6 @@
 <style>
 
 /* RESET */
-
 *{
 box-sizing:border-box;
 margin:0;
@@ -24,11 +23,10 @@ body{
 font-family:Inter,sans-serif;
 background:#f4f7fb;
 overflow-x:hidden;
-overflow-y:auto;
 -webkit-overflow-scrolling:touch;
 }
 
-/* HEADER */
+/* HEADER (твой стиль) */
 
 .header{
 height:82px;
@@ -66,7 +64,7 @@ font-size:28px;
 font-weight:900;
 }
 
-.green{ color:#2e7d32; }
+.green{color:#2e7d32;}
 
 .subtitle{
 font-size:11px;
@@ -80,8 +78,8 @@ background:linear-gradient(135deg,#34c759,#1f8f3d);
 color:white;
 padding:12px 20px;
 border-radius:16px;
-cursor:pointer;
 font-weight:800;
+cursor:pointer;
 }
 
 /* CONTENT */
@@ -91,12 +89,12 @@ min-height:100%;
 padding:20px;
 }
 
-/* TOTAL (как было — стильный блок) */
+/* TOP BAR */
 
 .total{
 position:sticky;
 top:10px;
-z-index:100;
+z-index:10;
 
 background:linear-gradient(135deg,#1f2937,#111827);
 color:white;
@@ -118,7 +116,7 @@ opacity:.8;
 }
 
 .total-value{
-font-size:38px;
+font-size:40px;
 font-weight:900;
 }
 
@@ -131,7 +129,7 @@ margin:35px 0 18px;
 color:#111827;
 }
 
-/* GRID (iOS FIX) */
+/* GRID FIX IOS */
 
 .products-grid{
 display:grid;
@@ -148,18 +146,11 @@ padding:20px;
 
 box-shadow:0 10px 25px rgba(0,0,0,.06);
 border:1px solid #edf1f5;
-
-transition:.2s;
-}
-
-.card:hover{
-transform:translateY(-3px);
 }
 
 .card h2{
 font-size:20px;
 margin-bottom:12px;
-color:#111827;
 }
 
 /* STATS */
@@ -184,67 +175,49 @@ overflow:hidden;
 .progress-bar{
 height:100%;
 border-radius:999px;
-
 display:flex;
-justify-content:flex-end;
 align-items:center;
-
+justify-content:flex-end;
 padding-right:8px;
-
 font-size:11px;
 font-weight:800;
 color:white;
-
 background:linear-gradient(90deg,#22c55e,#15803d);
 }
 
-/* BONUS */
+/* MONEY */
 
 .money{
 margin-top:18px;
 padding:14px;
 border-radius:18px;
-
 background:linear-gradient(135deg,#dcfce7,#bbf7d0);
-
 color:#166534;
-
 font-size:24px;
 font-weight:900;
-
 text-align:center;
 }
 
-/* MOBILE */
-
-@media(max-width:1200px){
-.products-grid{ grid-template-columns:repeat(3,1fr); }
-}
+/* MOBILE FIX */
 
 @media(max-width:900px){
-.products-grid{ grid-template-columns:repeat(2,1fr); }
+.products-grid{
+grid-template-columns:repeat(2,1fr);
+}
 }
 
 @media(max-width:600px){
-.products-grid{ grid-template-columns:1fr; }
-
+.products-grid{
+grid-template-columns:1fr;
+}
 .header{
 flex-wrap:wrap;
 height:auto;
-gap:12px;
-}
-
-.total{
-flex-direction:column;
 gap:10px;
 }
-
-.total-value{
-font-size:30px;
-}
-
-.group-title{
-font-size:26px;
+.total{
+flex-direction:column;
+gap:8px;
 }
 }
 
@@ -256,19 +229,15 @@ font-size:26px;
 <header class="header">
 
 <div class="left">
-
 <a href="index.html" class="logo">
 <img src="favicon.png">
-
 <div>
 <div class="logo-title">
 <span class="green">A</span>uto-<span class="green">S</span>tyle
 </div>
 <div class="subtitle">ПАНЕЛЬ МЕНЕДЖЕРА</div>
 </div>
-
 </a>
-
 </div>
 
 <button class="back" onclick="history.back()">← Назад</button>
@@ -279,7 +248,7 @@ font-size:26px;
 
 <div class="total">
 <div>
-<div class="total-title">Общая премия</div>
+<div class="total-title">Общая премия (старт 5000 ₽)</div>
 <div class="total-value" id="totalBonus">0 ₽</div>
 </div>
 </div>
@@ -290,8 +259,7 @@ font-size:26px;
 
 <script>
 
-const products =
-JSON.parse(localStorage.getItem('products')) || [];
+const products = JSON.parse(localStorage.getItem('products')) || [];
 
 const groups = [
 'Ароматизаторы',
@@ -301,44 +269,50 @@ const groups = [
 ];
 
 const container = document.getElementById('products');
-const totalBonusEl = document.getElementById('totalBonus');
+const totalEl = document.getElementById('totalBonus');
 
-let total = 0;
+let total = 5000; // ⭐ СТАРТОВАЯ ЗП
+
+function safeNum(v){
+return isNaN(Number(v)) ? 0 : Number(v);
+}
 
 groups.forEach(group => {
 
-const groupProducts =
-products.filter(p => p.group === group);
+const groupProducts = products.filter(p => p.group === group);
 
 if(groupProducts.length === 0) return;
 
-/* TITLE */
-container.innerHTML += `
-<div class="group-title">${group}</div>
-<div class="products-grid" id="${group}"></div>
-`;
+const title = document.createElement('div');
+title.className = 'group-title';
+title.textContent = group;
+container.appendChild(title);
 
-const groupContainer =
-document.getElementById(group);
+const grid = document.createElement('div');
+grid.className = 'products-grid';
+container.appendChild(grid);
 
 groupProducts.forEach(product => {
 
-const percent =
-Math.min((product.sold / product.plan) * 100, 100);
+const plan = safeNum(product.plan);
+const sold = safeNum(product.sold);
+const bonusPer = safeNum(product.bonus);
 
-const bonus =
-product.sold * product.bonus;
+const percent = plan ? Math.min((sold / plan) * 100, 100) : 0;
+
+const bonus = sold * bonusPer;
 
 total += bonus;
 
-groupContainer.innerHTML += `
-<div class="card">
+const card = document.createElement('div');
+card.className = 'card';
 
-<h2>${product.name}</h2>
+card.innerHTML = `
+<h2>${product.name || 'Без названия'}</h2>
 
 <div class="stats">
-<span>Продано: <b>${product.sold}</b></span>
-<span>План: <b>${product.plan}</b></span>
+<span>Продано: <b>${sold}</b></span>
+<span>План: <b>${plan}</b></span>
 </div>
 
 <div class="progress">
@@ -350,14 +324,15 @@ ${Math.round(percent)}%
 <div class="money">
 ${bonus} ₽
 </div>
-
-</div>
 `;
-});
+
+grid.appendChild(card);
 
 });
 
-totalBonusEl.textContent = total + ' ₽';
+});
+
+totalEl.textContent = total + ' ₽';
 
 </script>
 
