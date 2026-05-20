@@ -8,10 +8,15 @@
 
 <style>
 
+/* RESET */
 *{
 box-sizing:border-box;
 margin:0;
 padding:0;
+}
+
+html, body{
+height:100%;
 }
 
 body{
@@ -19,6 +24,7 @@ font-family:Inter,sans-serif;
 background:#f4f7fb;
 overflow-x:hidden;
 overflow-y:auto;
+-webkit-overflow-scrolling:touch;
 }
 
 /* HEADER */
@@ -59,9 +65,7 @@ font-size:28px;
 font-weight:900;
 }
 
-.green{
-color:#2e7d32;
-}
+.green{ color:#2e7d32; }
 
 .subtitle{
 font-size:11px;
@@ -77,76 +81,60 @@ padding:12px 20px;
 border-radius:16px;
 cursor:pointer;
 font-weight:800;
-transition:.2s;
-}
-
-.back:hover{
-transform:translateY(-1px);
 }
 
 /* CONTENT */
 
 .content{
-min-height:calc(100vh - 82px);
+min-height:100%;
 padding:20px;
 }
 
-/* TOP BONUS */
+/* TOTAL */
 
 .total{
 position:sticky;
 top:10px;
 z-index:100;
 
-background:
-linear-gradient(
-135deg,
-#1f2937,
-#111827
-);
-
+background:linear-gradient(135deg,#1f2937,#111827);
 color:white;
 
 padding:24px;
-
 border-radius:28px;
 
 display:flex;
-align-items:center;
 justify-content:space-between;
 
 margin-bottom:25px;
 
-box-shadow:
-0 15px 35px rgba(0,0,0,.18);
+box-shadow:0 15px 35px rgba(0,0,0,.18);
 }
 
 .total-title{
 font-size:18px;
 opacity:.8;
-margin-bottom:6px;
 }
 
 .total-value{
-font-size:42px;
+font-size:38px;
 font-weight:900;
-line-height:1;
 }
 
-/* GROUP TITLE */
+/* GROUP */
 
 .group-title{
-font-size:34px;
+font-size:30px;
 font-weight:900;
+margin:30px 0 18px;
 color:#111827;
-margin:35px 0 20px;
 }
 
-/* GRID */
+/* GRID (iOS SAFE) */
 
 .products-grid{
 display:grid;
-grid-template-columns:repeat(5,1fr);
+grid-template-columns:repeat(5, minmax(0,1fr));
 gap:18px;
 }
 
@@ -154,45 +142,33 @@ gap:18px;
 
 .card{
 background:white;
-border-radius:28px;
-padding:22px;
-
-box-shadow:
-0 12px 28px rgba(0,0,0,.06);
-
+border-radius:24px;
+padding:20px;
+box-shadow:0 10px 25px rgba(0,0,0,.06);
 border:1px solid #edf1f5;
-
-transition:.2s;
-}
-
-.card:hover{
-transform:translateY(-3px);
 }
 
 .card h2{
-font-size:22px;
-margin-bottom:14px;
+font-size:20px;
+margin-bottom:12px;
 color:#111827;
 }
-
-/* STATS */
 
 .stats{
 display:flex;
 justify-content:space-between;
 font-size:14px;
-margin-bottom:16px;
+margin-bottom:14px;
 color:#64748b;
 }
 
-/* BAR */
+/* PROGRESS */
 
 .progress{
-height:22px;
+height:18px;
 background:#e5e7eb;
 border-radius:999px;
 overflow:hidden;
-position:relative;
 }
 
 .progress-bar{
@@ -200,111 +176,46 @@ height:100%;
 border-radius:999px;
 
 display:flex;
-align-items:center;
 justify-content:flex-end;
+align-items:center;
 
-padding-right:10px;
+padding-right:8px;
 
 font-size:11px;
 font-weight:800;
 color:white;
 
-transition:.4s;
+background:linear-gradient(90deg,#22c55e,#15803d);
 }
 
-/* BONUS BLOCK */
-
-.money-box{
-margin-top:22px;
-
-padding:20px;
-
-border-radius:24px;
-
-background:
-linear-gradient(
-135deg,
-#ffffff,
-#f8fafc
-);
-
-border:2px solid #dcfce7;
-
-box-shadow:
-0 10px 25px rgba(34,197,94,.08);
-}
-
-.money-label{
-font-size:14px;
-font-weight:700;
-color:#64748b;
-margin-bottom:10px;
-}
+/* MONEY */
 
 .money{
-font-size:36px;
+margin-top:18px;
+padding:14px;
+border-radius:18px;
+background:linear-gradient(135deg,#dcfce7,#bbf7d0);
+color:#166534;
+font-size:22px;
 font-weight:900;
-color:#15803d;
-line-height:1;
+text-align:center;
 }
 
 /* MOBILE */
 
-@media(max-width:1600px){
-
-.products-grid{
-grid-template-columns:repeat(4,1fr);
-}
-
-}
-
 @media(max-width:1200px){
-
-.products-grid{
-grid-template-columns:repeat(3,1fr);
-}
-
+.products-grid{ grid-template-columns:repeat(3,1fr); }
 }
 
 @media(max-width:900px){
-
-.products-grid{
-grid-template-columns:repeat(2,1fr);
-}
-
+.products-grid{ grid-template-columns:repeat(2,1fr); }
 }
 
 @media(max-width:600px){
-
-.products-grid{
-grid-template-columns:1fr;
-}
-
-.header{
-padding:12px;
-height:auto;
-flex-wrap:wrap;
-gap:12px;
-}
-
-.logo-title{
-font-size:22px;
-}
-
-.total{
-flex-direction:column;
-align-items:flex-start;
-gap:8px;
-}
-
-.total-value{
-font-size:32px;
-}
-
-.group-title{
-font-size:28px;
-}
-
+.products-grid{ grid-template-columns:1fr; }
+.header{ flex-wrap:wrap; height:auto; gap:12px; }
+.total{ flex-direction:column; gap:10px; }
+.total-value{ font-size:30px; }
 }
 
 </style>
@@ -317,48 +228,26 @@ font-size:28px;
 <div class="left">
 
 <a href="index.html" class="logo">
-
 <img src="favicon.png">
-
 <div>
-
-<div class="logo-title">
-<span class="green">A</span>uto-
-<span class="green">S</span>tyle
+<div class="logo-title"><span class="green">A</span>uto-<span class="green">S</span>tyle</div>
+<div class="subtitle">ПАНЕЛЬ МЕНЕДЖЕРА</div>
 </div>
-
-<div class="subtitle">
-ПАНЕЛЬ МЕНЕДЖЕРА
-</div>
-
-</div>
-
 </a>
 
 </div>
 
-<button class="back" onclick="history.back()">
-← Назад
-</button>
+<button class="back" onclick="history.back()">← Назад</button>
 
 </header>
 
 <div class="content">
 
 <div class="total">
-
 <div>
-
-<div class="total-title">
-Общая зарплата
+<div class="total-title">Общая премия</div>
+<div class="total-value" id="totalBonus">0 ₽</div>
 </div>
-
-<div class="total-value" id="totalBonus">
-0 ₽
-</div>
-
-</div>
-
 </div>
 
 <div id="products"></div>
@@ -370,8 +259,6 @@ font-size:28px;
 const products =
 JSON.parse(localStorage.getItem('products')) || [];
 
-/* ГРУППЫ */
-
 const groups = [
 'Ароматизаторы',
 'Автохимия',
@@ -379,174 +266,70 @@ const groups = [
 'Масла'
 ];
 
-const container =
-document.getElementById('products');
+const container = document.getElementById('products');
+const totalBonusEl = document.getElementById('totalBonus');
 
-const totalBonus =
-document.getElementById('totalBonus');
+let total = 0;
 
-/* СТАРТОВАЯ ЗП */
-
-const startSalary = 5000;
-
-let total = startSalary;
-
-/* ОТРИСОВКА */
+/* RENDER */
 
 groups.forEach(group => {
 
 const groupProducts =
-products.filter(
-product => product.group === group
-);
+products.filter(p => p.group === group);
 
-if(groupProducts.length === 0){
-return;
-}
+if(groupProducts.length === 0) return;
 
 /* TITLE */
+const title = document.createElement('div');
+title.className = 'group-title';
+title.textContent = group;
+container.appendChild(title);
 
-container.innerHTML += `
+/* GRID */
+const grid = document.createElement('div');
+grid.className = 'products-grid';
+container.appendChild(grid);
 
-<div class="group-title">
-${group}
-</div>
-
-<div class="products-grid" id="${group}">
-</div>
-
-`;
-
-const groupContainer =
-document.getElementById(group);
-
+/* ITEMS */
 groupProducts.forEach(product => {
 
-const percent =
-Math.min(
-(product.sold / product.plan) * 100,
-100
-);
-
-const bonus =
-product.sold * product.bonus;
+const percent = Math.min((product.sold / product.plan) * 100, 100);
+const bonus = product.sold * product.bonus;
 
 total += bonus;
 
-/* ЦВЕТ БАРА */
+const card = document.createElement('div');
+card.className = 'card';
 
-let progressColor = `
-linear-gradient(
-90deg,
-#ef4444,
-#dc2626
-)
-`;
-
-if(percent >= 40){
-
-progressColor = `
-linear-gradient(
-90deg,
-#f59e0b,
-#d97706
-)
-`;
-
-}
-
-if(percent >= 70){
-
-progressColor = `
-linear-gradient(
-90deg,
-#22c55e,
-#15803d
-)
-`;
-
-}
-
-/* CARD */
-
-groupContainer.innerHTML += `
-
-<div class="card">
-
-<h2>
-${product.name}
-</h2>
+card.innerHTML = `
+<h2>${product.name}</h2>
 
 <div class="stats">
-
-<span>
-Продано:
-<b>${product.sold}</b>
-</span>
-
-<span>
-План:
-<b>${product.plan}</b>
-</span>
-
-</div>
-
-<div
-style="
-display:flex;
-justify-content:flex-end;
-margin-bottom:8px;
-font-size:13px;
-font-weight:700;
-color:#16a34a;
-">
-
-<span>
-+ ${bonus} ₽
-</span>
-
+<span>Продано: <b>${product.sold}</b></span>
+<span>План: <b>${product.plan}</b></span>
 </div>
 
 <div class="progress">
-
-<div
-class="progress-bar"
-
-style="
-width:${percent}%;
-background:${progressColor};
-">
-
+<div class="progress-bar" style="width:${percent}%">
 ${Math.round(percent)}%
-
 </div>
-
-</div>
-
-<div class="money-box">
-
-<div class="money-label">
-Премия за товар
 </div>
 
 <div class="money">
 ${bonus} ₽
 </div>
-
-</div>
-
-</div>
-
 `;
 
-});
+grid.appendChild(card);
 
 });
 
-/* ОБЩАЯ ЗП */
+});
 
-totalBonus.innerText =
-`${total} ₽`;
+/* TOTAL */
+
+totalBonusEl.textContent = total + ' ₽';
 
 </script>
 
