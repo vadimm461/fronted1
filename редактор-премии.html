@@ -39,16 +39,19 @@ grid-template-columns:repeat(5,1fr);
 gap:14px;
 }
 
-input{
+input,
+select{
 width:100%;
 padding:14px;
 border-radius:16px;
 border:1px solid #dbe2ea;
 font-size:15px;
 outline:none;
+background:white;
 }
 
-input:focus{
+input:focus,
+select:focus{
 border-color:#22c55e;
 box-shadow:0 0 0 4px rgba(34,197,94,.12);
 }
@@ -79,7 +82,14 @@ color:white;
 padding:10px 16px;
 }
 
-#list{
+.group-title{
+font-size:28px;
+font-weight:900;
+margin:30px 0 20px;
+color:#111827;
+}
+
+.products-grid{
 display:grid;
 grid-template-columns:repeat(3,1fr);
 gap:18px;
@@ -97,16 +107,6 @@ border:1px solid #edf1f5;
 font-size:22px;
 margin-bottom:12px;
 color:#111827;
-}
-
-.cashier{
-margin-bottom:14px;
-padding:10px 14px;
-background:linear-gradient(135deg,#eff6ff,#dbeafe);
-border-radius:14px;
-color:#1d4ed8;
-font-weight:700;
-font-size:15px;
 }
 
 .info{
@@ -140,7 +140,7 @@ margin-top:18px;
 grid-template-columns:repeat(2,1fr);
 }
 
-#list{
+.products-grid{
 grid-template-columns:repeat(2,1fr);
 }
 
@@ -152,7 +152,7 @@ grid-template-columns:repeat(2,1fr);
 grid-template-columns:1fr;
 }
 
-#list{
+.products-grid{
 grid-template-columns:1fr;
 }
 
@@ -167,10 +167,25 @@ grid-template-columns:1fr;
 
 <div class="form">
 
-<input
-type="text"
-id="cashier"
-placeholder="Имя кассира">
+<select id="group">
+
+<option value="Ароматизаторы">
+Ароматизаторы
+</option>
+
+<option value="Автохимия">
+Автохимия
+</option>
+
+<option value="Неликвид">
+Неликвид
+</option>
+
+<option value="Масла">
+Масла
+</option>
+
+</select>
 
 <input
 type="text"
@@ -211,6 +226,13 @@ JSON.parse(localStorage.getItem('products')) || [];
 
 let editIndex = null;
 
+const groups = [
+'Ароматизаторы',
+'Автохимия',
+'Неликвид',
+'Масла'
+];
+
 function saveProducts(){
 
 localStorage.setItem(
@@ -224,8 +246,8 @@ renderProducts();
 
 function saveProduct(){
 
-const cashier =
-document.getElementById('cashier').value.trim();
+const group =
+document.getElementById('group').value;
 
 const name =
 document.getElementById('name').value.trim();
@@ -238,11 +260,6 @@ document.getElementById('sold').value;
 
 const bonus =
 document.getElementById('bonus').value;
-
-if(cashier === ''){
-alert('Введите имя кассира');
-return;
-}
 
 if(name === ''){
 alert('Введите название товара');
@@ -266,7 +283,7 @@ return;
 
 const product = {
 
-cashier,
+group,
 name,
 
 plan:Number(plan),
@@ -308,8 +325,8 @@ function editProduct(index){
 
 const product = products[index];
 
-document.getElementById('cashier').value =
-product.cashier;
+document.getElementById('group').value =
+product.group;
 
 document.getElementById('name').value =
 product.name;
@@ -334,10 +351,12 @@ behavior:'smooth'
 
 function clearForm(){
 
-document.getElementById('cashier').value = '';
 document.getElementById('name').value = '';
+
 document.getElementById('plan').value = '';
+
 document.getElementById('sold').value = '';
+
 document.getElementById('bonus').value = '';
 
 }
@@ -349,19 +368,43 @@ document.getElementById('list');
 
 list.innerHTML = '';
 
-products.forEach((product,index)=>{
+groups.forEach(group => {
+
+const groupProducts =
+products.filter(
+product => product.group === group
+);
+
+if(groupProducts.length === 0){
+return;
+}
+
+list.innerHTML += `
+
+<div class="group-title">
+${group}
+</div>
+
+<div class="products-grid" id="${group}">
+</div>
+
+`;
+
+const groupContainer =
+document.getElementById(group);
+
+groupProducts.forEach(product => {
+
+const realIndex =
+products.indexOf(product);
 
 const totalBonus =
 product.sold *
 product.bonus;
 
-list.innerHTML += `
+groupContainer.innerHTML += `
 
 <div class="card">
-
-<div class="cashier">
-Кассир: ${product.cashier}
-</div>
 
 <h2>${product.name}</h2>
 
@@ -392,7 +435,7 @@ ${totalBonus} ₽
 
 <button
 class="edit"
-onclick="editProduct(${index})">
+onclick="editProduct(${realIndex})">
 
 Редактировать
 
@@ -400,7 +443,7 @@ onclick="editProduct(${index})">
 
 <button
 class="delete"
-onclick="deleteProduct(${index})">
+onclick="deleteProduct(${realIndex})">
 
 Удалить
 
@@ -411,6 +454,8 @@ onclick="deleteProduct(${index})">
 </div>
 
 `;
+
+});
 
 });
 
