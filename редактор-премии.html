@@ -1,254 +1,3 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Редактор премии — AUTO-STYLE</title>
-
-<style>
-
-*{
-box-sizing:border-box;
-margin:0;
-padding:0;
-}
-
-body{
-font-family:Inter,sans-serif;
-background:#f4f7fb;
-padding:20px;
-}
-
-/* TITLE */
-
-h1{
-margin-bottom:20px;
-font-size:34px;
-font-weight:900;
-color:#111827;
-}
-
-/* FORM */
-
-.form{
-background:white;
-padding:24px;
-border-radius:24px;
-
-box-shadow:
-0 10px 30px rgba(0,0,0,.06);
-
-margin-bottom:24px;
-
-display:grid;
-grid-template-columns:repeat(5,1fr);
-gap:14px;
-}
-
-input{
-width:100%;
-padding:14px;
-border-radius:16px;
-border:1px solid #dbe2ea;
-font-size:15px;
-outline:none;
-transition:.2s;
-}
-
-input:focus{
-border-color:#22c55e;
-box-shadow:
-0 0 0 4px rgba(34,197,94,.12);
-}
-
-/* BUTTONS */
-
-button{
-border:none;
-border-radius:16px;
-padding:14px;
-cursor:pointer;
-font-weight:800;
-transition:.2s;
-}
-
-.add{
-background:
-linear-gradient(
-135deg,
-#22c55e,
-#15803d
-);
-
-color:white;
-}
-
-.add:hover{
-transform:translateY(-2px);
-}
-
-.delete{
-background:#ef4444;
-color:white;
-padding:10px 16px;
-}
-
-.edit{
-background:#3b82f6;
-color:white;
-padding:10px 16px;
-margin-right:10px;
-}
-
-/* LIST */
-
-#list{
-display:grid;
-grid-template-columns:repeat(3,1fr);
-gap:18px;
-}
-
-.card{
-background:white;
-border-radius:24px;
-padding:20px;
-
-box-shadow:
-0 10px 25px rgba(0,0,0,.05);
-
-border:1px solid #edf1f5;
-}
-
-.card h2{
-font-size:22px;
-margin-bottom:12px;
-color:#111827;
-}
-
-.cashier{
-margin-bottom:14px;
-padding:10px 14px;
-
-background:
-linear-gradient(
-135deg,
-#eff6ff,
-#dbeafe
-);
-
-border-radius:14px;
-
-color:#1d4ed8;
-font-weight:700;
-font-size:15px;
-}
-
-.info{
-display:flex;
-flex-direction:column;
-gap:8px;
-margin-bottom:18px;
-color:#475569;
-font-size:15px;
-}
-
-.money{
-margin-top:10px;
-padding:14px;
-border-radius:18px;
-
-background:
-linear-gradient(
-135deg,
-#dcfce7,
-#bbf7d0
-);
-
-color:#166534;
-
-font-size:24px;
-font-weight:900;
-text-align:center;
-}
-
-.actions{
-display:flex;
-margin-top:18px;
-}
-
-/* MOBILE */
-
-@media(max-width:1200px){
-
-.form{
-grid-template-columns:repeat(2,1fr);
-}
-
-#list{
-grid-template-columns:repeat(2,1fr);
-}
-
-}
-
-@media(max-width:700px){
-
-.form{
-grid-template-columns:1fr;
-}
-
-#list{
-grid-template-columns:1fr;
-}
-
-}
-
-</style>
-</head>
-
-<body>
-
-<h1>Редактор премии</h1>
-
-<div class="form">
-
-<input
-type="text"
-id="cashier"
-placeholder="Имя кассира">
-
-<input
-type="text"
-id="name"
-placeholder="Название товара">
-
-<input
-type="number"
-id="plan"
-placeholder="План продаж">
-
-<input
-type="number"
-id="sold"
-placeholder="Количество продаж">
-
-<input
-type="number"
-id="bonus"
-placeholder="Бонус за 1 продажу">
-
-<button
-class="add"
-onclick="saveProduct()">
-
-Сохранить товар
-
-</button>
-
-</div>
-
-<div id="list"></div>
-
 <script>
 
 let products =
@@ -274,28 +23,48 @@ renderProducts();
 function saveProduct(){
 
 const cashier =
-document.getElementById('cashier').value;
+document.getElementById('cashier').value.trim();
 
 const name =
-document.getElementById('name').value;
+document.getElementById('name').value.trim();
 
 const plan =
-Number(document.getElementById('plan').value);
+document.getElementById('plan').value;
 
 const sold =
-Number(document.getElementById('sold').value);
+document.getElementById('sold').value;
 
 const bonus =
-Number(document.getElementById('bonus').value);
+document.getElementById('bonus').value;
 
-if(
-!cashier ||
-!name ||
-!plan ||
-!sold ||
-!bonus
-){
-alert('Заполните все поля');
+/* VALIDATION */
+
+if(cashier === ''){
+alert('Введите имя кассира');
+return;
+}
+
+if(name === ''){
+alert('Введите название товара');
+return;
+}
+
+/*
+ТЕПЕРЬ 0 РАЗРЕШЕН
+*/
+
+if(plan === ''){
+alert('Введите план продаж');
+return;
+}
+
+if(sold === ''){
+alert('Введите количество продаж');
+return;
+}
+
+if(bonus === ''){
+alert('Введите бонус');
 return;
 }
 
@@ -303,9 +72,10 @@ const product = {
 
 cashier,
 name,
-plan,
-sold,
-bonus
+
+plan:Number(plan),
+sold:Number(sold),
+bonus:Number(bonus)
 
 };
 
@@ -461,6 +231,3 @@ onclick="deleteProduct(${index})">
 renderProducts();
 
 </script>
-
-</body>
-</html>
