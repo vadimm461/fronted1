@@ -17,7 +17,8 @@ padding:0;
 body{
 font-family:Inter,sans-serif;
 background:#f4f7fb;
-overflow:hidden;
+overflow-x:hidden;
+overflow-y:auto;
 }
 
 /* HEADER */
@@ -88,17 +89,17 @@ transform:translateY(-1px);
 .content{
 min-height:calc(100vh - 82px);
 padding:20px;
-overflow:visible;
 }
 
 /* TOP BONUS */
 
 .total{
 position:sticky;
-top:0;
+top:10px;
 z-index:100;
 
-background:linear-gradient(
+background:
+linear-gradient(
 135deg,
 #1f2937,
 #111827
@@ -106,28 +107,39 @@ background:linear-gradient(
 
 color:white;
 
-padding:22px;
+padding:24px;
 
-border-radius:24px;
+border-radius:28px;
 
 display:flex;
 align-items:center;
 justify-content:space-between;
 
-margin-bottom:20px;
+margin-bottom:25px;
 
 box-shadow:
-0 10px 30px rgba(0,0,0,.12);
+0 15px 35px rgba(0,0,0,.18);
 }
 
 .total-title{
 font-size:18px;
 opacity:.8;
+margin-bottom:6px;
 }
 
 .total-value{
+font-size:42px;
+font-weight:900;
+line-height:1;
+}
+
+/* GROUP TITLE */
+
+.group-title{
 font-size:34px;
 font-weight:900;
+color:#111827;
+margin:35px 0 20px;
 }
 
 /* GRID */
@@ -142,13 +154,15 @@ gap:18px;
 
 .card{
 background:white;
-border-radius:24px;
-padding:20px;
+border-radius:28px;
+padding:22px;
+
 box-shadow:
-0 10px 25px rgba(0,0,0,.06);
+0 12px 28px rgba(0,0,0,.06);
+
+border:1px solid #edf1f5;
 
 transition:.2s;
-border:1px solid #edf1f5;
 }
 
 .card:hover{
@@ -156,23 +170,25 @@ transform:translateY(-3px);
 }
 
 .card h2{
-font-size:20px;
-margin-bottom:12px;
+font-size:22px;
+margin-bottom:14px;
 color:#111827;
 }
+
+/* STATS */
 
 .stats{
 display:flex;
 justify-content:space-between;
 font-size:14px;
-margin-bottom:14px;
+margin-bottom:16px;
 color:#64748b;
 }
 
-/* MODERN PROGRESS */
+/* BAR */
 
 .progress{
-height:18px;
+height:22px;
 background:#e5e7eb;
 border-radius:999px;
 overflow:hidden;
@@ -183,50 +199,53 @@ position:relative;
 height:100%;
 border-radius:999px;
 
-background:
-linear-gradient(
-90deg,
-#22c55e,
-#16a34a,
-#15803d
-);
-
 display:flex;
 align-items:center;
 justify-content:flex-end;
 
-padding-right:8px;
+padding-right:10px;
 
 font-size:11px;
-font-weight:700;
+font-weight:800;
 color:white;
-
-box-shadow:
-0 0 18px rgba(34,197,94,.45);
 
 transition:.4s;
 }
 
-/* BONUS */
+/* BONUS BLOCK */
 
-.money{
-margin-top:18px;
-padding:14px;
-border-radius:18px;
+.money-box{
+margin-top:22px;
+
+padding:20px;
+
+border-radius:24px;
 
 background:
 linear-gradient(
 135deg,
-#dcfce7,
-#bbf7d0
+#ffffff,
+#f8fafc
 );
 
-color:#166534;
+border:2px solid #dcfce7;
 
-font-size:24px;
+box-shadow:
+0 10px 25px rgba(34,197,94,.08);
+}
+
+.money-label{
+font-size:14px;
+font-weight:700;
+color:#64748b;
+margin-bottom:10px;
+}
+
+.money{
+font-size:36px;
 font-weight:900;
-
-text-align:center;
+color:#15803d;
+line-height:1;
 }
 
 /* MOBILE */
@@ -268,10 +287,6 @@ flex-wrap:wrap;
 gap:12px;
 }
 
-.content{
-height:calc(100vh - 110px);
-}
-
 .logo-title{
 font-size:22px;
 }
@@ -283,6 +298,10 @@ gap:8px;
 }
 
 .total-value{
+font-size:32px;
+}
+
+.group-title{
 font-size:28px;
 }
 
@@ -329,17 +348,20 @@ font-size:28px;
 <div class="total">
 
 <div>
+
 <div class="total-title">
-Общая премия
+Общая зарплата
 </div>
+
 <div class="total-value" id="totalBonus">
 0 ₽
 </div>
-</div>
 
 </div>
 
-<div class="products-grid" id="products"></div>
+</div>
+
+<div id="products"></div>
 
 </div>
 
@@ -348,15 +370,57 @@ font-size:28px;
 const products =
 JSON.parse(localStorage.getItem('products')) || [];
 
+/* ГРУППЫ */
+
+const groups = [
+'Ароматизаторы',
+'Автохимия',
+'Неликвид',
+'Масла'
+];
+
 const container =
 document.getElementById('products');
 
 const totalBonus =
 document.getElementById('totalBonus');
 
-let total = 0;
+/* СТАРТОВАЯ ЗП */
 
-products.forEach(product => {
+const startSalary = 5000;
+
+let total = startSalary;
+
+/* ОТРИСОВКА */
+
+groups.forEach(group => {
+
+const groupProducts =
+products.filter(
+product => product.group === group
+);
+
+if(groupProducts.length === 0){
+return;
+}
+
+/* TITLE */
+
+container.innerHTML += `
+
+<div class="group-title">
+${group}
+</div>
+
+<div class="products-grid" id="${group}">
+</div>
+
+`;
+
+const groupContainer =
+document.getElementById(group);
+
+groupProducts.forEach(product => {
 
 const percent =
 Math.min(
@@ -369,13 +433,52 @@ product.sold * product.bonus;
 
 total += bonus;
 
-container.innerHTML += `
+/* ЦВЕТ БАРА */
+
+let progressColor = `
+linear-gradient(
+90deg,
+#ef4444,
+#dc2626
+)
+`;
+
+if(percent >= 40){
+
+progressColor = `
+linear-gradient(
+90deg,
+#f59e0b,
+#d97706
+)
+`;
+
+}
+
+if(percent >= 70){
+
+progressColor = `
+linear-gradient(
+90deg,
+#22c55e,
+#15803d
+)
+`;
+
+}
+
+/* CARD */
+
+groupContainer.innerHTML += `
 
 <div class="card">
 
-<h2>${product.name}</h2>
+<h2>
+${product.name}
+</h2>
 
 <div class="stats">
+
 <span>
 Продано:
 <b>${product.sold}</b>
@@ -385,18 +488,49 @@ container.innerHTML += `
 План:
 <b>${product.plan}</b>
 </span>
+
+</div>
+
+<div
+style="
+display:flex;
+justify-content:space-between;
+margin-bottom:8px;
+font-size:13px;
+font-weight:700;
+color:#64748b;
+">
+
+<span>
+Старт: 5000 ₽
+</span>
+
+<span>
++ ${bonus} ₽
+</span>
+
 </div>
 
 <div class="progress">
 
 <div
 class="progress-bar"
-style="width:${percent}%">
+
+style="
+width:${percent}%;
+background:${progressColor};
+">
 
 ${Math.round(percent)}%
 
 </div>
 
+</div>
+
+<div class="money-box">
+
+<div class="money-label">
+Премия за товар
 </div>
 
 <div class="money">
@@ -405,9 +539,15 @@ ${bonus} ₽
 
 </div>
 
+</div>
+
 `;
 
 });
+
+});
+
+/* ОБЩАЯ ЗП */
 
 totalBonus.innerText =
 `${total} ₽`;
