@@ -1,9 +1,9 @@
-// Вставь сюда конфиг из Firebase Console → Project settings → Your apps.
-export const firebaseConfig = {
-    apiKey: "PASTE_API_KEY",
-    authDomain: "PASTE_PROJECT.firebaseapp.com",
-    projectId: "PASTE_PROJECT_ID",
-    storageBucket: "PASTE_PROJECT.appspot.com",
-    messagingSenderId: "PASTE_SENDER_ID",
-    appId: "PASTE_APP_ID"
+const firebaseConfig = {
+  apiKey: "AIzaSyBZ-AW6XoMR14KmBtlz2q06Z0jPGXnWMTw",
+  authDomain: "auto-style-4dbb7.firebaseapp.com",
+  databaseURL: "https://auto-style-4dbb7-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId: "auto-style-4dbb7",
+  storageBucket: "auto-style-4dbb7.firebasestorage.app",
+  messagingSenderId: "217023127803",
+  appId: "1:217023127803:web:78568cf161edd452b0905e"
 };
