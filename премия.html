@@ -129,20 +129,46 @@ opacity:.65;
 
 /* GROUP */
 
+.group-block{
+margin-bottom:24px;
+}
+
+.group-header{
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:16px;
+padding:18px 24px;
+background:white;
+border-radius:24px;
+cursor:pointer;
+box-shadow:0 10px 20px rgba(0,0,0,.05);
+}
+
 .group-title{
-font-size:38px;
+font-size:32px;
 font-weight:900;
-margin:36px 0 20px;
-color:#111827;
+}
+
+.toggle-btn{
+background:linear-gradient(135deg,#22c55e,#15803d);
+color:white;
+padding:10px 18px;
+border-radius:14px;
+font-size:14px;
+font-weight:800;
 }
 
 /* GRID */
 
 .products-grid{
-display:grid;
+display:none;
 grid-template-columns:repeat(5,1fr);
 gap:18px;
-margin-bottom:20px;
+}
+
+.products-grid.active{
+display:grid;
 }
 
 /* CARD */
@@ -189,6 +215,7 @@ line-height:1.2;
 margin-bottom:16px;
 position:relative;
 z-index:2;
+min-height:44px;
 }
 
 /* STATS */
@@ -217,7 +244,7 @@ color:#16a34a;
 /* PROGRESS */
 
 .progress{
-height:16px;
+height:18px;
 background:#e5e7eb;
 border-radius:999px;
 overflow:hidden;
@@ -264,10 +291,10 @@ font-weight:700;
 }
 
 .money-value{
-font-size:34px;
+font-size:30px;
 font-weight:900;
 color:#15803d;
-line-height:1;
+line-height:1.2;
 }
 
 /* MOBILE */
@@ -313,14 +340,13 @@ font-size:22px;
 padding:12px;
 }
 
-.group-title{
-font-size:28px;
-margin-top:24px;
-}
-
 .products-grid{
 grid-template-columns:1fr;
 gap:14px;
+}
+
+.group-title{
+font-size:24px;
 }
 
 .total{
@@ -338,7 +364,11 @@ border-radius:24px;
 }
 
 .money-value{
-font-size:28px;
+font-size:24px;
+}
+
+.group-header{
+padding:16px;
 }
 
 }
@@ -460,6 +490,18 @@ return isNaN(Number(v))
 
 }
 
+function toggleGroup(id){
+
+const grid =
+document.getElementById(id);
+
+grid.classList.toggle('active');
+
+}
+
+window.toggleGroup =
+toggleGroup;
+
 function renderProducts(products){
 
 container.innerHTML = '';
@@ -467,7 +509,7 @@ container.innerHTML = '';
 let total = 5000;
 let maxTotal = 5000;
 
-groups.forEach(group=>{
+groups.forEach((group,index)=>{
 
 const groupProducts =
 products.filter(
@@ -478,24 +520,43 @@ if(groupProducts.length === 0){
 return;
 }
 
-const title =
+const block =
 document.createElement('div');
 
-title.className =
-'group-title';
+block.className =
+'group-block';
 
-title.innerText =
-group;
+const groupId =
+'group_' + index;
 
-container.appendChild(title);
+block.innerHTML = `
+
+<div
+class="group-header"
+onclick="toggleGroup('${groupId}')">
+
+<div class="group-title">
+${group}
+</div>
+
+<div class="toggle-btn">
+Развернуть
+</div>
+
+</div>
+
+<div
+class="products-grid"
+id="${groupId}">
+
+</div>
+
+`;
+
+container.appendChild(block);
 
 const grid =
-document.createElement('div');
-
-grid.className =
-'products-grid';
-
-container.appendChild(grid);
+document.getElementById(groupId);
 
 groupProducts.forEach(product=>{
 
@@ -594,7 +655,7 @@ width:${percent}%;
 background:${color};
 ">
 
-${bonus}/${maxBonus}
+${bonus}/${maxBonus} ₽
 
 </div>
 
@@ -607,7 +668,7 @@ ${bonus}/${maxBonus}
 </div>
 
 <div class="money-value">
-${bonus} ₽
+${bonus} ₽ / ${maxBonus} ₽
 </div>
 
 </div>
