@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -10,13 +9,15 @@
 <style>
 
 /* RESET */
+
 *{
 box-sizing:border-box;
 margin:0;
 padding:0;
 }
 
-html, body{
+html,
+body{
 height:100%;
 }
 
@@ -24,10 +25,11 @@ body{
 font-family:Inter,sans-serif;
 background:#f4f7fb;
 overflow-x:hidden;
+overflow-y:auto;
 -webkit-overflow-scrolling:touch;
 }
 
-/* HEADER (твой стиль) */
+/* HEADER */
 
 .header{
 height:82px;
@@ -65,7 +67,9 @@ font-size:28px;
 font-weight:900;
 }
 
-.green{color:#2e7d32;}
+.green{
+color:#2e7d32;
+}
 
 .subtitle{
 font-size:11px;
@@ -79,8 +83,13 @@ background:linear-gradient(135deg,#34c759,#1f8f3d);
 color:white;
 padding:12px 20px;
 border-radius:16px;
-font-weight:800;
 cursor:pointer;
+font-weight:800;
+transition:.2s;
+}
+
+.back:hover{
+transform:translateY(-1px);
 }
 
 /* CONTENT */
@@ -90,69 +99,110 @@ min-height:100%;
 padding:20px;
 }
 
-/* TOP BAR */
+/* TOTAL */
 
 .total{
 position:sticky;
 top:10px;
-z-index:10;
+z-index:100;
 
-background:linear-gradient(135deg,#1f2937,#111827);
+background:
+linear-gradient(
+135deg,
+#111827,
+#0f172a,
+#020617
+);
+
 color:white;
 
-padding:24px;
-border-radius:28px;
+padding:28px;
+
+border-radius:30px;
 
 display:flex;
+align-items:center;
 justify-content:space-between;
 
-margin-bottom:25px;
+margin-bottom:28px;
 
-box-shadow:0 15px 35px rgba(0,0,0,.18);
+box-shadow:
+0 20px 50px rgba(0,0,0,.18);
+}
+
+.total::before{
+content:"";
+position:absolute;
+top:-80px;
+right:-80px;
+width:220px;
+height:220px;
+border-radius:50%;
+
+background:
+radial-gradient(
+circle,
+rgba(34,197,94,.18),
+transparent 70%
+);
 }
 
 .total-title{
-font-size:18px;
-opacity:.8;
+font-size:17px;
+opacity:.7;
+margin-bottom:8px;
+position:relative;
+z-index:2;
 }
 
 .total-value{
-font-size:40px;
+font-size:44px;
 font-weight:900;
+line-height:1;
+position:relative;
+z-index:2;
 }
 
-/* GROUP TITLE */
+/* GROUP */
 
 .group-title{
-font-size:32px;
+font-size:36px;
 font-weight:900;
-margin:35px 0 18px;
-color:#111827;
+margin:38px 0 22px;
+color:#0f172a;
 }
 
-/* GRID FIX IOS */
+/* GRID */
 
 .products-grid{
 display:grid;
-grid-template-columns:repeat(5, minmax(0,1fr));
+grid-template-columns:repeat(5,minmax(0,1fr));
 gap:18px;
 }
 
 /* CARD */
 
 .card{
-background: linear-gradient(145deg, #ffffff, #f8fafc);
-border-radius:28px;
+
+background:
+linear-gradient(
+145deg,
+#ffffff,
+#f8fafc
+);
+
+border-radius:30px;
+
 padding:20px;
-
-box-shadow:
-0 10px 25px rgba(0,0,0,.06),
-0 2px 8px rgba(0,0,0,.04);
-
-border:1px solid rgba(255,255,255,.6);
 
 position:relative;
 overflow:hidden;
+
+border:1px solid #edf1f5;
+
+box-shadow:
+0 12px 30px rgba(0,0,0,.06),
+0 2px 8px rgba(0,0,0,.04);
 
 transition:.25s;
 }
@@ -160,18 +210,26 @@ transition:.25s;
 .card::before{
 content:"";
 position:absolute;
-top:-40px;
-right:-40px;
-width:120px;
-height:120px;
-background:radial-gradient(circle, rgba(34,197,94,.25), transparent 70%);
+top:-60px;
+right:-60px;
+
+width:150px;
+height:150px;
+
 border-radius:50%;
+
+background:
+radial-gradient(
+circle,
+rgba(34,197,94,.18),
+transparent 70%
+);
 }
 
 .card:hover{
-transform:translateY(-6px);
+transform:translateY(-5px);
 box-shadow:
-0 20px 45px rgba(0,0,0,.10);
+0 22px 45px rgba(0,0,0,.10);
 }
 
 /* TITLE */
@@ -179,9 +237,11 @@ box-shadow:
 .card h2{
 font-size:20px;
 font-weight:900;
-color:#0f172a;
-margin-bottom:12px;
-letter-spacing:-0.3px;
+line-height:1.2;
+margin-bottom:14px;
+color:#111827;
+position:relative;
+z-index:2;
 }
 
 /* STATS */
@@ -189,28 +249,54 @@ letter-spacing:-0.3px;
 .stats{
 display:flex;
 justify-content:space-between;
-font-size:13px;
 margin-bottom:14px;
+
+font-size:13px;
+font-weight:600;
+
 color:#64748b;
+
+position:relative;
+z-index:2;
 }
 
 .stats b{
 color:#0f172a;
-font-weight:800;
 }
 
-/* PROGRESS WRAP */
+/* BONUS TOP */
+
+.bonus-top{
+display:flex;
+justify-content:flex-end;
+
+margin-bottom:10px;
+
+font-size:13px;
+font-weight:900;
+
+color:#16a34a;
+
+position:relative;
+z-index:2;
+}
+
+/* PROGRESS */
 
 .progress{
-height:14px;
-background:#e2e8f0;
+height:16px;
+
+background:#e5e7eb;
+
 border-radius:999px;
 overflow:hidden;
-position:relative;
-box-shadow: inset 0 2px 6px rgba(0,0,0,.06);
-}
 
-/* PROGRESS BAR */
+position:relative;
+z-index:2;
+
+box-shadow:
+inset 0 2px 6px rgba(0,0,0,.06);
+}
 
 .progress-bar{
 height:100%;
@@ -226,32 +312,32 @@ font-size:10px;
 font-weight:900;
 color:white;
 
-background:linear-gradient(
-90deg,
-#22c55e,
-#16a34a,
-#15803d
-);
+transition:.4s;
 
-box-shadow:0 0 18px rgba(34,197,94,.35);
-transition:.5s;
+box-shadow:
+0 0 18px rgba(34,197,94,.35);
 }
 
-/* MONEY BLOCK */
+/* MONEY */
 
 .money{
-margin-top:16px;
-padding:16px;
-border-radius:20px;
+margin-top:18px;
 
-background:linear-gradient(135deg,#dcfce7,#bbf7d0);
+padding:18px;
 
-color:#14532d;
+border-radius:22px;
 
-font-size:26px;
-font-weight:900;
+background:
+linear-gradient(
+135deg,
+#ffffff,
+#f8fafc
+);
 
-text-align:center;
+border:2px solid #dcfce7;
+
+box-shadow:
+0 10px 25px rgba(34,197,94,.08);
 
 position:relative;
 overflow:hidden;
@@ -261,38 +347,117 @@ overflow:hidden;
 content:"";
 position:absolute;
 inset:0;
-background:linear-gradient(90deg, transparent, rgba(255,255,255,.4), transparent);
+
+background:
+linear-gradient(
+90deg,
+transparent,
+rgba(255,255,255,.45),
+transparent
+);
+
 transform:translateX(-100%);
+
 animation:shine 3s infinite;
 }
 
 @keyframes shine{
-0%{ transform:translateX(-100%); }
-50%{ transform:translateX(100%); }
-100%{ transform:translateX(100%); }
+
+0%{
+transform:translateX(-100%);
 }
 
-/* MOBILE FIX */
+50%{
+transform:translateX(100%);
+}
+
+100%{
+transform:translateX(100%);
+}
+
+}
+
+.money-label{
+font-size:13px;
+font-weight:700;
+opacity:.65;
+margin-bottom:8px;
+position:relative;
+z-index:2;
+}
+
+.money-value{
+font-size:36px;
+font-weight:900;
+line-height:1;
+color:#15803d;
+position:relative;
+z-index:2;
+}
+
+/* MOBILE */
+
+@media(max-width:1600px){
+
+.products-grid{
+grid-template-columns:repeat(4,1fr);
+}
+
+}
+
+@media(max-width:1200px){
+
+.products-grid{
+grid-template-columns:repeat(3,1fr);
+}
+
+}
 
 @media(max-width:900px){
+
 .products-grid{
 grid-template-columns:repeat(2,1fr);
 }
+
 }
 
 @media(max-width:600px){
+
 .products-grid{
 grid-template-columns:1fr;
 }
+
 .header{
-flex-wrap:wrap;
+padding:12px;
 height:auto;
-gap:10px;
+flex-wrap:wrap;
+gap:12px;
 }
+
+.logo-title{
+font-size:22px;
+}
+
+.group-title{
+font-size:28px;
+}
+
 .total{
-flex-direction:column;
-gap:8px;
+padding:22px;
 }
+
+.total-value{
+font-size:30px;
+}
+
+.card{
+padding:18px;
+}
+
+.money-value{
+font-size:28px;
+}
+
 }
 
 </style>
@@ -303,28 +468,50 @@ gap:8px;
 <header class="header">
 
 <div class="left">
+
 <a href="index.html" class="logo">
+
 <img src="favicon.png">
+
 <div>
+
 <div class="logo-title">
-<span class="green">A</span>uto-<span class="green">S</span>tyle
-</div>
-<div class="subtitle">ПАНЕЛЬ МЕНЕДЖЕРА</div>
-</div>
-</a>
+<span class="green">A</span>uto-
+<span class="green">S</span>tyle
 </div>
 
-<button class="back" onclick="history.back()">← Назад</button>
+<div class="subtitle">
+ПАНЕЛЬ МЕНЕДЖЕРА
+</div>
+
+</div>
+
+</a>
+
+</div>
+
+<button class="back" onclick="history.back()">
+← Назад
+</button>
 
 </header>
 
 <div class="content">
 
 <div class="total">
+
 <div>
-<div class="total-title">Общая премия (старт 5000 ₽)</div>
-<div class="total-value" id="totalBonus">0 ₽</div>
+
+<div class="total-title">
+Общая зарплата
 </div>
+
+<div class="total-value" id="totalBonus">
+0 ₽
+</div>
+
+</div>
+
 </div>
 
 <div id="products"></div>
@@ -333,7 +520,10 @@ gap:8px;
 
 <script>
 
-const products = JSON.parse(localStorage.getItem('products')) || [];
+const products =
+JSON.parse(localStorage.getItem('products')) || [];
+
+/* GROUPS */
 
 const groups = [
 'Ароматизаторы',
@@ -342,62 +532,182 @@ const groups = [
 'Масла'
 ];
 
-const container = document.getElementById('products');
-const totalEl = document.getElementById('totalBonus');
+const container =
+document.getElementById('products');
 
-let total = 5000; // ⭐ СТАРТОВАЯ ЗП
+const totalEl =
+document.getElementById('totalBonus');
+
+/* START SALARY */
+
+let total = 5000;
+let maxTotal = 5000;
 
 function safeNum(v){
-return isNaN(Number(v)) ? 0 : Number(v);
+
+return isNaN(Number(v))
+? 0
+: Number(v);
+
 }
+
+/* RENDER */
 
 groups.forEach(group => {
 
-const groupProducts = products.filter(p => p.group === group);
+const groupProducts =
+products.filter(
+p => p.group === group
+);
 
-if(groupProducts.length === 0) return;
+if(groupProducts.length === 0){
+return;
+}
 
-const title = document.createElement('div');
-title.className = 'group-title';
-title.textContent = group;
+/* TITLE */
+
+const title =
+document.createElement('div');
+
+title.className =
+'group-title';
+
+title.textContent =
+group;
+
 container.appendChild(title);
 
-const grid = document.createElement('div');
-grid.className = 'products-grid';
+/* GRID */
+
+const grid =
+document.createElement('div');
+
+grid.className =
+'products-grid';
+
 container.appendChild(grid);
+
+/* CARDS */
 
 groupProducts.forEach(product => {
 
-const plan = safeNum(product.plan);
-const sold = safeNum(product.sold);
-const bonusPer = safeNum(product.bonus);
+const plan =
+safeNum(product.plan);
 
-const percent = plan ? Math.min((sold / plan) * 100, 100) : 0;
+const sold =
+safeNum(product.sold);
 
-const bonus = sold * bonusPer;
+const bonusPer =
+safeNum(product.bonus);
+
+const percent =
+plan
+? Math.min((sold / plan) * 100, 100)
+: 0;
+
+const bonus =
+sold * bonusPer;
+
+const maxBonus =
+plan * bonusPer;
 
 total += bonus;
+maxTotal += maxBonus;
 
-const card = document.createElement('div');
-card.className = 'card';
+/* BAR COLOR */
+
+let progressColor = `
+linear-gradient(
+90deg,
+#ef4444,
+#dc2626
+)
+`;
+
+if(percent >= 40){
+
+progressColor = `
+linear-gradient(
+90deg,
+#f59e0b,
+#d97706
+)
+`;
+
+}
+
+if(percent >= 70){
+
+progressColor = `
+linear-gradient(
+90deg,
+#22c55e,
+#15803d
+)
+`;
+
+}
+
+/* CARD */
+
+const card =
+document.createElement('div');
+
+card.className =
+'card';
 
 card.innerHTML = `
-<h2>${product.name || 'Без названия'}</h2>
+
+<h2>
+${product.name || 'Без названия'}
+</h2>
 
 <div class="stats">
-<span>Продано: <b>${sold}</b></span>
-<span>План: <b>${plan}</b></span>
+
+<span>
+Продано:
+<b>${sold}</b>
+</span>
+
+<span>
+План:
+<b>${plan}</b>
+</span>
+
+</div>
+
+<div class="bonus-top">
++ ${bonus} ₽
 </div>
 
 <div class="progress">
-<div class="progress-bar" style="width:${percent}%">
+
+<div
+class="progress-bar"
+
+style="
+width:${percent}%;
+background:${progressColor};
+">
+
 ${Math.round(percent)}%
+
 </div>
+
 </div>
 
 <div class="money">
-${bonus} ₽
+
+<div class="money-label">
+Премия за товар
 </div>
+
+<div class="money-value">
+${bonus} / ${maxBonus} ₽
+</div>
+
+</div>
+
 `;
 
 grid.appendChild(card);
@@ -406,7 +716,10 @@ grid.appendChild(card);
 
 });
 
-totalEl.textContent = total + ' ₽';
+/* TOTAL */
+
+totalEl.textContent =
+`${total} / ${maxTotal} ₽`;
 
 </script>
 
