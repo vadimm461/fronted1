@@ -23,6 +23,7 @@
         <button class="admin-tab" data-tab="calculators">Калькуляторы</button>
         <button class="admin-tab" data-tab="menu">Меню сайта</button>
         <button class="admin-tab" data-tab="users">Пользователи</button>
+        <button class="admin-tab" data-tab="products">Премия / товары</button>
         <button class="admin-tab" data-tab="json">JSON</button>
 
         <a class="admin-link" href="index.html">← На сайт</a>
@@ -77,6 +78,15 @@
                 Сейчас это фронтовая авторизация. Пароли в таком виде видны в коде браузера. Для настоящей защиты подключи Firebase Authentication.
             </div>
             <div id="usersEditor"></div>
+        </section>
+
+        <section class="admin-panel" id="tab-products">
+            <div class="panel-head">
+                <h2>Премия / товары</h2>
+                <button class="small-btn" id="addProductBtn">+ Товар</button>
+            </div>
+            <p class="hint">Редактирует существующую коллекцию Firestore <b>products</b>. Уже добавленные товары не удаляются, пока ты не нажмёшь «Удалить» у конкретного товара.</p>
+            <div id="productsEditor"></div>
         </section>
 
         <section class="admin-panel" id="tab-json">

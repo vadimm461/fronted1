@@ -1,7 +1,3 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
-import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
-import { firebaseConfig } from "./firebase-config.js";
-
 const fallbackData = {
     users: {
         cashier: { name: "Кассир", pass: "2012" },
@@ -32,23 +28,57 @@ const fallbackData = {
 };
 
 let db = null;
+let fb = null;
 let data = structuredClone(fallbackData);
+let products = [];
+let deletedProductIds = [];
 const $ = (id) => document.getElementById(id);
 
-function isFirebaseReady() {
-    return firebaseConfig.apiKey && !firebaseConfig.apiKey.includes("PASTE_");
+function withTimeout(promise, ms = 9000) {
+    return Promise.race([promise, new Promise((_, reject) => setTimeout(() => reject(new Error("Firebase timeout")), ms))]);
+}
+
+async function getFirebaseConfig() {
+    try {
+        const module = await import("./firebase-config.js?ts=" + Date.now());
+        const config = module.firebaseConfig || {};
+        if (!config.apiKey || String(config.apiKey).includes("PASTE_")) return null;
+        return config;
+    } catch (error) {
+        console.error(error);
+        return null;
+    }
+}
+
+async function initFirebase() {
+    const config = await getFirebaseConfig();
+    if (!config) {
+        setStatus("Firebase config не заполнен или файл с ошибкой. Работает локальный шаблон.", "error");
+        return false;
+    }
+    try {
+        const appMod = await import("https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js");
+        const fsMod = await import("https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js");
+        fb = fsMod;
+        const app = appMod.initializeApp(config);
+        db = fsMod.getFirestore(app);
+        return true;
+    } catch (error) {
+        console.error(error);
+        setStatus("Firebase не подключился. Проверь firebase-config.js и интернет.", "error");
+        return false;
+    }
 }
 
 function setStatus(text, type = "") {
     const el = $("statusText");
+    if (!el) return;
     el.textContent = text;
     el.className = type ? `status-${type}` : "";
 }
 
-function toDatetimeLocal(value) {
-    if (!value) return "";
-    return String(value).slice(0, 16);
-}
+function toDatetimeLocal(value) { return value ? String(value).slice(0, 16) : ""; }
+function escapeAttr(value) { return String(value ?? "").replaceAll("&", "&amp;").replaceAll('"', "&quot;").replaceAll("<", "&lt;").replaceAll(">", "&gt;"); }
 
 function collectDataFromForm() {
     data.news = {
@@ -87,8 +117,18 @@ function collectDataFromForm() {
         };
     });
     data.users = users;
-
     $("jsonEditor").value = JSON.stringify(data, null, 4);
+}
+
+function collectProductsFromForm() {
+    products = [...document.querySelectorAll("[data-product]")].map(card => ({
+        id: card.dataset.id || "",
+        name: card.querySelector("[data-product-name]").value.trim(),
+        group: card.querySelector("[data-product-group]").value.trim(),
+        bonus: Number(card.querySelector("[data-product-bonus]").value) || 0,
+        plan: Number(card.querySelector("[data-product-plan]").value) || 0,
+        sold: Number(card.querySelector("[data-product-sold]").value) || 0
+    })).filter(item => item.name);
 }
 
 function renderAll() {
@@ -103,105 +143,88 @@ function renderAll() {
 }
 
 function renderCalculators() {
-    $("calculatorsEditor").innerHTML = (data.calculators || []).map((calc, i) => `
-        <div class="editor-card" data-calc>
-            <div class="card-title-line">
-                <strong>${calc.bank || "Банк"}</strong>
-                <button class="danger-btn" data-remove-calc>Удалить</button>
-            </div>
-            <div class="editor-grid">
-                <div><label>Название блока</label><input data-calc-title value="${escapeAttr(calc.title || "")}"></div>
-                <div><label>Банк</label><input data-calc-bank value="${escapeAttr(calc.bank || "")}"></div>
-            </div>
-            <div class="row-list">
-                ${(calc.rows || []).map(([term, coef]) => rowTemplate(term, coef)).join("")}
-            </div>
-            <button class="small-btn" data-add-row>+ Срок</button>
-        </div>`).join("");
+    $("calculatorsEditor").innerHTML = (data.calculators || []).map(calc => `<div class="editor-card" data-calc><div class="card-title-line"><strong>${escapeAttr(calc.bank || "Банк")}</strong><button class="danger-btn" data-remove-calc>Удалить</button></div><div class="editor-grid"><div><label>Название блока</label><input data-calc-title value="${escapeAttr(calc.title || "")}"></div><div><label>Банк</label><input data-calc-bank value="${escapeAttr(calc.bank || "")}"></div></div><div class="row-list">${(calc.rows || []).map(([term, coef]) => rowTemplate(term, coef)).join("")}</div><button class="small-btn" data-add-row>+ Срок</button></div>`).join("");
 }
 
 function rowTemplate(term = "3 мес.", coef = 0.95) {
-    return `<div class="row-item" data-calc-row>
-        <input data-term placeholder="Срок" value="${escapeAttr(term)}">
-        <input data-coef type="number" step="0.001" placeholder="Коэффициент" value="${coef}">
-        <button class="danger-btn" data-remove-row>×</button>
-    </div>`;
+    return `<div class="row-item" data-calc-row><input data-term placeholder="Срок" value="${escapeAttr(term)}"><input data-coef type="number" step="0.001" placeholder="Коэффициент" value="${escapeAttr(coef)}"><button class="danger-btn" data-remove-row>×</button></div>`;
 }
 
 function renderMenu() {
-    $("menuEditor").innerHTML = (data.menu || []).map(item => `
-        <div class="editor-card" data-menu>
-            <div class="card-title-line">
-                <strong>${item.icon || "🔗"} ${item.title || "Карточка"}</strong>
-                <button class="danger-btn" data-remove-menu>Удалить</button>
-            </div>
-            <div class="menu-item">
-                <div><label>Иконка</label><input data-menu-icon value="${escapeAttr(item.icon || "")}"></div>
-                <div><label>Название</label><input data-menu-title value="${escapeAttr(item.title || "")}"></div>
-                <div><label>Ссылка</label><input data-menu-href value="${escapeAttr(item.href || "#")}"></div>
-            </div>
-            <label>Описание</label><input data-menu-desc value="${escapeAttr(item.desc || "")}">
-            <div class="editor-grid">
-                <label class="checkbox-line"><input type="checkbox" data-menu-manager ${item.managerOnly ? "checked" : ""}> Только менеджерам</label>
-                <div><label>Action, например logout</label><input data-menu-action value="${escapeAttr(item.action || "")}"></div>
-            </div>
-        </div>`).join("");
+    $("menuEditor").innerHTML = (data.menu || []).map(item => `<div class="editor-card" data-menu><div class="card-title-line"><strong>${escapeAttr(item.icon || "🔗")} ${escapeAttr(item.title || "Карточка")}</strong><button class="danger-btn" data-remove-menu>Удалить</button></div><div class="menu-item"><div><label>Иконка</label><input data-menu-icon value="${escapeAttr(item.icon || "")}"></div><div><label>Название</label><input data-menu-title value="${escapeAttr(item.title || "")}"></div><div><label>Ссылка</label><input data-menu-href value="${escapeAttr(item.href || "#")}"></div></div><label>Описание</label><input data-menu-desc value="${escapeAttr(item.desc || "")}"><div class="editor-grid"><label class="checkbox-line"><input type="checkbox" data-menu-manager ${item.managerOnly ? "checked" : ""}> Только менеджерам</label><div><label>Action, например logout</label><input data-menu-action value="${escapeAttr(item.action || "")}"></div></div></div>`).join("");
 }
 
 function renderUsers() {
-    $("usersEditor").innerHTML = Object.entries(data.users || {}).map(([key, user]) => `
-        <div class="editor-card" data-user>
-            <div class="card-title-line">
-                <strong>${user.name || key}</strong>
-                <button class="danger-btn" data-remove-user>Удалить</button>
-            </div>
-            <div class="editor-grid three">
-                <div><label>ID</label><input data-user-key value="${escapeAttr(key)}"></div>
-                <div><label>Имя</label><input data-user-name value="${escapeAttr(user.name || "")}"></div>
-                <div><label>Пароль</label><input data-user-pass value="${escapeAttr(user.pass || "")}"></div>
-            </div>
-            <label class="checkbox-line"><input type="checkbox" data-user-manager ${user.manager ? "checked" : ""}> Менеджер</label>
-        </div>`).join("");
+    $("usersEditor").innerHTML = Object.entries(data.users || {}).map(([key, user]) => `<div class="editor-card" data-user><div class="card-title-line"><strong>${escapeAttr(user.name || key)}</strong><button class="danger-btn" data-remove-user>Удалить</button></div><div class="editor-grid three"><div><label>ID</label><input data-user-key value="${escapeAttr(key)}"></div><div><label>Имя</label><input data-user-name value="${escapeAttr(user.name || "")}"></div><div><label>Пароль</label><input data-user-pass value="${escapeAttr(user.pass || "")}"></div></div><label class="checkbox-line"><input type="checkbox" data-user-manager ${user.manager ? "checked" : ""}> Менеджер</label></div>`).join("");
 }
 
-function escapeAttr(value) {
-    return String(value).replaceAll("&", "&amp;").replaceAll('"', "&quot;").replaceAll("<", "&lt;").replaceAll(">", "&gt;");
-}
-
-async function loadData() {
-    if (!isFirebaseReady()) {
-        setStatus("Firebase config не заполнен. Сейчас админка работает только с локальным шаблоном.", "error");
-        data = structuredClone(fallbackData);
-        renderAll();
+function renderProducts() {
+    const box = $("productsEditor");
+    if (!box) return;
+    if (!products.length) {
+        box.innerHTML = `<div class="warning-box">Товары не загружены. Если во вкладке «Премия» они есть, проверь правила Firestore для коллекции <b>products</b> и нажми «Обновить».</div>`;
         return;
     }
+    box.innerHTML = products.map(item => productTemplate(item)).join("");
+}
 
+function productTemplate(item = {}) {
+    return `<div class="editor-card" data-product data-id="${escapeAttr(item.id || "")}"><div class="card-title-line"><strong>${escapeAttr(item.name || "Новый товар")}</strong><button class="danger-btn" data-remove-product>Удалить</button></div><div class="editor-grid three"><div><label>Название</label><input data-product-name value="${escapeAttr(item.name || "")}"></div><div><label>Группа</label><input data-product-group value="${escapeAttr(item.group || "")}"></div><div><label>Бонус</label><input type="number" data-product-bonus value="${escapeAttr(item.bonus ?? 0)}"></div><div><label>План</label><input type="number" data-product-plan value="${escapeAttr(item.plan ?? 0)}"></div><div><label>Продано</label><input type="number" data-product-sold value="${escapeAttr(item.sold ?? 0)}"></div><div><label>ID документа</label><input value="${escapeAttr(item.id || "создастся автоматически")}" disabled></div></div></div>`;
+}
+
+async function loadSiteData() {
     try {
-        const app = initializeApp(firebaseConfig);
-        db = getFirestore(app);
-        const snap = await getDoc(doc(db, "site", "main"));
+        const snap = await withTimeout(fb.getDoc(fb.doc(db, "site", "main")));
         data = snap.exists() ? { ...structuredClone(fallbackData), ...snap.data() } : structuredClone(fallbackData);
         renderAll();
-        setStatus("Данные загружены из Firebase.", "ok");
+        setStatus("Данные сайта загружены.", "ok");
     } catch (error) {
         console.error(error);
         data = structuredClone(fallbackData);
         renderAll();
-        setStatus("Не удалось загрузить Firebase. Проверь config и правила Firestore.", "error");
+        setStatus("Данные сайта не загрузились. Оставил локальный шаблон.", "error");
     }
+}
+
+async function loadProducts() {
+    if (!db) { products = []; renderProducts(); return; }
+    try {
+        const snap = await withTimeout(fb.getDocs(fb.collection(db, "products")));
+        products = snap.docs.map(d => ({ id: d.id, ...d.data() })).sort((a, b) => String(a.group || "").localeCompare(String(b.group || ""), "ru") || String(a.name || "").localeCompare(String(b.name || ""), "ru"));
+        deletedProductIds = [];
+        renderProducts();
+        setStatus(`Товары загружены: ${products.length}.`, "ok");
+    } catch (error) {
+        console.error(error);
+        products = [];
+        renderProducts();
+        setStatus("Товары из products не загрузились. Проверь правила Firestore.", "error");
+    }
+}
+
+async function loadData() {
+    setStatus("Загрузка данных…");
+    const ready = await initFirebase();
+    if (!ready) { data = structuredClone(fallbackData); renderAll(); renderProducts(); return; }
+    await loadSiteData();
+    await loadProducts();
 }
 
 async function saveData() {
     collectDataFromForm();
-
-    if (!db) {
-        setStatus("Сохранение недоступно: сначала заполни firebase-config.js.", "error");
-        return;
-    }
-
+    collectProductsFromForm();
+    if (!db) { setStatus("Сохранение недоступно: проверь firebase-config.js.", "error"); return; }
     try {
-        await setDoc(doc(db, "site", "main"), data, { merge: true });
-        setStatus("Сохранено в Firebase. Обнови главную страницу.", "ok");
+        await fb.setDoc(fb.doc(db, "site", "main"), data, { merge: true });
+        for (const id of deletedProductIds) await fb.deleteDoc(fb.doc(db, "products", id));
+        for (const item of products) {
+            const clean = { name: item.name, group: item.group, bonus: item.bonus, plan: item.plan, sold: item.sold };
+            if (item.id) await fb.setDoc(fb.doc(db, "products", item.id), clean, { merge: true });
+            else await fb.addDoc(fb.collection(db, "products"), clean);
+        }
+        deletedProductIds = [];
+        setStatus("Сохранено в Firebase. Обнови сайт и вкладку премии.", "ok");
+        await loadProducts();
     } catch (error) {
         console.error(error);
         setStatus("Ошибка сохранения. Проверь правила Firestore.", "error");
@@ -212,6 +235,7 @@ function bindEvents() {
     document.querySelectorAll(".admin-tab").forEach(btn => {
         btn.addEventListener("click", () => {
             collectDataFromForm();
+            collectProductsFromForm();
             document.querySelectorAll(".admin-tab").forEach(x => x.classList.remove("active"));
             document.querySelectorAll(".admin-panel").forEach(x => x.classList.remove("active"));
             btn.classList.add("active");
@@ -221,34 +245,11 @@ function bindEvents() {
 
     $("saveBtn").onclick = saveData;
     $("reloadBtn").onclick = loadData;
-
-    $("addCalculatorBtn").onclick = () => {
-        collectDataFromForm();
-        data.calculators.push({ title: "КАЛЬКУЛЯТОР РАССРОЧКИ", bank: "НОВЫЙ БАНК", rows: [["3 мес.", 0.95]] });
-        renderAll();
-    };
-
-    $("addMenuBtn").onclick = () => {
-        collectDataFromForm();
-        data.menu.push({ href: "#", icon: "🔗", title: "Новая карточка", desc: "Описание" });
-        renderAll();
-    };
-
-    $("addUserBtn").onclick = () => {
-        collectDataFromForm();
-        data.users[`user${Object.keys(data.users).length + 1}`] = { name: "Новый пользователь", pass: "0000", manager: false };
-        renderAll();
-    };
-
-    $("applyJsonBtn").onclick = () => {
-        try {
-            data = JSON.parse($("jsonEditor").value);
-            renderAll();
-            setStatus("JSON применён. Теперь можно сохранить в Firebase.", "ok");
-        } catch {
-            setStatus("Ошибка в JSON. Проверь запятые и кавычки.", "error");
-        }
-    };
+    $("addCalculatorBtn").onclick = () => { collectDataFromForm(); data.calculators.push({ title: "КАЛЬКУЛЯТОР РАССРОЧКИ", bank: "НОВЫЙ БАНК", rows: [["3 мес.", 0.95]] }); renderAll(); };
+    $("addMenuBtn").onclick = () => { collectDataFromForm(); data.menu.push({ href: "#", icon: "🔗", title: "Новая карточка", desc: "Описание" }); renderAll(); };
+    $("addUserBtn").onclick = () => { collectDataFromForm(); data.users[`user${Object.keys(data.users).length + 1}`] = { name: "Новый пользователь", pass: "0000", manager: false }; renderAll(); };
+    $("addProductBtn").onclick = () => { collectProductsFromForm(); products.push({ id: "", name: "Новый товар", group: "", bonus: 0, plan: 0, sold: 0 }); renderProducts(); };
+    $("applyJsonBtn").onclick = () => { try { data = JSON.parse($("jsonEditor").value); renderAll(); setStatus("JSON применён. Теперь можно сохранить в Firebase.", "ok"); } catch { setStatus("Ошибка в JSON. Проверь запятые и кавычки.", "error"); } };
 
     document.body.addEventListener("click", (e) => {
         if (e.target.matches("[data-remove-calc]")) { e.target.closest("[data-calc]").remove(); collectDataFromForm(); renderAll(); }
@@ -256,6 +257,12 @@ function bindEvents() {
         if (e.target.matches("[data-remove-row]")) { e.target.closest("[data-calc-row]").remove(); collectDataFromForm(); }
         if (e.target.matches("[data-remove-menu]")) { e.target.closest("[data-menu]").remove(); collectDataFromForm(); renderAll(); }
         if (e.target.matches("[data-remove-user]")) { e.target.closest("[data-user]").remove(); collectDataFromForm(); renderAll(); }
+        if (e.target.matches("[data-remove-product]")) {
+            const card = e.target.closest("[data-product]");
+            if (card.dataset.id) deletedProductIds.push(card.dataset.id);
+            card.remove();
+            collectProductsFromForm();
+        }
     });
 }
 
