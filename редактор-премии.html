@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Редактор премии</title>
+
+<style>
+
+*{
+box-sizing:border-box;
+margin:0;
+padding:0;
+}
+
+body{
+font-family:Inter,sans-serif;
+background:#f4f7fb;
+padding:20px;
+}
+
+h1{
+font-size:34px;
+font-weight:900;
+margin-bottom:20px;
+}
+
+.form{
+background:white;
+padding:20px;
+border-radius:24px;
+display:grid;
+grid-template-columns:repeat(6,1fr);
+gap:12px;
+margin-bottom:20px;
+box-shadow:0 10px 25px rgba(0,0,0,.05);
+}
+
+input,
+select{
+padding:14px;
+border-radius:14px;
+border:1px solid #dbe2ea;
+font-size:14px;
+}
+
+button{
+border:none;
+padding:14px;
+border-radius:14px;
+font-weight:800;
+cursor:pointer;
+}
+
+.add{
+background:#16a34a;
+color:white;
+}
+
+.card{
+background:white;
+padding:20px;
+border-radius:24px;
+margin-bottom:14px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+box-shadow:0 10px 25px rgba(0,0,0,.05);
+}
+
+.actions{
+display:flex;
+gap:10px;
+}
+
+.edit{
+background:#3b82f6;
+color:white;
+}
+
+.delete{
+background:#ef4444;
+color:white;
+}
+
+@media(max-width:900px){
+
+.form{
+grid-template-columns:1fr;
+}
+
+.card{
+flex-direction:column;
+align-items:flex-start;
+gap:14px;
+}
+
+}
+
+</style>
+</head>
+
+<body>
+
+<h1>Редактор премии</h1>
+
+<div class="form">
+
+<select id="group">
+<option>Ароматизаторы</option>
+<option>Автохимия</option>
+<option>Неликвид</option>
+<option>Масла</option>
+</select>
+
+<input type="text" id="name" placeholder="Название товара">
+<input type="number" id="plan" placeholder="План">
+<input type="number" id="sold" placeholder="Продано">
+<input type="number" id="bonus" placeholder="Бонус">
+
+<button class="add" onclick="saveProduct()">
+Сохранить
+</button>
+
+</div>
+
+<div id="list"></div>
+
+<script type="module">
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+
+import {
+getFirestore,
+collection,
+addDoc,
+getDocs,
+deleteDoc,
+doc,
+updateDoc
+}
+
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+const firebaseConfig = {
+
+apiKey: "AIzaSyBZ-AW6XoMR14KmBtlz2q06Z0jPGXnWMTw",
+
+authDomain: "auto-style-4dbb7.firebaseapp.com",
+
+projectId: "auto-style-4dbb7",
+
+storageBucket: "auto-style-4dbb7.firebasestorage.app",
+
+messagingSenderId: "217023127803",
+
+appId: "1:217023127803:web:78568cf161edd452b0905e"
+
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+let editId = null;
+
+async function loadProducts(){
+
+const querySnapshot =
+await getDocs(collection(db,"products"));
+
+const list =
+document.getElementById('list');
+
+list.innerHTML = '';
+
+querySnapshot.forEach((docSnap)=>{
+
+const p = docSnap.data();
+
+list.innerHTML += `
+
+<div class="card">
+
+<div>
+
+<b>${p.name}</b><br>
+${p.group}<br>
+Продано: ${p.sold}/${p.plan}<br>
+Бонус: ${p.bonus} ₽
+
+</div>
+
+<div class="actions">
+
+<button
+class="edit"
+onclick="window.editProduct('${docSnap.id}')">
+
+Изменить
+
+</button>
+
+<button
+class="delete"
+onclick="window.deleteProduct('${docSnap.id}')">
+
+Удалить
+
+</button>
+
+</div>
+
+</div>
+
+`;
+
+});
+
+}
+
+window.saveProduct = async function(){
+
+const product = {
+
+group:
+document.getElementById('group').value,
+
+name:
+document.getElementById('name').value,
+
+plan:Number(
+document.getElementById('plan').value
+),
+
+sold:Number(
+document.getElementById('sold').value
+),
+
+bonus:Number(
+document.getElementById('bonus').value
+)
+
+};
+
+if(editId){
+
+await updateDoc(
+doc(db,"products",editId),
+product
+);
+
+editId = null;
+
+}else{
+
+await addDoc(
+collection(db,"products"),
+product
+);
+
+}
+
+clearForm();
+
+loadProducts();
+
+}
+
+window.deleteProduct = async function(id){
+
+await deleteDoc(doc(db,"products",id));
+
+loadProducts();
+
+}
+
+window.editProduct = async function(id){
+
+const querySnapshot =
+await getDocs(collection(db,"products"));
+
+querySnapshot.forEach((docSnap)=>{
+
+if(docSnap.id === id){
+
+const p = docSnap.data();
+
+document.getElementById('group').value = p.group;
+document.getElementById('name').value = p.name;
+document.getElementById('plan').value = p.plan;
+document.getElementById('sold').value = p.sold;
+document.getElementById('bonus').value = p.bonus;
+
+editId = id;
+
+}
+
+});
+
+}
+
+function clearForm(){
+
+document.getElementById('name').value = '';
+document.getElementById('plan').value = '';
+document.getElementById('sold').value = '';
+document.getElementById('bonus').value = '';
+
+}
+
+loadProducts();
+
+</script>
+
+</body>
+</html>
