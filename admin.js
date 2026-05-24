@@ -268,3 +268,6 @@ function bindEvents() {
 
 bindEvents();
 loadData();
+
+
+текст текст
