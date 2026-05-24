@@ -83,7 +83,6 @@ async function initFirebase() {
 function setStatus(text, type = "") {
     const el = $("statusText");
     if (!el) return;
-
     el.textContent = text;
     el.className = type ? `status-${type}` : "";
 }
@@ -100,9 +99,37 @@ function escapeAttr(value) {
         .replaceAll(">", "&gt;");
 }
 
+function normalizeCalculatorRows(rows) {
+    return (rows || []).map(row => {
+        if (Array.isArray(row)) return [row[0], Number(row[1])];
+        return [row.term || row.title || "", Number(row.coef ?? row.value ?? 0)];
+    }).filter(row => row[0] && !Number.isNaN(row[1]));
+}
+
+function normalizeSiteData(siteData) {
+    const result = { ...clone(fallbackData), ...(siteData || {}) };
+    result.calculators = (result.calculators || []).map(calc => ({
+        ...calc,
+        rows: normalizeCalculatorRows(calc.rows)
+    }));
+    return result;
+}
+
+function prepareSiteDataForFirestore(sourceData) {
+    const result = clone(sourceData);
+
+    // Firestore НЕ поддерживает массивы внутри массивов.
+    // Поэтому rows: [["3 мес.", 0.95]] сохраняем как rows: [{term:"3 мес.", coef:0.95}]
+    result.calculators = (result.calculators || []).map(calc => ({
+        ...calc,
+        rows: normalizeCalculatorRows(calc.rows).map(([term, coef]) => ({ term, coef }))
+    }));
+
+    return result;
+}
+
 function collectDataFromForm() {
-    const newsBadge = $("newsBadge");
-    if (!newsBadge) return;
+    if (!$("newsBadge")) return;
 
     data.news = {
         badge: $("newsBadge").value.trim(),
@@ -130,7 +157,6 @@ function collectDataFromForm() {
     })).filter(item => item.title);
 
     const users = {};
-
     [...document.querySelectorAll("[data-user]")].forEach(card => {
         const key = card.querySelector("[data-user-key]").value.trim();
         if (!key) return;
@@ -143,10 +169,7 @@ function collectDataFromForm() {
     });
 
     data.users = users;
-
-    if ($("jsonEditor")) {
-        $("jsonEditor").value = JSON.stringify(data, null, 4);
-    }
+    if ($("jsonEditor")) $("jsonEditor").value = JSON.stringify(data, null, 4);
 }
 
 function collectProductsFromForm() {
@@ -166,11 +189,9 @@ function renderAll() {
     $("newsTitle").value = data.news?.title || "";
     $("newsText").value = data.news?.text || "";
     $("newsEndDate").value = toDatetimeLocal(data.news?.endDate);
-
     renderCalculators();
     renderMenu();
     renderUsers();
-
     $("jsonEditor").value = JSON.stringify(data, null, 4);
 }
 
@@ -182,18 +203,10 @@ function renderCalculators() {
                 <button class="danger-btn" data-remove-calc>Удалить</button>
             </div>
             <div class="editor-grid">
-                <div>
-                    <label>Название блока</label>
-                    <input data-calc-title value="${escapeAttr(calc.title || "")}">
-                </div>
-                <div>
-                    <label>Банк</label>
-                    <input data-calc-bank value="${escapeAttr(calc.bank || "")}">
-                </div>
+                <div><label>Название блока</label><input data-calc-title value="${escapeAttr(calc.title || "")}"></div>
+                <div><label>Банк</label><input data-calc-bank value="${escapeAttr(calc.bank || "")}"></div>
             </div>
-            <div class="row-list">
-                ${(calc.rows || []).map(([term, coef]) => rowTemplate(term, coef)).join("")}
-            </div>
+            <div class="row-list">${normalizeCalculatorRows(calc.rows).map(([term, coef]) => rowTemplate(term, coef)).join("")}</div>
             <button class="small-btn" data-add-row>+ Срок</button>
         </div>
     `).join("");
@@ -212,34 +225,16 @@ function rowTemplate(term = "3 мес.", coef = 0.95) {
 function renderMenu() {
     $("menuEditor").innerHTML = (data.menu || []).map(item => `
         <div class="editor-card" data-menu>
-            <div class="card-title-line">
-                <strong>${escapeAttr(item.icon || "🔗")} ${escapeAttr(item.title || "Карточка")}</strong>
-                <button class="danger-btn" data-remove-menu>Удалить</button>
-            </div>
+            <div class="card-title-line"><strong>${escapeAttr(item.icon || "🔗")} ${escapeAttr(item.title || "Карточка")}</strong><button class="danger-btn" data-remove-menu>Удалить</button></div>
             <div class="menu-item">
-                <div>
-                    <label>Иконка</label>
-                    <input data-menu-icon value="${escapeAttr(item.icon || "")}">
-                </div>
-                <div>
-                    <label>Название</label>
-                    <input data-menu-title value="${escapeAttr(item.title || "")}">
-                </div>
-                <div>
-                    <label>Ссылка</label>
-                    <input data-menu-href value="${escapeAttr(item.href || "#")}">
-                </div>
+                <div><label>Иконка</label><input data-menu-icon value="${escapeAttr(item.icon || "")}"></div>
+                <div><label>Название</label><input data-menu-title value="${escapeAttr(item.title || "")}"></div>
+                <div><label>Ссылка</label><input data-menu-href value="${escapeAttr(item.href || "#")}"></div>
             </div>
-            <label>Описание</label>
-            <input data-menu-desc value="${escapeAttr(item.desc || "")}">
+            <label>Описание</label><input data-menu-desc value="${escapeAttr(item.desc || "")}">
             <div class="editor-grid">
-                <label class="checkbox-line">
-                    <input type="checkbox" data-menu-manager ${item.managerOnly ? "checked" : ""}> Только менеджерам
-                </label>
-                <div>
-                    <label>Action, например logout</label>
-                    <input data-menu-action value="${escapeAttr(item.action || "")}">
-                </div>
+                <label class="checkbox-line"><input type="checkbox" data-menu-manager ${item.managerOnly ? "checked" : ""}> Только менеджерам</label>
+                <div><label>Action, например logout</label><input data-menu-action value="${escapeAttr(item.action || "")}"></div>
             </div>
         </div>
     `).join("");
@@ -248,27 +243,13 @@ function renderMenu() {
 function renderUsers() {
     $("usersEditor").innerHTML = Object.entries(data.users || {}).map(([key, user]) => `
         <div class="editor-card" data-user>
-            <div class="card-title-line">
-                <strong>${escapeAttr(user.name || key)}</strong>
-                <button class="danger-btn" data-remove-user>Удалить</button>
-            </div>
+            <div class="card-title-line"><strong>${escapeAttr(user.name || key)}</strong><button class="danger-btn" data-remove-user>Удалить</button></div>
             <div class="editor-grid three">
-                <div>
-                    <label>ID</label>
-                    <input data-user-key value="${escapeAttr(key)}">
-                </div>
-                <div>
-                    <label>Имя</label>
-                    <input data-user-name value="${escapeAttr(user.name || "")}">
-                </div>
-                <div>
-                    <label>Пароль</label>
-                    <input data-user-pass value="${escapeAttr(user.pass || "")}">
-                </div>
+                <div><label>ID</label><input data-user-key value="${escapeAttr(key)}"></div>
+                <div><label>Имя</label><input data-user-name value="${escapeAttr(user.name || "")}"></div>
+                <div><label>Пароль</label><input data-user-pass value="${escapeAttr(user.pass || "")}"></div>
             </div>
-            <label class="checkbox-line">
-                <input type="checkbox" data-user-manager ${user.manager ? "checked" : ""}> Менеджер
-            </label>
+            <label class="checkbox-line"><input type="checkbox" data-user-manager ${user.manager ? "checked" : ""}> Менеджер</label>
         </div>
     `).join("");
 }
@@ -286,44 +267,33 @@ function renderProducts() {
 
     if (!products.length) {
         box.innerHTML = `
-            <div class="products-toolbar">
-                <button class="small-btn" id="addProductGroupInlineBtn">+ Группа</button>
-            </div>
-            <div class="warning-box">
-                Товары не загружены. Если во вкладке «Премия» они есть, проверь правила Firestore для коллекции <b>products</b> и нажми «Обновить».
-            </div>
+            <div class="products-toolbar"><button class="small-btn" id="addProductGroupInlineBtn">+ Группа</button></div>
+            <div class="warning-box">Товары не загружены. Если во вкладке «Премия» они есть, проверь правила Firestore для коллекции <b>products</b> и нажми «Обновить».</div>
         `;
         bindProductGroupButton();
         return;
     }
-
-    const groupedHtml = groups.map(group => {
-        const groupProducts = products
-            .filter(item => (String(item.group || "Без группы").trim() || "Без группы") === group)
-            .sort((a, b) => String(a.name || "").localeCompare(String(b.name || ""), "ru"));
-
-        return `
-            <div class="product-group-block">
-                <div class="product-group-head">
-                    <div>
-                        <strong>${escapeAttr(group)}</strong>
-                        <span>${groupProducts.length} тов.</span>
-                    </div>
-                    <button class="small-btn" data-add-product-to-group="${escapeAttr(group)}">+ Товар</button>
-                </div>
-                <div class="product-compact-list">
-                    ${groupProducts.map(item => productTemplate(item, groups)).join("")}
-                </div>
-            </div>
-        `;
-    }).join("");
 
     box.innerHTML = `
         <div class="products-toolbar">
             <button class="small-btn" id="addProductGroupInlineBtn">+ Группа</button>
             <span class="hint">Группы создаются автоматически, когда ты добавляешь товар с новой группой.</span>
         </div>
-        ${groupedHtml}
+        ${groups.map(group => {
+            const groupProducts = products
+                .filter(item => (String(item.group || "Без группы").trim() || "Без группы") === group)
+                .sort((a, b) => String(a.name || "").localeCompare(String(b.name || ""), "ru"));
+
+            return `
+                <div class="product-group-block">
+                    <div class="product-group-head">
+                        <div><strong>${escapeAttr(group)}</strong><span>${groupProducts.length} тов.</span></div>
+                        <button class="small-btn" data-add-product-to-group="${escapeAttr(group)}">+ Товар</button>
+                    </div>
+                    <div class="product-compact-list">${groupProducts.map(item => productTemplate(item, groups)).join("")}</div>
+                </div>
+            `;
+        }).join("")}
     `;
 
     bindProductGroupButton();
@@ -338,22 +308,15 @@ function bindProductGroupButton() {
         if (!group || !group.trim()) return;
 
         collectProductsFromForm();
-        products.push({
-            id: "",
-            code: "",
-            name: "Новый товар",
-            group: group.trim(),
-            bonus: 0,
-            plan: 0,
-            sold: 0
-        });
+        products.push({ id: "", code: "", name: "Новый товар", group: group.trim(), bonus: 0, plan: 0, sold: 0 });
         renderProducts();
     };
 }
 
 function productTemplate(item = {}, groups = []) {
+    const cleanGroup = String(item.group || "Без группы").trim() || "Без группы";
     const groupOptions = groups.map(group => `
-        <option value="${escapeAttr(group)}" ${group === item.group ? "selected" : ""}>${escapeAttr(group)}</option>
+        <option value="${escapeAttr(group)}" ${group === cleanGroup ? "selected" : ""}>${escapeAttr(group)}</option>
     `).join("");
 
     return `
@@ -361,10 +324,7 @@ function productTemplate(item = {}, groups = []) {
             <div class="product-row-main">
                 <input class="product-code-input" data-product-code placeholder="Код" value="${escapeAttr(item.code || "")}">
                 <input class="product-name-input" data-product-name placeholder="Название" value="${escapeAttr(item.name || "")}">
-                <select data-product-group>
-                    ${groupOptions}
-                    <option value="${escapeAttr(item.group || "")}" ${groups.includes(item.group) ? "" : "selected"}>${escapeAttr(item.group || "Без группы")}</option>
-                </select>
+                <select data-product-group>${groupOptions}</select>
                 <input type="number" data-product-bonus placeholder="Бонус" value="${escapeAttr(item.bonus ?? 0)}">
                 <input type="number" data-product-plan placeholder="План" value="${escapeAttr(item.plan ?? 0)}">
                 <input type="number" data-product-sold placeholder="Продано" value="${escapeAttr(item.sold ?? 0)}">
@@ -377,7 +337,7 @@ function productTemplate(item = {}, groups = []) {
 async function loadSiteData() {
     try {
         const snap = await withTimeout(fb.getDoc(fb.doc(db, "site", "main")));
-        data = snap.exists() ? { ...clone(fallbackData), ...snap.data() } : clone(fallbackData);
+        data = snap.exists() ? normalizeSiteData(snap.data()) : clone(fallbackData);
         renderAll();
         setStatus("Данные сайта загружены.", "ok");
     } catch (error) {
@@ -417,7 +377,6 @@ async function loadProducts() {
 
 async function loadData() {
     setStatus("Загрузка данных…");
-
     const ready = await initFirebase();
 
     if (!ready) {
@@ -441,7 +400,8 @@ async function saveData() {
     }
 
     try {
-        await fb.setDoc(fb.doc(db, "site", "main"), data, { merge: true });
+        const siteData = prepareSiteDataForFirestore(data);
+        await fb.setDoc(fb.doc(db, "site", "main"), siteData, { merge: true });
 
         for (const id of deletedProductIds) {
             await fb.deleteDoc(fb.doc(db, "products", id));
@@ -469,7 +429,7 @@ async function saveData() {
         await loadProducts();
     } catch (error) {
         console.error(error);
-        setStatus("Ошибка сохранения. Проверь правила Firestore.", "error");
+        setStatus("Ошибка сохранения: " + (error.message || "проверь правила Firestore"), "error");
     }
 }
 
@@ -519,15 +479,7 @@ function bindEvents() {
         $("addProductBtn").onclick = () => {
             collectProductsFromForm();
             const groups = getProductGroups();
-            products.push({
-                id: "",
-                code: "",
-                name: "Новый товар",
-                group: groups[0] || "Новая группа",
-                bonus: 0,
-                plan: 0,
-                sold: 0
-            });
+            products.push({ id: "", code: "", name: "Новый товар", group: groups[0] || "Новая группа", bonus: 0, plan: 0, sold: 0 });
             renderProducts();
         };
     }
@@ -535,7 +487,7 @@ function bindEvents() {
     if ($("applyJsonBtn")) {
         $("applyJsonBtn").onclick = () => {
             try {
-                data = JSON.parse($("jsonEditor").value);
+                data = normalizeSiteData(JSON.parse($("jsonEditor").value));
                 renderAll();
                 setStatus("JSON применён. Теперь можно сохранить в Firebase.", "ok");
             } catch {
@@ -574,15 +526,7 @@ function bindEvents() {
 
         if (e.target.matches("[data-add-product-to-group]")) {
             collectProductsFromForm();
-            products.push({
-                id: "",
-                code: "",
-                name: "Новый товар",
-                group: e.target.dataset.addProductToGroup || "Новая группа",
-                bonus: 0,
-                plan: 0,
-                sold: 0
-            });
+            products.push({ id: "", code: "", name: "Новый товар", group: e.target.dataset.addProductToGroup || "Новая группа", bonus: 0, plan: 0, sold: 0 });
             renderProducts();
         }
 
