@@ -1,3 +1,5 @@
+const clone = (obj) => JSON.parse(JSON.stringify(obj));
+
 const fallbackData = {
     users: {
         cashier: { name: "Кассир", pass: "2012" },
@@ -27,7 +29,7 @@ const fallbackData = {
     ]
 };
 
-let appData = structuredClone(fallbackData);
+let appData = clone(fallbackData);
 let timerInterval = null;
 const $ = (id) => document.getElementById(id);
 
@@ -36,6 +38,24 @@ function withTimeout(promise, ms = 7000) {
         promise,
         new Promise((_, reject) => setTimeout(() => reject(new Error("Firebase timeout")), ms))
     ]);
+}
+
+function normalizeRows(rows) {
+    return (rows || []).map(row => {
+        if (Array.isArray(row)) return [row[0], Number(row[1])];
+        return [row.term || row.title || "", Number(row.coef ?? row.value ?? 0)];
+    }).filter(row => row[0] && !Number.isNaN(row[1]));
+}
+
+function normalizeAppData(rawData) {
+    const result = { ...clone(fallbackData), ...(rawData || {}) };
+
+    result.calculators = (result.calculators || []).map(calc => ({
+        ...calc,
+        rows: normalizeRows(calc.rows)
+    }));
+
+    return result;
 }
 
 async function getFirebaseConfig() {
@@ -52,42 +72,88 @@ async function getFirebaseConfig() {
 
 async function loadData() {
     const config = await getFirebaseConfig();
-    if (!config) return structuredClone(fallbackData);
+    if (!config) return clone(fallbackData);
 
     try {
         const [{ initializeApp }, { getFirestore, doc, getDoc }] = await Promise.all([
             import("https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js"),
             import("https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js")
         ]);
+
         const firebaseApp = initializeApp(config);
         const db = getFirestore(firebaseApp);
         const snapshot = await withTimeout(getDoc(doc(db, "site", "main")));
-        return snapshot.exists() ? { ...structuredClone(fallbackData), ...snapshot.data() } : structuredClone(fallbackData);
+
+        return snapshot.exists() ? normalizeAppData(snapshot.data()) : clone(fallbackData);
     } catch (error) {
         console.warn("Firebase недоступен, используется локальный fallback:", error);
-        return structuredClone(fallbackData);
+        return clone(fallbackData);
     }
 }
 
 function renderLoginUsers() {
     if (!$('userSelect')) return;
+
     $("userSelect").innerHTML = Object.entries(appData.users || fallbackData.users)
         .map(([key, user]) => `<option value="${key}">${user.name}</option>`)
         .join("");
 }
 
 function renderNews() {
-    $("newsContainer").innerHTML = `<div class="news-banner"><div class="news-left"><div class="news-badge">${appData.news.badge}</div><div class="news-title">${appData.news.title}</div><div class="news-text">${appData.news.text}</div></div><div class="news-timer"><div class="timer-label">СТАРТ ЧЕРЕЗ</div><div class="days" id="days">--д 00:00:00</div></div></div>`;
+    const container = $("newsContainer");
+    if (!container) return;
+
+    container.innerHTML = `
+        <div class="news-banner">
+            <div class="news-left">
+                <div class="news-badge">${appData.news.badge}</div>
+                <div class="news-title">${appData.news.title}</div>
+                <div class="news-text">${appData.news.text}</div>
+            </div>
+            <div class="news-timer">
+                <div class="timer-label">СТАРТ ЧЕРЕЗ</div>
+                <div class="days" id="days">--д 00:00:00</div>
+            </div>
+        </div>
+    `;
 }
 
 function renderCalculators() {
-    $("calculatorsContainer").innerHTML = (appData.calculators || []).map(calc => `<div class="calculator"><div class="calc-title">${calc.title}</div><div class="calc-subtitle">${calc.bank}</div><input type="number" class="sum"><button class="btn btn-calc">РАССЧИТАТЬ</button><table>${(calc.rows || []).map(([term, coef]) => `<tr><td>${term}</td><td class="coef">${coef}</td><td class="result"></td></tr>`).join("")}</table></div>`).join("");
+    const container = $("calculatorsContainer");
+    if (!container) return;
+
+    container.innerHTML = (appData.calculators || []).map(calc => `
+        <div class="calculator">
+            <div class="calc-title">${calc.title}</div>
+            <div class="calc-subtitle">${calc.bank}</div>
+            <input type="number" class="sum">
+            <button class="btn btn-calc">РАССЧИТАТЬ</button>
+            <table>
+                ${normalizeRows(calc.rows).map(([term, coef]) => `
+                    <tr>
+                        <td>${term}</td>
+                        <td class="coef">${coef}</td>
+                        <td class="result"></td>
+                    </tr>
+                `).join("")}
+            </table>
+        </div>
+    `).join("");
 }
 
 function renderMenu(isManager = false) {
-    $("menuGrid").innerHTML = (appData.menu || [])
+    const grid = $("menuGrid");
+    if (!grid) return;
+
+    grid.innerHTML = (appData.menu || [])
         .filter(item => !item.managerOnly || isManager)
-        .map(item => `<a href="${item.href}" class="menu-card" ${item.action ? `data-action="${item.action}"` : ""}><div class="menu-icon">${item.icon}</div><div class="menu-title">${item.title}</div><div class="menu-desc">${item.desc}</div></a>`).join("");
+        .map(item => `
+            <a href="${item.href}" class="menu-card" ${item.action ? `data-action="${item.action}"` : ""}>
+                <div class="menu-icon">${item.icon}</div>
+                <div class="menu-title">${item.title}</div>
+                <div class="menu-desc">${item.desc}</div>
+            </a>
+        `).join("");
 }
 
 function bindCalculators() {
@@ -95,18 +161,26 @@ function bindCalculators() {
         calc.querySelector(".btn-calc").onclick = () => {
             const sum = parseFloat(calc.querySelector(".sum").value);
             if (isNaN(sum)) return;
+
             calc.querySelectorAll(".coef").forEach((coef, i) => {
                 const value = sum / parseFloat(coef.textContent);
-                calc.querySelectorAll(".result")[i].textContent = value.toLocaleString("ru-RU", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+                calc.querySelectorAll(".result")[i].textContent = value.toLocaleString("ru-RU", {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2
+                });
             });
         };
     });
 }
 
 function bindMenu() {
-    $("menuGrid").addEventListener("click", (event) => {
+    const grid = $("menuGrid");
+    if (!grid) return;
+
+    grid.addEventListener("click", (event) => {
         const card = event.target.closest("[data-action='logout']");
         if (!card) return;
+
         event.preventDefault();
         logout();
     });
@@ -115,12 +189,20 @@ function bindMenu() {
 function login() {
     const userKey = $("userSelect").value;
     const user = (appData.users || fallbackData.users)[userKey];
+
     if (!user || $("passwordInput").value !== user.pass) {
         $("errorMsg").textContent = "Неверный пароль";
         return;
     }
+
     const expire = Date.now() + 24 * 60 * 60 * 1000;
-    localStorage.setItem("session", JSON.stringify({ key: userKey, name: user.name, manager: !!user.manager, expire }));
+    localStorage.setItem("session", JSON.stringify({
+        key: userKey,
+        name: user.name,
+        manager: !!user.manager,
+        expire
+    }));
+
     openApp(user.name, !!user.manager);
 }
 
@@ -140,16 +222,27 @@ function updateTimer() {
     const endDate = new Date(appData.news.endDate).getTime();
     const diff = endDate - Date.now();
     const el = $("days");
+
     if (!el) return;
-    if (!endDate || diff <= 0) { el.innerHTML = "СТАРТ"; return; }
+
+    if (!endDate || diff <= 0) {
+        el.innerHTML = "СТАРТ";
+        return;
+    }
+
     const days = Math.floor(diff / 86400000);
     const hours = Math.floor((diff / 3600000) % 24);
     const minutes = Math.floor((diff / 60000) % 60);
     const seconds = Math.floor((diff / 1000) % 60);
+
     el.innerHTML = `${days}д ${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
 }
 
-function startTimer() { clearInterval(timerInterval); updateTimer(); timerInterval = setInterval(updateTimer, 1000); }
+function startTimer() {
+    clearInterval(timerInterval);
+    updateTimer();
+    timerInterval = setInterval(updateTimer, 1000);
+}
 
 async function init() {
     try {
@@ -162,10 +255,16 @@ async function init() {
         bindCalculators();
         bindMenu();
         startTimer();
+
         const session = JSON.parse(localStorage.getItem("session"));
-        if (session && session.expire > Date.now()) openApp(session.name, !!session.manager);
+        if (session && session.expire > Date.now()) {
+            openApp(session.name, !!session.manager);
+        }
+
         $("loginBtn").onclick = login;
-        $("passwordInput").addEventListener("keyup", e => { if (e.key === "Enter") login(); });
+        $("passwordInput").addEventListener("keyup", e => {
+            if (e.key === "Enter") login();
+        });
     } catch (error) {
         console.error("Ошибка запуска сайта:", error);
         alert("Ошибка запуска сайта. Проверь firebase-config.js и консоль браузера.");
@@ -174,9 +273,3 @@ async function init() {
 
 window.logout = logout;
 init();
-
-
-
-
-
-ываываывываывыа
