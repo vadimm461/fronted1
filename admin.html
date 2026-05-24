@@ -1,103 +1,600 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>AUTO-STYLE — Админ</title>
-    <link rel="icon" type="image/png" href="favicon.png">
-    <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="admin.css">
-</head>
-<body>
-<div class="admin-layout">
-    <aside class="admin-sidebar">
-        <div class="logo admin-logo">
-            <img src="favicon.png" alt="AUTO-STYLE" class="logo-icon">
-            <div class="logo-text">
-                <div class="logo-title"><span class="green">A</span>uto-<span class="green">S</span>tyle</div>
-                <div class="logo-subtitle">АДМИН ПАНЕЛЬ</div>
+const clone = (obj) => JSON.parse(JSON.stringify(obj));
+
+const fallbackData = {
+    users: {
+        cashier: { name: "Кассир", pass: "2012" },
+        evgeniy: { name: "Евгений", pass: "0186", manager: true },
+        vadim: { name: "Вадим", pass: "2385", manager: true }
+    },
+    news: {
+        badge: "НОВОСТЬ ДЛЯ КОМАНДЫ",
+        title: "🚀 Команда, для вас хорошие новости",
+        text: `Запускаем <b>Бонусный проект</b> — систему накопительных скидок.<br><br>Привязка клиента:<br>• по ФИО<br>• по номеру телефона<br><br>Все покупки сохраняются автоматически.`,
+        endDate: "2026-06-20T00:00:00"
+    },
+    calculators: [
+        { title: "КАЛЬКУЛЯТОР РАССРОЧКИ", bank: "АГРОПРОМБАНК", rows: [["3 мес.", 0.955], ["6 мес.", 0.93], ["9 мес.", 0.90], ["12 мес.", 0.875]] },
+        { title: "КАЛЬКУЛЯТОР РАССРОЧКИ", bank: "ЭКСИМБАНК", rows: [["3 мес.", 0.955], ["6 мес.", 0.93], ["9 мес.", 0.90], ["12 мес.", 0.886]] },
+        { title: "КАЛЬКУЛЯТОР РАССРОЧКИ", bank: "СБЕРБАНК", rows: [["3 мес.", 0.96], ["6 мес.", 0.93], ["9 мес.", 0.90], ["12 мес.", 0.88]] }
+    ],
+    menu: [
+        { href: "beznal.html", icon: "💳", title: "Безнал", desc: "Оформление безналичной оплаты и документов." },
+        { href: "smena.html", icon: "📊", title: "Закрытие смены", desc: "Быстрое оформление и завершение смены." },
+        { href: "discount.html", icon: "🎫", title: "Скидочная карта", desc: "Создание и печать анкеты клиента." },
+        { href: "baza.html", icon: "📚", title: "База знаний", desc: "Инструкции, масла и техническая информация." },
+        { href: "pass.html", icon: "🔐", title: "Пароли", desc: "Доступы и служебная информация." },
+        { href: "close-shift.html", icon: "📊", title: "Закрытие смен", desc: "Ссылка на отчет по закрытию смены", managerOnly: true },
+        { href: "cash-diff.html", icon: "💰", title: "Расхождение по кассе", desc: "Контроль расхождения наличности.", managerOnly: true },
+        { href: "#", icon: "🚪", title: "Выход", desc: "Завершить текущую сессию пользователя.", action: "logout" }
+    ]
+};
+
+let db = null;
+let fb = null;
+let data = clone(fallbackData);
+let products = [];
+let deletedProductIds = [];
+
+const $ = (id) => document.getElementById(id);
+
+function withTimeout(promise, ms = 9000) {
+    return Promise.race([
+        promise,
+        new Promise((_, reject) => setTimeout(() => reject(new Error("Firebase timeout")), ms))
+    ]);
+}
+
+async function getFirebaseConfig() {
+    try {
+        const module = await import("./firebase-config.js?ts=" + Date.now());
+        const config = module.firebaseConfig || {};
+        if (!config.apiKey || String(config.apiKey).includes("PASTE_")) return null;
+        return config;
+    } catch (error) {
+        console.error(error);
+        return null;
+    }
+}
+
+async function initFirebase() {
+    const config = await getFirebaseConfig();
+
+    if (!config) {
+        setStatus("Firebase config не заполнен или файл с ошибкой. Работает локальный шаблон.", "error");
+        return false;
+    }
+
+    try {
+        const appMod = await import("https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js");
+        const fsMod = await import("https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js");
+
+        fb = fsMod;
+        const app = appMod.initializeApp(config);
+        db = fsMod.getFirestore(app);
+
+        return true;
+    } catch (error) {
+        console.error(error);
+        setStatus("Firebase не подключился. Проверь firebase-config.js и интернет.", "error");
+        return false;
+    }
+}
+
+function setStatus(text, type = "") {
+    const el = $("statusText");
+    if (!el) return;
+
+    el.textContent = text;
+    el.className = type ? `status-${type}` : "";
+}
+
+function toDatetimeLocal(value) {
+    return value ? String(value).slice(0, 16) : "";
+}
+
+function escapeAttr(value) {
+    return String(value ?? "")
+        .replaceAll("&", "&amp;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;");
+}
+
+function collectDataFromForm() {
+    const newsBadge = $("newsBadge");
+    if (!newsBadge) return;
+
+    data.news = {
+        badge: $("newsBadge").value.trim(),
+        title: $("newsTitle").value.trim(),
+        text: $("newsText").value,
+        endDate: $("newsEndDate").value ? `${$("newsEndDate").value}:00` : ""
+    };
+
+    data.calculators = [...document.querySelectorAll("[data-calc]")].map(card => ({
+        title: card.querySelector("[data-calc-title]").value.trim(),
+        bank: card.querySelector("[data-calc-bank]").value.trim(),
+        rows: [...card.querySelectorAll("[data-calc-row]")].map(row => [
+            row.querySelector("[data-term]").value.trim(),
+            Number(row.querySelector("[data-coef]").value)
+        ]).filter(row => row[0] && !Number.isNaN(row[1]))
+    }));
+
+    data.menu = [...document.querySelectorAll("[data-menu]")].map(card => ({
+        icon: card.querySelector("[data-menu-icon]").value.trim(),
+        title: card.querySelector("[data-menu-title]").value.trim(),
+        desc: card.querySelector("[data-menu-desc]").value.trim(),
+        href: card.querySelector("[data-menu-href]").value.trim() || "#",
+        managerOnly: card.querySelector("[data-menu-manager]").checked,
+        action: card.querySelector("[data-menu-action]").value.trim() || undefined
+    })).filter(item => item.title);
+
+    const users = {};
+
+    [...document.querySelectorAll("[data-user]")].forEach(card => {
+        const key = card.querySelector("[data-user-key]").value.trim();
+        if (!key) return;
+
+        users[key] = {
+            name: card.querySelector("[data-user-name]").value.trim(),
+            pass: card.querySelector("[data-user-pass]").value.trim(),
+            manager: card.querySelector("[data-user-manager]").checked
+        };
+    });
+
+    data.users = users;
+
+    if ($("jsonEditor")) {
+        $("jsonEditor").value = JSON.stringify(data, null, 4);
+    }
+}
+
+function collectProductsFromForm() {
+    products = [...document.querySelectorAll("[data-product]")].map(card => ({
+        id: card.dataset.id || "",
+        code: card.querySelector("[data-product-code]")?.value.trim() || "",
+        name: card.querySelector("[data-product-name]").value.trim(),
+        group: card.querySelector("[data-product-group]").value.trim(),
+        bonus: Number(card.querySelector("[data-product-bonus]").value) || 0,
+        plan: Number(card.querySelector("[data-product-plan]").value) || 0,
+        sold: Number(card.querySelector("[data-product-sold]").value) || 0
+    })).filter(item => item.name);
+}
+
+function renderAll() {
+    $("newsBadge").value = data.news?.badge || "";
+    $("newsTitle").value = data.news?.title || "";
+    $("newsText").value = data.news?.text || "";
+    $("newsEndDate").value = toDatetimeLocal(data.news?.endDate);
+
+    renderCalculators();
+    renderMenu();
+    renderUsers();
+
+    $("jsonEditor").value = JSON.stringify(data, null, 4);
+}
+
+function renderCalculators() {
+    $("calculatorsEditor").innerHTML = (data.calculators || []).map(calc => `
+        <div class="editor-card" data-calc>
+            <div class="card-title-line">
+                <strong>${escapeAttr(calc.bank || "Банк")}</strong>
+                <button class="danger-btn" data-remove-calc>Удалить</button>
+            </div>
+            <div class="editor-grid">
+                <div>
+                    <label>Название блока</label>
+                    <input data-calc-title value="${escapeAttr(calc.title || "")}">
+                </div>
+                <div>
+                    <label>Банк</label>
+                    <input data-calc-bank value="${escapeAttr(calc.bank || "")}">
+                </div>
+            </div>
+            <div class="row-list">
+                ${(calc.rows || []).map(([term, coef]) => rowTemplate(term, coef)).join("")}
+            </div>
+            <button class="small-btn" data-add-row>+ Срок</button>
+        </div>
+    `).join("");
+}
+
+function rowTemplate(term = "3 мес.", coef = 0.95) {
+    return `
+        <div class="row-item" data-calc-row>
+            <input data-term placeholder="Срок" value="${escapeAttr(term)}">
+            <input data-coef type="number" step="0.001" placeholder="Коэффициент" value="${escapeAttr(coef)}">
+            <button class="danger-btn" data-remove-row>×</button>
+        </div>
+    `;
+}
+
+function renderMenu() {
+    $("menuEditor").innerHTML = (data.menu || []).map(item => `
+        <div class="editor-card" data-menu>
+            <div class="card-title-line">
+                <strong>${escapeAttr(item.icon || "🔗")} ${escapeAttr(item.title || "Карточка")}</strong>
+                <button class="danger-btn" data-remove-menu>Удалить</button>
+            </div>
+            <div class="menu-item">
+                <div>
+                    <label>Иконка</label>
+                    <input data-menu-icon value="${escapeAttr(item.icon || "")}">
+                </div>
+                <div>
+                    <label>Название</label>
+                    <input data-menu-title value="${escapeAttr(item.title || "")}">
+                </div>
+                <div>
+                    <label>Ссылка</label>
+                    <input data-menu-href value="${escapeAttr(item.href || "#")}">
+                </div>
+            </div>
+            <label>Описание</label>
+            <input data-menu-desc value="${escapeAttr(item.desc || "")}">
+            <div class="editor-grid">
+                <label class="checkbox-line">
+                    <input type="checkbox" data-menu-manager ${item.managerOnly ? "checked" : ""}> Только менеджерам
+                </label>
+                <div>
+                    <label>Action, например logout</label>
+                    <input data-menu-action value="${escapeAttr(item.action || "")}">
+                </div>
             </div>
         </div>
+    `).join("");
+}
 
-        <button class="admin-tab active" data-tab="news">Новости и таймер</button>
-        <button class="admin-tab" data-tab="calculators">Калькуляторы</button>
-        <button class="admin-tab" data-tab="menu">Меню сайта</button>
-        <button class="admin-tab" data-tab="users">Пользователи</button>
-        <button class="admin-tab" data-tab="products">Премия / товары</button>
-        <button class="admin-tab" data-tab="json">JSON</button>
-
-        <a class="admin-link" href="index.html">← На сайт</a>
-    </aside>
-
-    <main class="admin-main">
-        <div class="admin-top">
-            <div>
-                <h1>Управление сайтом</h1>
-                <p id="statusText">Загрузка данных…</p>
+function renderUsers() {
+    $("usersEditor").innerHTML = Object.entries(data.users || {}).map(([key, user]) => `
+        <div class="editor-card" data-user>
+            <div class="card-title-line">
+                <strong>${escapeAttr(user.name || key)}</strong>
+                <button class="danger-btn" data-remove-user>Удалить</button>
             </div>
-            <div class="admin-actions">
-                <button class="btn secondary" id="reloadBtn">Обновить</button>
-                <button class="btn" id="saveBtn">Сохранить в Firebase</button>
+            <div class="editor-grid three">
+                <div>
+                    <label>ID</label>
+                    <input data-user-key value="${escapeAttr(key)}">
+                </div>
+                <div>
+                    <label>Имя</label>
+                    <input data-user-name value="${escapeAttr(user.name || "")}">
+                </div>
+                <div>
+                    <label>Пароль</label>
+                    <input data-user-pass value="${escapeAttr(user.pass || "")}">
+                </div>
             </div>
+            <label class="checkbox-line">
+                <input type="checkbox" data-user-manager ${user.manager ? "checked" : ""}> Менеджер
+            </label>
         </div>
+    `).join("");
+}
 
-        <section class="admin-panel active" id="tab-news">
-            <h2>Новости и таймер</h2>
-            <label>Бейдж</label>
-            <input id="newsBadge" type="text">
-            <label>Заголовок</label>
-            <input id="newsTitle" type="text">
-            <label>Текст новости, можно использовать &lt;br&gt; и &lt;b&gt;</label>
-            <textarea id="newsText" rows="9"></textarea>
-            <label>Дата старта</label>
-            <input id="newsEndDate" type="datetime-local">
-        </section>
+function getProductGroups() {
+    return [...new Set(products.map(item => String(item.group || "Без группы").trim() || "Без группы"))]
+        .sort((a, b) => a.localeCompare(b, "ru"));
+}
 
-        <section class="admin-panel" id="tab-calculators">
-            <div class="panel-head">
-                <h2>Калькуляторы рассрочки</h2>
-                <button class="small-btn" id="addCalculatorBtn">+ Банк</button>
-            </div>
-            <div id="calculatorsEditor"></div>
-        </section>
+function renderProducts() {
+    const box = $("productsEditor");
+    if (!box) return;
 
-        <section class="admin-panel" id="tab-menu">
-            <div class="panel-head">
-                <h2>Меню сайта</h2>
-                <button class="small-btn" id="addMenuBtn">+ Карточка</button>
-            </div>
-            <div id="menuEditor"></div>
-        </section>
+    const groups = getProductGroups();
 
-        <section class="admin-panel" id="tab-users">
-            <div class="panel-head">
-                <h2>Пользователи</h2>
-                <button class="small-btn" id="addUserBtn">+ Пользователь</button>
+    if (!products.length) {
+        box.innerHTML = `
+            <div class="products-toolbar">
+                <button class="small-btn" id="addProductGroupInlineBtn">+ Группа</button>
             </div>
             <div class="warning-box">
-                Сейчас это фронтовая авторизация. Пароли в таком виде видны в коде браузера. Для настоящей защиты подключи Firebase Authentication.
+                Товары не загружены. Если во вкладке «Премия» они есть, проверь правила Firestore для коллекции <b>products</b> и нажми «Обновить».
             </div>
-            <div id="usersEditor"></div>
-        </section>
+        `;
+        bindProductGroupButton();
+        return;
+    }
 
-        <section class="admin-panel" id="tab-products">
-            <div class="panel-head">
-                <h2>Премия / товары</h2>
-                <button class="small-btn" id="addProductBtn">+ Товар</button>
+    const groupedHtml = groups.map(group => {
+        const groupProducts = products
+            .filter(item => (String(item.group || "Без группы").trim() || "Без группы") === group)
+            .sort((a, b) => String(a.name || "").localeCompare(String(b.name || ""), "ru"));
+
+        return `
+            <div class="product-group-block">
+                <div class="product-group-head">
+                    <div>
+                        <strong>${escapeAttr(group)}</strong>
+                        <span>${groupProducts.length} тов.</span>
+                    </div>
+                    <button class="small-btn" data-add-product-to-group="${escapeAttr(group)}">+ Товар</button>
+                </div>
+                <div class="product-compact-list">
+                    ${groupProducts.map(item => productTemplate(item, groups)).join("")}
+                </div>
             </div>
-            <p class="hint">Редактирует существующую коллекцию Firestore <b>products</b>. Уже добавленные товары не удаляются, пока ты не нажмёшь «Удалить» у конкретного товара.</p>
-            <div id="productsEditor"></div>
-        </section>
+        `;
+    }).join("");
 
-        <section class="admin-panel" id="tab-json">
-            <h2>Полные данные сайта</h2>
-            <p class="hint">Можно редактировать напрямую. После правки нажми «Применить JSON», потом «Сохранить в Firebase».</p>
-            <textarea id="jsonEditor" rows="24"></textarea>
-            <button class="small-btn" id="applyJsonBtn">Применить JSON</button>
-        </section>
-    </main>
-</div>
+    box.innerHTML = `
+        <div class="products-toolbar">
+            <button class="small-btn" id="addProductGroupInlineBtn">+ Группа</button>
+            <span class="hint">Группы создаются автоматически, когда ты добавляешь товар с новой группой.</span>
+        </div>
+        ${groupedHtml}
+    `;
 
-<script type="module" src="admin.js"></script>
-</body>
-</html>
+    bindProductGroupButton();
+}
+
+function bindProductGroupButton() {
+    const btn = $("addProductGroupInlineBtn");
+    if (!btn) return;
+
+    btn.onclick = () => {
+        const group = prompt("Название новой группы:");
+        if (!group || !group.trim()) return;
+
+        collectProductsFromForm();
+        products.push({
+            id: "",
+            code: "",
+            name: "Новый товар",
+            group: group.trim(),
+            bonus: 0,
+            plan: 0,
+            sold: 0
+        });
+        renderProducts();
+    };
+}
+
+function productTemplate(item = {}, groups = []) {
+    const groupOptions = groups.map(group => `
+        <option value="${escapeAttr(group)}" ${group === item.group ? "selected" : ""}>${escapeAttr(group)}</option>
+    `).join("");
+
+    return `
+        <div class="editor-card product-card-compact" data-product data-id="${escapeAttr(item.id || "")}">
+            <div class="product-row-main">
+                <input class="product-code-input" data-product-code placeholder="Код" value="${escapeAttr(item.code || "")}">
+                <input class="product-name-input" data-product-name placeholder="Название" value="${escapeAttr(item.name || "")}">
+                <select data-product-group>
+                    ${groupOptions}
+                    <option value="${escapeAttr(item.group || "")}" ${groups.includes(item.group) ? "" : "selected"}>${escapeAttr(item.group || "Без группы")}</option>
+                </select>
+                <input type="number" data-product-bonus placeholder="Бонус" value="${escapeAttr(item.bonus ?? 0)}">
+                <input type="number" data-product-plan placeholder="План" value="${escapeAttr(item.plan ?? 0)}">
+                <input type="number" data-product-sold placeholder="Продано" value="${escapeAttr(item.sold ?? 0)}">
+                <button class="danger-btn compact-delete" data-remove-product>Удалить</button>
+            </div>
+        </div>
+    `;
+}
+
+async function loadSiteData() {
+    try {
+        const snap = await withTimeout(fb.getDoc(fb.doc(db, "site", "main")));
+        data = snap.exists() ? { ...clone(fallbackData), ...snap.data() } : clone(fallbackData);
+        renderAll();
+        setStatus("Данные сайта загружены.", "ok");
+    } catch (error) {
+        console.error(error);
+        data = clone(fallbackData);
+        renderAll();
+        setStatus("Данные сайта не загрузились. Оставил локальный шаблон.", "error");
+    }
+}
+
+async function loadProducts() {
+    if (!db) {
+        products = [];
+        renderProducts();
+        return;
+    }
+
+    try {
+        const snap = await withTimeout(fb.getDocs(fb.collection(db, "products")));
+        products = snap.docs
+            .map(d => ({ id: d.id, ...d.data() }))
+            .sort((a, b) =>
+                String(a.group || "").localeCompare(String(b.group || ""), "ru") ||
+                String(a.name || "").localeCompare(String(b.name || ""), "ru")
+            );
+
+        deletedProductIds = [];
+        renderProducts();
+        setStatus(`Товары загружены: ${products.length}.`, "ok");
+    } catch (error) {
+        console.error(error);
+        products = [];
+        renderProducts();
+        setStatus("Товары из products не загрузились. Проверь правила Firestore.", "error");
+    }
+}
+
+async function loadData() {
+    setStatus("Загрузка данных…");
+
+    const ready = await initFirebase();
+
+    if (!ready) {
+        data = clone(fallbackData);
+        renderAll();
+        renderProducts();
+        return;
+    }
+
+    await loadSiteData();
+    await loadProducts();
+}
+
+async function saveData() {
+    collectDataFromForm();
+    collectProductsFromForm();
+
+    if (!db) {
+        setStatus("Сохранение недоступно: проверь firebase-config.js.", "error");
+        return;
+    }
+
+    try {
+        await fb.setDoc(fb.doc(db, "site", "main"), data, { merge: true });
+
+        for (const id of deletedProductIds) {
+            await fb.deleteDoc(fb.doc(db, "products", id));
+        }
+
+        for (const item of products) {
+            const clean = {
+                code: item.code || "",
+                name: item.name,
+                group: item.group,
+                bonus: item.bonus,
+                plan: item.plan,
+                sold: item.sold
+            };
+
+            if (item.id) {
+                await fb.setDoc(fb.doc(db, "products", item.id), clean, { merge: true });
+            } else {
+                await fb.addDoc(fb.collection(db, "products"), clean);
+            }
+        }
+
+        deletedProductIds = [];
+        setStatus("Сохранено в Firebase. Обнови сайт и вкладку премии.", "ok");
+        await loadProducts();
+    } catch (error) {
+        console.error(error);
+        setStatus("Ошибка сохранения. Проверь правила Firestore.", "error");
+    }
+}
+
+function bindEvents() {
+    document.querySelectorAll(".admin-tab").forEach(btn => {
+        btn.addEventListener("click", () => {
+            collectDataFromForm();
+            collectProductsFromForm();
+
+            document.querySelectorAll(".admin-tab").forEach(x => x.classList.remove("active"));
+            document.querySelectorAll(".admin-panel").forEach(x => x.classList.remove("active"));
+
+            btn.classList.add("active");
+            const panel = $(`tab-${btn.dataset.tab}`);
+            if (panel) panel.classList.add("active");
+        });
+    });
+
+    if ($("saveBtn")) $("saveBtn").onclick = saveData;
+    if ($("reloadBtn")) $("reloadBtn").onclick = loadData;
+
+    if ($("addCalculatorBtn")) {
+        $("addCalculatorBtn").onclick = () => {
+            collectDataFromForm();
+            data.calculators.push({ title: "КАЛЬКУЛЯТОР РАССРОЧКИ", bank: "НОВЫЙ БАНК", rows: [["3 мес.", 0.95]] });
+            renderAll();
+        };
+    }
+
+    if ($("addMenuBtn")) {
+        $("addMenuBtn").onclick = () => {
+            collectDataFromForm();
+            data.menu.push({ href: "#", icon: "🔗", title: "Новая карточка", desc: "Описание" });
+            renderAll();
+        };
+    }
+
+    if ($("addUserBtn")) {
+        $("addUserBtn").onclick = () => {
+            collectDataFromForm();
+            data.users[`user${Object.keys(data.users).length + 1}`] = { name: "Новый пользователь", pass: "0000", manager: false };
+            renderAll();
+        };
+    }
+
+    if ($("addProductBtn")) {
+        $("addProductBtn").onclick = () => {
+            collectProductsFromForm();
+            const groups = getProductGroups();
+            products.push({
+                id: "",
+                code: "",
+                name: "Новый товар",
+                group: groups[0] || "Новая группа",
+                bonus: 0,
+                plan: 0,
+                sold: 0
+            });
+            renderProducts();
+        };
+    }
+
+    if ($("applyJsonBtn")) {
+        $("applyJsonBtn").onclick = () => {
+            try {
+                data = JSON.parse($("jsonEditor").value);
+                renderAll();
+                setStatus("JSON применён. Теперь можно сохранить в Firebase.", "ok");
+            } catch {
+                setStatus("Ошибка в JSON. Проверь запятые и кавычки.", "error");
+            }
+        };
+    }
+
+    document.body.addEventListener("click", (e) => {
+        if (e.target.matches("[data-remove-calc]")) {
+            e.target.closest("[data-calc]").remove();
+            collectDataFromForm();
+            renderAll();
+        }
+
+        if (e.target.matches("[data-add-row]")) {
+            e.target.previousElementSibling.insertAdjacentHTML("beforeend", rowTemplate());
+        }
+
+        if (e.target.matches("[data-remove-row]")) {
+            e.target.closest("[data-calc-row]").remove();
+            collectDataFromForm();
+        }
+
+        if (e.target.matches("[data-remove-menu]")) {
+            e.target.closest("[data-menu]").remove();
+            collectDataFromForm();
+            renderAll();
+        }
+
+        if (e.target.matches("[data-remove-user]")) {
+            e.target.closest("[data-user]").remove();
+            collectDataFromForm();
+            renderAll();
+        }
+
+        if (e.target.matches("[data-add-product-to-group]")) {
+            collectProductsFromForm();
+            products.push({
+                id: "",
+                code: "",
+                name: "Новый товар",
+                group: e.target.dataset.addProductToGroup || "Новая группа",
+                bonus: 0,
+                plan: 0,
+                sold: 0
+            });
+            renderProducts();
+        }
+
+        if (e.target.matches("[data-remove-product]")) {
+            const card = e.target.closest("[data-product]");
+            if (card.dataset.id) deletedProductIds.push(card.dataset.id);
+            card.remove();
+            collectProductsFromForm();
+            renderProducts();
+        }
+    });
+}
+
+bindEvents();
+loadData();
