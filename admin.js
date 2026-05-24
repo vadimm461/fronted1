@@ -273,58 +273,102 @@ function renderUsers() {
     `).join("");
 }
 
+function getProductGroups() {
+    return [...new Set(products.map(item => String(item.group || "Без группы").trim() || "Без группы"))]
+        .sort((a, b) => a.localeCompare(b, "ru"));
+}
+
 function renderProducts() {
     const box = $("productsEditor");
     if (!box) return;
 
+    const groups = getProductGroups();
+
     if (!products.length) {
         box.innerHTML = `
+            <div class="products-toolbar">
+                <button class="small-btn" id="addProductGroupInlineBtn">+ Группа</button>
+            </div>
             <div class="warning-box">
                 Товары не загружены. Если во вкладке «Премия» они есть, проверь правила Firestore для коллекции <b>products</b> и нажми «Обновить».
             </div>
         `;
+        bindProductGroupButton();
         return;
     }
 
-    box.innerHTML = products.map(item => productTemplate(item)).join("");
+    const groupedHtml = groups.map(group => {
+        const groupProducts = products
+            .filter(item => (String(item.group || "Без группы").trim() || "Без группы") === group)
+            .sort((a, b) => String(a.name || "").localeCompare(String(b.name || ""), "ru"));
+
+        return `
+            <div class="product-group-block">
+                <div class="product-group-head">
+                    <div>
+                        <strong>${escapeAttr(group)}</strong>
+                        <span>${groupProducts.length} тов.</span>
+                    </div>
+                    <button class="small-btn" data-add-product-to-group="${escapeAttr(group)}">+ Товар</button>
+                </div>
+                <div class="product-compact-list">
+                    ${groupProducts.map(item => productTemplate(item, groups)).join("")}
+                </div>
+            </div>
+        `;
+    }).join("");
+
+    box.innerHTML = `
+        <div class="products-toolbar">
+            <button class="small-btn" id="addProductGroupInlineBtn">+ Группа</button>
+            <span class="hint">Группы создаются автоматически, когда ты добавляешь товар с новой группой.</span>
+        </div>
+        ${groupedHtml}
+    `;
+
+    bindProductGroupButton();
 }
 
-function productTemplate(item = {}) {
+function bindProductGroupButton() {
+    const btn = $("addProductGroupInlineBtn");
+    if (!btn) return;
+
+    btn.onclick = () => {
+        const group = prompt("Название новой группы:");
+        if (!group || !group.trim()) return;
+
+        collectProductsFromForm();
+        products.push({
+            id: "",
+            code: "",
+            name: "Новый товар",
+            group: group.trim(),
+            bonus: 0,
+            plan: 0,
+            sold: 0
+        });
+        renderProducts();
+    };
+}
+
+function productTemplate(item = {}, groups = []) {
+    const groupOptions = groups.map(group => `
+        <option value="${escapeAttr(group)}" ${group === item.group ? "selected" : ""}>${escapeAttr(group)}</option>
+    `).join("");
+
     return `
-        <div class="editor-card" data-product data-id="${escapeAttr(item.id || "")}">
-            <div class="card-title-line">
-                <strong>${escapeAttr(item.name || "Новый товар")}</strong>
-                <button class="danger-btn" data-remove-product>Удалить</button>
-            </div>
-            <div class="editor-grid three">
-                <div>
-                    <label>Код</label>
-                    <input data-product-code value="${escapeAttr(item.code || "")}">
-                </div>
-                <div>
-                    <label>Название</label>
-                    <input data-product-name value="${escapeAttr(item.name || "")}">
-                </div>
-                <div>
-                    <label>Группа</label>
-                    <input data-product-group value="${escapeAttr(item.group || "")}">
-                </div>
-                <div>
-                    <label>Бонус</label>
-                    <input type="number" data-product-bonus value="${escapeAttr(item.bonus ?? 0)}">
-                </div>
-                <div>
-                    <label>План</label>
-                    <input type="number" data-product-plan value="${escapeAttr(item.plan ?? 0)}">
-                </div>
-                <div>
-                    <label>Продано</label>
-                    <input type="number" data-product-sold value="${escapeAttr(item.sold ?? 0)}">
-                </div>
-                <div>
-                    <label>ID документа</label>
-                    <input value="${escapeAttr(item.id || "создастся автоматически")}" disabled>
-                </div>
+        <div class="editor-card product-card-compact" data-product data-id="${escapeAttr(item.id || "")}">
+            <div class="product-row-main">
+                <input class="product-code-input" data-product-code placeholder="Код" value="${escapeAttr(item.code || "")}">
+                <input class="product-name-input" data-product-name placeholder="Название" value="${escapeAttr(item.name || "")}">
+                <select data-product-group>
+                    ${groupOptions}
+                    <option value="${escapeAttr(item.group || "")}" ${groups.includes(item.group) ? "" : "selected"}>${escapeAttr(item.group || "Без группы")}</option>
+                </select>
+                <input type="number" data-product-bonus placeholder="Бонус" value="${escapeAttr(item.bonus ?? 0)}">
+                <input type="number" data-product-plan placeholder="План" value="${escapeAttr(item.plan ?? 0)}">
+                <input type="number" data-product-sold placeholder="Продано" value="${escapeAttr(item.sold ?? 0)}">
+                <button class="danger-btn compact-delete" data-remove-product>Удалить</button>
             </div>
         </div>
     `;
@@ -474,7 +518,16 @@ function bindEvents() {
     if ($("addProductBtn")) {
         $("addProductBtn").onclick = () => {
             collectProductsFromForm();
-            products.push({ id: "", code: "", name: "Новый товар", group: "", bonus: 0, plan: 0, sold: 0 });
+            const groups = getProductGroups();
+            products.push({
+                id: "",
+                code: "",
+                name: "Новый товар",
+                group: groups[0] || "Новая группа",
+                bonus: 0,
+                plan: 0,
+                sold: 0
+            });
             renderProducts();
         };
     }
@@ -519,11 +572,26 @@ function bindEvents() {
             renderAll();
         }
 
+        if (e.target.matches("[data-add-product-to-group]")) {
+            collectProductsFromForm();
+            products.push({
+                id: "",
+                code: "",
+                name: "Новый товар",
+                group: e.target.dataset.addProductToGroup || "Новая группа",
+                bonus: 0,
+                plan: 0,
+                sold: 0
+            });
+            renderProducts();
+        }
+
         if (e.target.matches("[data-remove-product]")) {
             const card = e.target.closest("[data-product]");
             if (card.dataset.id) deletedProductIds.push(card.dataset.id);
             card.remove();
             collectProductsFromForm();
+            renderProducts();
         }
     });
 }
