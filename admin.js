@@ -540,65 +540,7 @@ async function loadXlsxLibrary() {
     });
 }
 
-async function parseSalaryExcel(file) {
-    await loadXlsxLibrary();
-
-    const buffer = await file.arrayBuffer();
-    const workbook = XLSX.read(buffer, { type: "array" });
-    const sheet = workbook.Sheets[workbook.SheetNames[0]];
-
-    const table = XLSX.utils.sheet_to_json(sheet, {
-        header: 1,
-        defval: ""
-    });
-
-    let headerRowIndex = -1;
-
-    for (let i = 0; i < table.length; i++) {
-        const rowText = table[i].map(x => String(x).toLowerCase().trim()).join("|");
-        if (
-            rowText.includes("ценовая группа") &&
-            rowText.includes("количество") &&
-            (rowText.includes("стоимость") || rowText.includes("сумма"))
-        ) {
-            headerRowIndex = i;
-            break;
-        }
-    }
-
-    if (headerRowIndex < 0) {
-        alert("Не нашел строку заголовков. Нужны колонки: Номенклатура.Ценовая группа, Количество, Стоимость");
-        return;
-    }
-
-    const headers = table[headerRowIndex].map(x => String(x).toLowerCase().trim());
-    const groupIndex = headers.findIndex(h => h.includes("ценовая группа"));
-    const qtyIndex = headers.findIndex(h => h.includes("количество"));
-    const sumIndex = headers.findIndex(h => h.includes("стоимость") || h.includes("сумма"));
-
-    salaryData.rows = [];
-
-    for (let i = headerRowIndex + 1; i < table.length; i++) {
-        const row = table[i];
-        const group = String(row[groupIndex] || "").trim();
-
-        if (!group || group.toLowerCase() === "итог") continue;
-
-        salaryData.rows.push({
-            group,
-            qty: parseMoney(row[qtyIndex]),
-            sum: parseMoney(row[sumIndex])
-        });
-    }
-
-    if (!salaryData.period) {
-        const periodRow = table.find(row => row.map(x => String(x).toLowerCase()).join(" ").includes("период"));
-        if (periodRow) salaryData.period = periodRow.join(" ").replace(/\s+/g, " ").trim();
-    }
-
-    setStatus(`Excel загружен: ${salaryData.rows.length} строк.`, "ok");
-    renderSalaryAdmin();
-}
+        $("salaryPreviewTotal").textContent = "0 ₽";
 
 async function loadSiteData() {
     try {
