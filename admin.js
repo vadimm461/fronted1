@@ -552,216 +552,59 @@ async function parseSalaryExcel(file) {
     const buffer = await file.arrayBuffer();
     const workbook = XLSX.read(buffer, { type: "array" });
     const sheet = workbook.Sheets[workbook.SheetNames[0]];
-    const rows = XLSX.utils.sheet_to_json(sheet, { defval: "" });
 
-    if (!rows.length) {
-        salaryData.rows = [];
-        renderSalaryAdmin();
-        setStatus("Excel пустой.", "error");
+    const table = XLSX.utils.sheet_to_json(sheet, {
+        header: 1,
+        defval: ""
+    });
+
+    let headerRowIndex = -1;
+
+    for (let i = 0; i < table.length; i++) {
+        const rowText = table[i].map(x => String(x).toLowerCase().trim()).join("|");
+
+        if (
+            rowText.includes("номенклатура.ценовая группа") &&
+            rowText.includes("количество") &&
+            rowText.includes("стоимость")
+        ) {
+            headerRowIndex = i;
+            break;
+        }
+    }
+
+    if (headerRowIndex < 0) {
+        alert("Не нашел строку заголовков. Нужны колонки: Номенклатура.Ценовая группа, Количество, Стоимость");
         return;
     }
 
-    const headers = Object.keys(rows[0]);
-    const groupCol = findColumn(headers, ["ценовая группа", "ценов", "группа"]);
-    const qtyCol = findColumn(headers, ["количество", "кол-во", "кол.", "qty"]);
-    const sumCol = findColumn(headers, ["сумма", "продаж", "amount", "sum"]);
+    const headers = table[headerRowIndex].map(x => String(x).toLowerCase().trim());
 
-    if (!groupCol || !qtyCol || !sumCol) {
-        alert("Не нашел нужные колонки. Нужно: Ценовая группа, Количество, Сумма.");
-        return;
+    const groupIndex = headers.findIndex(h => h.includes("ценовая группа"));
+    const qtyIndex = headers.findIndex(h => h.includes("количество"));
+    const sumIndex = headers.findIndex(h => h.includes("стоимость") || h.includes("сумма"));
+
+    salaryData.rows = [];
+
+    for (let i = headerRowIndex + 1; i < table.length; i++) {
+        const row = table[i];
+
+        const group = String(row[groupIndex] || "").trim();
+
+        if (!group || group.toLowerCase() === "итог") {
+            continue;
+        }
+
+        salaryData.rows.push({
+            group,
+            qty: parseMoney(row[qtyIndex]),
+            sum: parseMoney(row[sumIndex])
+        });
     }
-
-    salaryData.rows = rows.map(row => ({
-        group: String(row[groupCol] || "Без группы").trim() || "Без группы",
-        qty: parseMoney(row[qtyCol]),
-        sum: parseMoney(row[sumCol])
-    })).filter(row => row.group && (row.qty || row.sum));
 
     setStatus(`Excel загружен: ${salaryData.rows.length} строк.`, "ok");
     renderSalaryAdmin();
 }
-
-function parseMoney(value) {
-    if (typeof value === "number") return value;
-    return Number(String(value || "")
-        .replace(/\s/g, "")
-        .replace(/,/g, ".")
-        .replace(/[^0-9.\-]/g, "")) || 0;
-}
-
-async function loadSiteData() {
-    try {
-        const snap = await withTimeout(fb.getDoc(fb.doc(db, "site", "main")));
-        data = snap.exists() ? normalizeSiteData(snap.data()) : clone(fallbackData);
-        renderAll();
-        setStatus("Данные сайта загружены.", "ok");
-    } catch (error) {
-        console.error(error);
-        data = clone(fallbackData);
-        renderAll();
-        setStatus("Данные сайта не загрузились. Оставил локальный шаблон.", "error");
-    }
-}
-
-async function loadProducts() {
-    if (!db) {
-        products = [];
-        renderProducts();
-        return;
-    }
-
-    try {
-        const snap = await withTimeout(fb.getDocs(fb.collection(db, "products")));
-        products = snap.docs
-            .map(d => ({ id: d.id, ...d.data() }))
-            .sort((a, b) =>
-                String(a.group || "").localeCompare(String(b.group || ""), "ru") ||
-                String(a.name || "").localeCompare(String(b.name || ""), "ru")
-            );
-
-        deletedProductIds = [];
-        renderProducts();
-        setStatus(`Товары загружены: ${products.length}.`, "ok");
-    } catch (error) {
-        console.error(error);
-        products = [];
-        renderProducts();
-        setStatus("Товары из products не загрузились. Проверь правила Firestore.", "error");
-    }
-}
-
-async function loadSalaryData() {
-    if (!db) {
-        renderSalaryAdmin();
-        return;
-    }
-
-    try {
-        const snap = await withTimeout(fb.getDoc(fb.doc(db, "salary", "current")));
-        if (snap.exists()) {
-            salaryData = {
-                ...salaryData,
-                ...snap.data(),
-                rates: { ...salaryData.rates, ...(snap.data().rates || {}) },
-                rows: snap.data().rows || []
-            };
-        }
-        renderSalaryAdmin();
-    } catch (error) {
-        console.error(error);
-        renderSalaryAdmin();
-    }
-}
-
-async function loadData() {
-    setStatus("Загрузка данных…");
-    injectSalaryAdminUI();
-    const ready = await initFirebase();
-
-    if (!ready) {
-        data = clone(fallbackData);
-        renderAll();
-        renderProducts();
-        renderSalaryAdmin();
-        return;
-    }
-
-    await loadSiteData();
-    await loadProducts();
-    await loadSalaryData();
-}
-
-async function saveData() {
-    collectDataFromForm();
-    collectProductsFromForm();
-    collectSalaryFromForm();
-
-    if (!db) {
-        setStatus("Сохранение недоступно: проверь firebase-config.js.", "error");
-        return;
-    }
-
-    try {
-        const siteData = prepareSiteDataForFirestore(data);
-        await fb.setDoc(fb.doc(db, "site", "main"), siteData, { merge: true });
-
-        for (const id of deletedProductIds) {
-            await fb.deleteDoc(fb.doc(db, "products", id));
-        }
-
-        for (const item of products) {
-            const clean = {
-                code: item.code || "",
-                name: item.name,
-                group: item.group,
-                bonus: item.bonus,
-                plan: item.plan,
-                sold: item.sold
-            };
-
-            if (item.id) {
-                await fb.setDoc(fb.doc(db, "products", item.id), clean, { merge: true });
-            } else {
-                await fb.addDoc(fb.collection(db, "products"), clean);
-            }
-        }
-
-        await fb.setDoc(fb.doc(db, "salary", "current"), {
-            period: salaryData.period || "",
-            rates: salaryData.rates || {},
-            rows: salaryData.rows || [],
-            updatedAt: new Date().toISOString()
-        }, { merge: true });
-
-        deletedProductIds = [];
-        setStatus("Сохранено в Firebase.", "ok");
-        await loadProducts();
-        await loadSalaryData();
-    } catch (error) {
-        console.error(error);
-        setStatus("Ошибка сохранения: " + (error.message || "проверь правила Firestore"), "error");
-    }
-}
-
-function bindEvents() {
-    injectSalaryAdminUI();
-
-    document.querySelectorAll(".admin-tab").forEach(btn => {
-        btn.addEventListener("click", () => {
-            collectDataFromForm();
-            collectProductsFromForm();
-            collectSalaryFromForm();
-
-            document.querySelectorAll(".admin-tab").forEach(x => x.classList.remove("active"));
-            document.querySelectorAll(".admin-panel").forEach(x => x.classList.remove("active"));
-
-            btn.classList.add("active");
-            const panel = $(`tab-${btn.dataset.tab}`);
-            if (panel) panel.classList.add("active");
-        });
-    });
-
-    if ($("saveBtn")) $("saveBtn").onclick = saveData;
-    if ($("reloadBtn")) $("reloadBtn").onclick = loadData;
-    if ($("saveSalaryBtn")) $("saveSalaryBtn").onclick = saveData;
-
-    if ($("salaryFile")) {
-        $("salaryFile").addEventListener("change", async (event) => {
-            const file = event.target.files?.[0];
-            if (!file) return;
-            await parseSalaryExcel(file);
-        });
-    }
-
-    if ($("addSalaryGroupBtn")) {
-        $("addSalaryGroupBtn").onclick = () => {
-            collectSalaryFromForm();
-            const name = prompt("Название ценовой группы:");
-            if (!name || !name.trim()) return;
-            salaryData.rates[name.trim()] = 0;
-            renderSalaryAdmin();
-        };
-    }
 
     if ($("addCalculatorBtn")) {
         $("addCalculatorBtn").onclick = () => {
