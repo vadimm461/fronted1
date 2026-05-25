@@ -87,7 +87,6 @@ async function initFirebase() {
         fb = fsMod;
         const app = appMod.initializeApp(config);
         db = fsMod.getFirestore(app);
-
         return true;
     } catch (error) {
         console.error(error);
@@ -115,6 +114,22 @@ function escapeAttr(value) {
         .replaceAll(">", "&gt;");
 }
 
+function money(value) {
+    return Number(value || 0).toLocaleString("ru-RU", { maximumFractionDigits: 2 }) + " ₽";
+}
+
+function num(value) {
+    return Number(value || 0).toLocaleString("ru-RU", { maximumFractionDigits: 2 });
+}
+
+function parseMoney(value) {
+    if (typeof value === "number") return value;
+    return Number(String(value || "")
+        .replace(/\s/g, "")
+        .replace(/,/g, ".")
+        .replace(/[^0-9.\-]/g, "")) || 0;
+}
+
 function normalizeCalculatorRows(rows) {
     return (rows || []).map(row => {
         if (Array.isArray(row)) return [row[0], Number(row[1])];
@@ -133,12 +148,10 @@ function normalizeSiteData(siteData) {
 
 function prepareSiteDataForFirestore(sourceData) {
     const result = clone(sourceData);
-
     result.calculators = (result.calculators || []).map(calc => ({
         ...calc,
         rows: normalizeCalculatorRows(calc.rows).map(([term, coef]) => ({ term, coef }))
     }));
-
     return result;
 }
 
@@ -174,7 +187,6 @@ function collectDataFromForm() {
     [...document.querySelectorAll("[data-user]")].forEach(card => {
         const key = card.querySelector("[data-user-key]").value.trim();
         if (!key) return;
-
         users[key] = {
             name: card.querySelector("[data-user-name]").value.trim(),
             pass: card.querySelector("[data-user-pass]").value.trim(),
@@ -320,7 +332,6 @@ function bindProductGroupButton() {
     btn.onclick = () => {
         const group = prompt("Название новой группы:");
         if (!group || !group.trim()) return;
-
         collectProductsFromForm();
         products.push({ id: "", code: "", name: "Новый товар", group: group.trim(), bonus: 0, plan: 0, sold: 0 });
         renderProducts();
@@ -374,14 +385,14 @@ function injectSalaryAdminUI() {
             </div>
 
             <div class="warning-box">
-                Загрузи отчет Excel. Админка ищет колонки: <b>Ценовая группа</b>, <b>Количество</b>, <b>Сумма</b>.
+                Загрузи Excel. Админка ищет строку с колонками: <b>Номенклатура.Ценовая группа</b>, <b>Количество</b>, <b>Стоимость</b>.
             </div>
 
             <div class="editor-card">
                 <div class="editor-grid three">
                     <div>
                         <label>Период отчета</label>
-                        <input id="salaryPeriod" placeholder="Май 2026">
+                        <input id="salaryPeriod" placeholder="01.05.2026 - 25.05.2026">
                     </div>
                     <div>
                         <label>Excel файл .xls / .xlsx</label>
@@ -434,7 +445,7 @@ function addSalaryCss() {
 function salaryGroupsFromRows() {
     const fromRows = salaryData.rows.map(row => row.group).filter(Boolean);
     const fromRates = Object.keys(salaryData.rates || {});
-    return [...new Set([...defaultSalaryGroups, ...fromRates, ...fromRows])].sort((a,b)=>a.localeCompare(b,"ru"));
+    return [...new Set([...defaultSalaryGroups, ...fromRates, ...fromRows])].sort((a, b) => a.localeCompare(b, "ru"));
 }
 
 function renderSalaryAdmin() {
@@ -490,13 +501,13 @@ function renderSalaryPreview() {
         grouped[group].sum += Number(row.sum || 0);
     });
 
-    const result = Object.values(grouped).sort((a,b)=>b.sum-a.sum).map(row => {
+    const result = Object.values(grouped).sort((a, b) => b.sum - a.sum).map(row => {
         row.rate = Number(salaryData.rates[row.group] || 0);
         row.salary = row.sum * row.rate / 100;
         return row;
     });
 
-    const total = result.reduce((sum,row)=>sum+row.salary,0);
+    const total = result.reduce((sum, row) => sum + row.salary, 0);
     $("salaryPreviewTotal").textContent = money(total);
 
     box.innerHTML = `
@@ -517,14 +528,6 @@ function renderSalaryPreview() {
     `;
 }
 
-function money(value) {
-    return Number(value || 0).toLocaleString("ru-RU", { maximumFractionDigits: 2 }) + " ₽";
-}
-
-function num(value) {
-    return Number(value || 0).toLocaleString("ru-RU", { maximumFractionDigits: 2 });
-}
-
 async function loadXlsxLibrary() {
     if (window.XLSX) return;
 
@@ -535,15 +538,6 @@ async function loadXlsxLibrary() {
         script.onerror = reject;
         document.head.appendChild(script);
     });
-}
-
-function findColumn(headers, names) {
-    const normalized = headers.map(h => String(h || "").toLowerCase().trim());
-    for (const name of names) {
-        const index = normalized.findIndex(h => h.includes(name));
-        if (index >= 0) return headers[index];
-    }
-    return null;
 }
 
 async function parseSalaryExcel(file) {
@@ -562,11 +556,10 @@ async function parseSalaryExcel(file) {
 
     for (let i = 0; i < table.length; i++) {
         const rowText = table[i].map(x => String(x).toLowerCase().trim()).join("|");
-
         if (
-            rowText.includes("номенклатура.ценовая группа") &&
+            rowText.includes("ценовая группа") &&
             rowText.includes("количество") &&
-            rowText.includes("стоимость")
+            (rowText.includes("стоимость") || rowText.includes("сумма"))
         ) {
             headerRowIndex = i;
             break;
@@ -579,7 +572,6 @@ async function parseSalaryExcel(file) {
     }
 
     const headers = table[headerRowIndex].map(x => String(x).toLowerCase().trim());
-
     const groupIndex = headers.findIndex(h => h.includes("ценовая группа"));
     const qtyIndex = headers.findIndex(h => h.includes("количество"));
     const sumIndex = headers.findIndex(h => h.includes("стоимость") || h.includes("сумма"));
@@ -588,12 +580,9 @@ async function parseSalaryExcel(file) {
 
     for (let i = headerRowIndex + 1; i < table.length; i++) {
         const row = table[i];
-
         const group = String(row[groupIndex] || "").trim();
 
-        if (!group || group.toLowerCase() === "итог") {
-            continue;
-        }
+        if (!group || group.toLowerCase() === "итог") continue;
 
         salaryData.rows.push({
             group,
@@ -602,9 +591,189 @@ async function parseSalaryExcel(file) {
         });
     }
 
+    if (!salaryData.period) {
+        const periodRow = table.find(row => row.map(x => String(x).toLowerCase()).join(" ").includes("период"));
+        if (periodRow) salaryData.period = periodRow.join(" ").replace(/\s+/g, " ").trim();
+    }
+
     setStatus(`Excel загружен: ${salaryData.rows.length} строк.`, "ok");
     renderSalaryAdmin();
 }
+
+async function loadSiteData() {
+    try {
+        const snap = await withTimeout(fb.getDoc(fb.doc(db, "site", "main")));
+        data = snap.exists() ? normalizeSiteData(snap.data()) : clone(fallbackData);
+        renderAll();
+        setStatus("Данные сайта загружены.", "ok");
+    } catch (error) {
+        console.error(error);
+        data = clone(fallbackData);
+        renderAll();
+        setStatus("Данные сайта не загрузились. Оставил локальный шаблон.", "error");
+    }
+}
+
+async function loadProducts() {
+    if (!db) {
+        products = [];
+        renderProducts();
+        return;
+    }
+
+    try {
+        const snap = await withTimeout(fb.getDocs(fb.collection(db, "products")));
+        products = snap.docs
+            .map(d => ({ id: d.id, ...d.data() }))
+            .sort((a, b) =>
+                String(a.group || "").localeCompare(String(b.group || ""), "ru") ||
+                String(a.name || "").localeCompare(String(b.name || ""), "ru")
+            );
+
+        deletedProductIds = [];
+        renderProducts();
+        setStatus(`Товары загружены: ${products.length}.`, "ok");
+    } catch (error) {
+        console.error(error);
+        products = [];
+        renderProducts();
+        setStatus("Товары из products не загрузились. Проверь правила Firestore.", "error");
+    }
+}
+
+async function loadSalaryData() {
+    if (!db) {
+        renderSalaryAdmin();
+        return;
+    }
+
+    try {
+        const snap = await withTimeout(fb.getDoc(fb.doc(db, "salary", "current")));
+        if (snap.exists()) {
+            const loaded = snap.data();
+            salaryData = {
+                ...salaryData,
+                ...loaded,
+                rates: { ...salaryData.rates, ...(loaded.rates || {}) },
+                rows: loaded.rows || []
+            };
+        }
+        renderSalaryAdmin();
+    } catch (error) {
+        console.error(error);
+        renderSalaryAdmin();
+    }
+}
+
+async function loadData() {
+    setStatus("Загрузка данных…");
+    injectSalaryAdminUI();
+    const ready = await initFirebase();
+
+    if (!ready) {
+        data = clone(fallbackData);
+        renderAll();
+        renderProducts();
+        renderSalaryAdmin();
+        return;
+    }
+
+    await loadSiteData();
+    await loadProducts();
+    await loadSalaryData();
+}
+
+async function saveData() {
+    collectDataFromForm();
+    collectProductsFromForm();
+    collectSalaryFromForm();
+
+    if (!db) {
+        setStatus("Сохранение недоступно: проверь firebase-config.js.", "error");
+        return;
+    }
+
+    try {
+        const siteData = prepareSiteDataForFirestore(data);
+        await fb.setDoc(fb.doc(db, "site", "main"), siteData, { merge: true });
+
+        for (const id of deletedProductIds) {
+            await fb.deleteDoc(fb.doc(db, "products", id));
+        }
+
+        for (const item of products) {
+            const clean = {
+                code: item.code || "",
+                name: item.name,
+                group: item.group,
+                bonus: item.bonus,
+                plan: item.plan,
+                sold: item.sold
+            };
+
+            if (item.id) {
+                await fb.setDoc(fb.doc(db, "products", item.id), clean, { merge: true });
+            } else {
+                await fb.addDoc(fb.collection(db, "products"), clean);
+            }
+        }
+
+        await fb.setDoc(fb.doc(db, "salary", "current"), {
+            period: salaryData.period || "",
+            rates: salaryData.rates || {},
+            rows: salaryData.rows || [],
+            updatedAt: new Date().toISOString()
+        }, { merge: true });
+
+        deletedProductIds = [];
+        setStatus("Сохранено в Firebase.", "ok");
+        await loadProducts();
+        await loadSalaryData();
+    } catch (error) {
+        console.error(error);
+        setStatus("Ошибка сохранения: " + (error.message || "проверь правила Firestore"), "error");
+    }
+}
+
+function bindEvents() {
+    injectSalaryAdminUI();
+
+    document.querySelectorAll(".admin-tab").forEach(btn => {
+        btn.addEventListener("click", () => {
+            collectDataFromForm();
+            collectProductsFromForm();
+            collectSalaryFromForm();
+
+            document.querySelectorAll(".admin-tab").forEach(x => x.classList.remove("active"));
+            document.querySelectorAll(".admin-panel").forEach(x => x.classList.remove("active"));
+
+            btn.classList.add("active");
+            const panel = $(`tab-${btn.dataset.tab}`);
+            if (panel) panel.classList.add("active");
+        });
+    });
+
+    if ($("saveBtn")) $("saveBtn").onclick = saveData;
+    if ($("reloadBtn")) $("reloadBtn").onclick = loadData;
+    if ($("saveSalaryBtn")) $("saveSalaryBtn").onclick = saveData;
+
+    if ($("salaryFile")) {
+        $("salaryFile").addEventListener("change", async (event) => {
+            const file = event.target.files?.[0];
+            if (!file) return;
+            await parseSalaryExcel(file);
+        });
+    }
+
+    if ($("addSalaryGroupBtn")) {
+        $("addSalaryGroupBtn").onclick = () => {
+            collectSalaryFromForm();
+            const name = prompt("Название ценовой группы:");
+            if (!name || !name.trim()) return;
+            salaryData.rates[name.trim()] = 0;
+            renderSalaryAdmin();
+        };
+    }
 
     if ($("addCalculatorBtn")) {
         $("addCalculatorBtn").onclick = () => {
