@@ -540,7 +540,70 @@ async function loadXlsxLibrary() {
     });
 }
 
-        $("salaryPreviewTotal").textContent = "0 ₽";
+async function parseSalaryExcel(file) {
+    await loadXlsxLibrary();
+
+    const buffer = await file.arrayBuffer();
+    const workbook = XLSX.read(buffer, { type: "array", cellDates: false });
+    const sheet = workbook.Sheets[workbook.SheetNames[0]];
+
+    const table = XLSX.utils.sheet_to_json(sheet, {
+        header: 1,
+        defval: "",
+        raw: false
+    });
+
+    let headerRowIndex = -1;
+    let groupIndex = -1;
+    let qtyIndex = -1;
+    let sumIndex = -1;
+
+    for (let i = 0; i < table.length; i++) {
+        const row = table[i].map(x => String(x || "").toLowerCase().trim());
+        const g = row.findIndex(x => x.includes("ценовая") && x.includes("группа"));
+        const q = row.findIndex(x => x.includes("количество"));
+        const s = row.findIndex(x => x.includes("стоимость") || x.includes("сумма"));
+
+        if (g >= 0 && q >= 0 && s >= 0) {
+            headerRowIndex = i;
+            groupIndex = g;
+            qtyIndex = q;
+            sumIndex = s;
+            break;
+        }
+    }
+
+    if (headerRowIndex < 0) {
+        alert("Не нашел строку таблицы. Нужны колонки: Ценовая группа, Количество, Стоимость");
+        return;
+    }
+
+    salaryData.rows = [];
+
+    for (let i = headerRowIndex + 1; i < table.length; i++) {
+        const row = table[i];
+        let group = String(row[groupIndex] || "").trim();
+        const lowerGroup = group.toLowerCase();
+        const qty = parseMoney(row[qtyIndex]);
+        const sum = parseMoney(row[sumIndex]);
+
+        if (lowerGroup === "итог") continue;
+        if (!group && !qty && !sum) continue;
+        if (!group) group = "Без ценовой группы";
+
+        salaryData.rows.push({ group, qty, sum });
+    }
+
+    if (!salaryData.period) {
+        const periodRow = table.find(row =>
+            row.map(x => String(x).toLowerCase()).join(" ").includes("период")
+        );
+        if (periodRow) salaryData.period = periodRow.join(" ").replace(/\s+/g, " ").trim();
+    }
+
+    setStatus(`Excel загружен: ${salaryData.rows.length} строк.`, "ok");
+    renderSalaryAdmin();
+}
 
 async function loadSiteData() {
     try {
