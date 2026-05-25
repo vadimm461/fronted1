@@ -23,17 +23,33 @@ const fallbackData = {
         { href: "discount.html", icon: "🎫", title: "Скидочная карта", desc: "Создание и печать анкеты клиента." },
         { href: "baza.html", icon: "📚", title: "База знаний", desc: "Инструкции, масла и техническая информация." },
         { href: "pass.html", icon: "🔐", title: "Пароли", desc: "Доступы и служебная информация." },
+        { href: "salary.html", icon: "💵", title: "Заработная плата", desc: "Отчет по зарплате и ценовым группам.", managerOnly: true },
         { href: "close-shift.html", icon: "📊", title: "Закрытие смен", desc: "Ссылка на отчет по закрытию смены", managerOnly: true },
         { href: "cash-diff.html", icon: "💰", title: "Расхождение по кассе", desc: "Контроль расхождения наличности.", managerOnly: true },
         { href: "#", icon: "🚪", title: "Выход", desc: "Завершить текущую сессию пользователя.", action: "logout" }
     ]
 };
 
+const defaultSalaryGroups = [
+    "Скидка до 1%",
+    "Скидка до 3%",
+    "Скидка до 5%",
+    "Скидка до 7%",
+    "Скидка до 10%",
+    "Скидка до 15%",
+    "Скидка до 20%"
+];
+
 let db = null;
 let fb = null;
 let data = clone(fallbackData);
 let products = [];
 let deletedProductIds = [];
+let salaryData = {
+    period: "",
+    rows: [],
+    rates: Object.fromEntries(defaultSalaryGroups.map(group => [group, 0]))
+};
 
 const $ = (id) => document.getElementById(id);
 
@@ -118,8 +134,6 @@ function normalizeSiteData(siteData) {
 function prepareSiteDataForFirestore(sourceData) {
     const result = clone(sourceData);
 
-    // Firestore НЕ поддерживает массивы внутри массивов.
-    // Поэтому rows: [["3 мес.", 0.95]] сохраняем как rows: [{term:"3 мес.", coef:0.95}]
     result.calculators = (result.calculators || []).map(calc => ({
         ...calc,
         rows: normalizeCalculatorRows(calc.rows).map(([term, coef]) => ({ term, coef }))
@@ -129,7 +143,7 @@ function prepareSiteDataForFirestore(sourceData) {
 }
 
 function collectDataFromForm() {
-    if (!$("newsBadge")) return;
+    if (!$('newsBadge')) return;
 
     data.news = {
         badge: $("newsBadge").value.trim(),
@@ -334,6 +348,247 @@ function productTemplate(item = {}, groups = []) {
     `;
 }
 
+function injectSalaryAdminUI() {
+    if ($("tab-salary")) return;
+
+    const sidebar = document.querySelector(".admin-sidebar");
+    const main = document.querySelector(".admin-main");
+    const jsonBtn = document.querySelector('[data-tab="json"]');
+
+    if (sidebar && jsonBtn) {
+        const btn = document.createElement("button");
+        btn.className = "admin-tab";
+        btn.dataset.tab = "salary";
+        btn.textContent = "Заработная плата";
+        sidebar.insertBefore(btn, jsonBtn);
+    }
+
+    if (main) {
+        const section = document.createElement("section");
+        section.className = "admin-panel";
+        section.id = "tab-salary";
+        section.innerHTML = `
+            <div class="panel-head">
+                <h2>Заработная плата</h2>
+                <button class="small-btn" id="saveSalaryBtn">Сохранить зарплату</button>
+            </div>
+
+            <div class="warning-box">
+                Загрузи отчет Excel. Админка ищет колонки: <b>Ценовая группа</b>, <b>Количество</b>, <b>Сумма</b>.
+            </div>
+
+            <div class="editor-card">
+                <div class="editor-grid three">
+                    <div>
+                        <label>Период отчета</label>
+                        <input id="salaryPeriod" placeholder="Май 2026">
+                    </div>
+                    <div>
+                        <label>Excel файл .xls / .xlsx</label>
+                        <input id="salaryFile" type="file" accept=".xls,.xlsx">
+                    </div>
+                    <div>
+                        <label>Строк в отчете</label>
+                        <input id="salaryRowsCount" disabled value="0">
+                    </div>
+                </div>
+            </div>
+
+            <div class="editor-card">
+                <div class="card-title-line">
+                    <strong>Проценты ЗП по ценовым группам</strong>
+                    <button class="small-btn" id="addSalaryGroupBtn">+ Группа</button>
+                </div>
+                <div id="salaryRatesEditor"></div>
+            </div>
+
+            <div class="editor-card">
+                <div class="card-title-line">
+                    <strong>Предпросмотр</strong>
+                    <span id="salaryPreviewTotal">0 ₽</span>
+                </div>
+                <div id="salaryPreview"></div>
+            </div>
+        `;
+        main.appendChild(section);
+    }
+
+    addSalaryCss();
+}
+
+function addSalaryCss() {
+    if ($("salaryAdminCss")) return;
+    const style = document.createElement("style");
+    style.id = "salaryAdminCss";
+    style.textContent = `
+        .salary-rate-row{display:grid;grid-template-columns:1.6fr 160px 90px;gap:10px;align-items:center;margin-bottom:8px}
+        .salary-rate-row input{padding:10px;border-radius:12px;border:1px solid #dbe2ea}
+        .salary-preview-table{width:100%;border-collapse:collapse;min-width:760px}
+        .salary-preview-table th{background:#f1f5f9;text-align:left;padding:12px;font-size:13px;color:#334155}
+        .salary-preview-table td{padding:12px;border-bottom:1px solid #eef2f7;font-weight:700}
+        .salary-money{color:#15803d;font-weight:900}
+    `;
+    document.head.appendChild(style);
+}
+
+function salaryGroupsFromRows() {
+    const fromRows = salaryData.rows.map(row => row.group).filter(Boolean);
+    const fromRates = Object.keys(salaryData.rates || {});
+    return [...new Set([...defaultSalaryGroups, ...fromRates, ...fromRows])].sort((a,b)=>a.localeCompare(b,"ru"));
+}
+
+function renderSalaryAdmin() {
+    if (!$('salaryRatesEditor')) return;
+
+    $("salaryPeriod").value = salaryData.period || "";
+    $("salaryRowsCount").value = salaryData.rows.length;
+
+    const groups = salaryGroupsFromRows();
+    $("salaryRatesEditor").innerHTML = groups.map(group => `
+        <div class="salary-rate-row" data-salary-rate-row>
+            <input data-salary-group value="${escapeAttr(group)}" placeholder="Ценовая группа">
+            <input data-salary-rate type="number" step="0.01" value="${escapeAttr(salaryData.rates?.[group] ?? 0)}" placeholder="% ЗП">
+            <button class="danger-btn" data-remove-salary-group>Удалить</button>
+        </div>
+    `).join("");
+
+    renderSalaryPreview();
+}
+
+function collectSalaryFromForm() {
+    if (!$('salaryPeriod')) return;
+
+    salaryData.period = $("salaryPeriod").value.trim();
+    const rates = {};
+
+    document.querySelectorAll("[data-salary-rate-row]").forEach(row => {
+        const group = row.querySelector("[data-salary-group]").value.trim();
+        const rate = Number(row.querySelector("[data-salary-rate]").value) || 0;
+        if (group) rates[group] = rate;
+    });
+
+    salaryData.rates = rates;
+}
+
+function renderSalaryPreview() {
+    const box = $("salaryPreview");
+    if (!box) return;
+
+    collectSalaryFromForm();
+
+    if (!salaryData.rows.length) {
+        box.innerHTML = `<div class="warning-box">Файл еще не загружен.</div>`;
+        $("salaryPreviewTotal").textContent = "0 ₽";
+        return;
+    }
+
+    const grouped = {};
+    salaryData.rows.forEach(row => {
+        const group = row.group || "Без группы";
+        if (!grouped[group]) grouped[group] = { group, qty: 0, sum: 0, rate: 0, salary: 0 };
+        grouped[group].qty += Number(row.qty || 0);
+        grouped[group].sum += Number(row.sum || 0);
+    });
+
+    const result = Object.values(grouped).sort((a,b)=>b.sum-a.sum).map(row => {
+        row.rate = Number(salaryData.rates[row.group] || 0);
+        row.salary = row.sum * row.rate / 100;
+        return row;
+    });
+
+    const total = result.reduce((sum,row)=>sum+row.salary,0);
+    $("salaryPreviewTotal").textContent = money(total);
+
+    box.innerHTML = `
+        <table class="salary-preview-table">
+            <thead><tr><th>Ценовая группа</th><th>Кол-во</th><th>Сумма</th><th>% ЗП</th><th>ЗП</th></tr></thead>
+            <tbody>
+                ${result.map(row => `
+                    <tr>
+                        <td>${escapeAttr(row.group)}</td>
+                        <td>${num(row.qty)}</td>
+                        <td>${money(row.sum)}</td>
+                        <td>${row.rate}%</td>
+                        <td class="salary-money">${money(row.salary)}</td>
+                    </tr>
+                `).join("")}
+            </tbody>
+        </table>
+    `;
+}
+
+function money(value) {
+    return Number(value || 0).toLocaleString("ru-RU", { maximumFractionDigits: 2 }) + " ₽";
+}
+
+function num(value) {
+    return Number(value || 0).toLocaleString("ru-RU", { maximumFractionDigits: 2 });
+}
+
+async function loadXlsxLibrary() {
+    if (window.XLSX) return;
+
+    await new Promise((resolve, reject) => {
+        const script = document.createElement("script");
+        script.src = "https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js";
+        script.onload = resolve;
+        script.onerror = reject;
+        document.head.appendChild(script);
+    });
+}
+
+function findColumn(headers, names) {
+    const normalized = headers.map(h => String(h || "").toLowerCase().trim());
+    for (const name of names) {
+        const index = normalized.findIndex(h => h.includes(name));
+        if (index >= 0) return headers[index];
+    }
+    return null;
+}
+
+async function parseSalaryExcel(file) {
+    await loadXlsxLibrary();
+
+    const buffer = await file.arrayBuffer();
+    const workbook = XLSX.read(buffer, { type: "array" });
+    const sheet = workbook.Sheets[workbook.SheetNames[0]];
+    const rows = XLSX.utils.sheet_to_json(sheet, { defval: "" });
+
+    if (!rows.length) {
+        salaryData.rows = [];
+        renderSalaryAdmin();
+        setStatus("Excel пустой.", "error");
+        return;
+    }
+
+    const headers = Object.keys(rows[0]);
+    const groupCol = findColumn(headers, ["ценовая группа", "ценов", "группа"]);
+    const qtyCol = findColumn(headers, ["количество", "кол-во", "кол.", "qty"]);
+    const sumCol = findColumn(headers, ["сумма", "продаж", "amount", "sum"]);
+
+    if (!groupCol || !qtyCol || !sumCol) {
+        alert("Не нашел нужные колонки. Нужно: Ценовая группа, Количество, Сумма.");
+        return;
+    }
+
+    salaryData.rows = rows.map(row => ({
+        group: String(row[groupCol] || "Без группы").trim() || "Без группы",
+        qty: parseMoney(row[qtyCol]),
+        sum: parseMoney(row[sumCol])
+    })).filter(row => row.group && (row.qty || row.sum));
+
+    setStatus(`Excel загружен: ${salaryData.rows.length} строк.`, "ok");
+    renderSalaryAdmin();
+}
+
+function parseMoney(value) {
+    if (typeof value === "number") return value;
+    return Number(String(value || "")
+        .replace(/\s/g, "")
+        .replace(/,/g, ".")
+        .replace(/[^0-9.\-]/g, "")) || 0;
+}
+
 async function loadSiteData() {
     try {
         const snap = await withTimeout(fb.getDoc(fb.doc(db, "site", "main")));
@@ -375,24 +630,51 @@ async function loadProducts() {
     }
 }
 
+async function loadSalaryData() {
+    if (!db) {
+        renderSalaryAdmin();
+        return;
+    }
+
+    try {
+        const snap = await withTimeout(fb.getDoc(fb.doc(db, "salary", "current")));
+        if (snap.exists()) {
+            salaryData = {
+                ...salaryData,
+                ...snap.data(),
+                rates: { ...salaryData.rates, ...(snap.data().rates || {}) },
+                rows: snap.data().rows || []
+            };
+        }
+        renderSalaryAdmin();
+    } catch (error) {
+        console.error(error);
+        renderSalaryAdmin();
+    }
+}
+
 async function loadData() {
     setStatus("Загрузка данных…");
+    injectSalaryAdminUI();
     const ready = await initFirebase();
 
     if (!ready) {
         data = clone(fallbackData);
         renderAll();
         renderProducts();
+        renderSalaryAdmin();
         return;
     }
 
     await loadSiteData();
     await loadProducts();
+    await loadSalaryData();
 }
 
 async function saveData() {
     collectDataFromForm();
     collectProductsFromForm();
+    collectSalaryFromForm();
 
     if (!db) {
         setStatus("Сохранение недоступно: проверь firebase-config.js.", "error");
@@ -424,9 +706,17 @@ async function saveData() {
             }
         }
 
+        await fb.setDoc(fb.doc(db, "salary", "current"), {
+            period: salaryData.period || "",
+            rates: salaryData.rates || {},
+            rows: salaryData.rows || [],
+            updatedAt: new Date().toISOString()
+        }, { merge: true });
+
         deletedProductIds = [];
-        setStatus("Сохранено в Firebase. Обнови сайт и вкладку премии.", "ok");
+        setStatus("Сохранено в Firebase.", "ok");
         await loadProducts();
+        await loadSalaryData();
     } catch (error) {
         console.error(error);
         setStatus("Ошибка сохранения: " + (error.message || "проверь правила Firestore"), "error");
@@ -434,10 +724,13 @@ async function saveData() {
 }
 
 function bindEvents() {
+    injectSalaryAdminUI();
+
     document.querySelectorAll(".admin-tab").forEach(btn => {
         btn.addEventListener("click", () => {
             collectDataFromForm();
             collectProductsFromForm();
+            collectSalaryFromForm();
 
             document.querySelectorAll(".admin-tab").forEach(x => x.classList.remove("active"));
             document.querySelectorAll(".admin-panel").forEach(x => x.classList.remove("active"));
@@ -450,6 +743,25 @@ function bindEvents() {
 
     if ($("saveBtn")) $("saveBtn").onclick = saveData;
     if ($("reloadBtn")) $("reloadBtn").onclick = loadData;
+    if ($("saveSalaryBtn")) $("saveSalaryBtn").onclick = saveData;
+
+    if ($("salaryFile")) {
+        $("salaryFile").addEventListener("change", async (event) => {
+            const file = event.target.files?.[0];
+            if (!file) return;
+            await parseSalaryExcel(file);
+        });
+    }
+
+    if ($("addSalaryGroupBtn")) {
+        $("addSalaryGroupBtn").onclick = () => {
+            collectSalaryFromForm();
+            const name = prompt("Название ценовой группы:");
+            if (!name || !name.trim()) return;
+            salaryData.rates[name.trim()] = 0;
+            renderSalaryAdmin();
+        };
+    }
 
     if ($("addCalculatorBtn")) {
         $("addCalculatorBtn").onclick = () => {
@@ -496,6 +808,13 @@ function bindEvents() {
         };
     }
 
+    document.body.addEventListener("input", (e) => {
+        if (e.target.matches("[data-salary-rate], [data-salary-group], #salaryPeriod")) {
+            collectSalaryFromForm();
+            renderSalaryPreview();
+        }
+    });
+
     document.body.addEventListener("click", (e) => {
         if (e.target.matches("[data-remove-calc]")) {
             e.target.closest("[data-calc]").remove();
@@ -537,8 +856,18 @@ function bindEvents() {
             collectProductsFromForm();
             renderProducts();
         }
+
+        if (e.target.matches("[data-remove-salary-group]")) {
+            const row = e.target.closest("[data-salary-rate-row]");
+            const group = row.querySelector("[data-salary-group]").value.trim();
+            if (group && salaryData.rates[group] !== undefined) delete salaryData.rates[group];
+            row.remove();
+            collectSalaryFromForm();
+            renderSalaryPreview();
+        }
     });
 }
 
+injectSalaryAdminUI();
 bindEvents();
 loadData();
